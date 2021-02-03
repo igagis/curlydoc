@@ -1,11 +1,11 @@
-= docco document markup concept
+= puudoc document markup concept
 
 Using `puu` markup.
 
 ....
-={ header1: docco document markup concept }
+={ header1 puudoc document markup concept }
 
-=={ header2: docco code example }
+=={ header2 puudoc code example }
 
 p{
     Hello world! b{how are you doing today}? I'm fine, thanks!
