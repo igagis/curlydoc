@@ -3,14 +3,34 @@
 Using `puu` markup.
 
 ....
+include{some_file.puudoc}
+
+defs{
+    my_template{
+        args{x y z}
+        body{
+            ==={ subheader }
+            p{
+                lorem ipsum ${x} dolor ${y} sit amet ${z} bla bla...
+            }
+        }
+    }
+
+    // variable is same as template without arguments, invoke as ${var_name}
+    variable1{1.0.3}
+}
+
 ={ header1 puudoc document markup concept }
 
 =={ header2 puudoc code example }
 
 p{
     Hello world! b{how are you doing today}? I'm fine, thanks!
-    How about you? I'm fine too.
+    How about you? I'm fine too. Version ${variable1}.
 }
+
+// template with arguemnts can be invoked without ${}
+my_template{ x{pre-dolor} y{pre-sit} z{pre-bla} }
 
 p{
     Lorem i{ipsum} bi{dolor} sit amet bla bla.
