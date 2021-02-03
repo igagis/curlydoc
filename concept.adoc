@@ -1,0 +1,33 @@
+= docco document markup concept
+
+Using `puu` markup.
+
+....
+={ header1: docco document markup concept }
+
+=={ header2: docco code example }
+
+p{
+    Hello world! b{how are you doing today}? I'm fine, thanks!
+    How about you? I'm fine too.
+}
+
+p{
+    Lorem i{ipsum} bi{dolor} sit amet bla bla.
+    link{http://blabla.net}.
+    image{my_image.png}
+}
+
+p{
+    numbered list:
+    .{ bla bla1 }
+    .{ bla bla2 }
+    .{ bla bla3 }
+
+    unnumbered list:
+    -{ bla bla }
+    -{ bla bla }
+    -{ bla bla }
+
+}
+....
