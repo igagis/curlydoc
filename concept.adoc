@@ -20,6 +20,7 @@ defs{
     variable1{1.0.3}
 
     // array is same as variable, but with empty string element with children
+    // elements with non-empty string will be substituted as is when accessed by index
     array{
         {element1} {element2} {element3} {this is b{element} 4} {${variable}} sinle_word_element }
     }
