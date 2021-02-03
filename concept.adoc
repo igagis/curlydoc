@@ -8,7 +8,7 @@ include{some_file.puudoc}
 defs{
     my_template{
         args{x y z}
-        body{
+        {
             ==={ subheader }
             p{
                 lorem ipsum ${x} dolor ${y} sit amet ${z} bla bla...
@@ -36,6 +36,13 @@ p{
     Lorem i{ipsum} bi{dolor} sit amet bla bla.
     link{http://blabla.net}.
     image{my_image.png}
+}
+
+for{
+    i{ from{3} to{10} step{2} }
+    {
+        my_tempplate{ x{${i}} y{hi} z{bye} }
+    }
 }
 
 p{
