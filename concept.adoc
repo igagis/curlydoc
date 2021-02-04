@@ -5,6 +5,11 @@ Using `puu` markup.
 ....
 include{some_file.puudoc}
 
+// templates, variables and arrays are all same. Difference is only in the way how those are invoked.
+// Template invokation must have at least one child with children.
+// Array element access must have one childless child.
+// Variable is invoked as ${var_name}.
+
 defs{
     my_template{x y z
         {
