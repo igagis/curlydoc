@@ -6,8 +6,7 @@ Using `puu` markup.
 include{some_file.puudoc}
 
 defs{
-    my_template{
-        args{x y z}
+    my_template{x y z
         {
             ==={ subheader }
             p{
@@ -22,7 +21,8 @@ defs{
     // array is same as variable, but with empty string element with children
     // elements with non-empty string will be substituted as is when accessed by index
     array{
-        {element1} {element2} {element3} {this is b{element} 4} {${variable}} sinle_word_element }
+        {element1 bla bla} {element2} {element3} {this is b{element} 4} {${variable}} sinle_word_element
+        complex{element bla bla}
     }
 }
 
@@ -45,9 +45,12 @@ p{
 }
 
 for{
-    i{ from{3} to{${array size}} step{2} }
+    i{ from{3} to{size{array}}} step{2} }
+    // or
+    i{ in{ 3 4 6} }
+
     {
-        my_tempplate{ x{${i}} y{${array ${i}}} z{bye} }
+        my_tempplate{ x{${i}} y{array{${i}}} z{bye} }
     }
 }
 
