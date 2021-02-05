@@ -11,8 +11,9 @@ include{some_file.puudoc}
 // Variable is invoked as ${var_name}.
 
 defs{
-    my_template{x y z
-        {
+    template my_template{
+        args {x y z}
+        body {
             ==={ subheader }
             p{
                 lorem ipsum ${x} dolor ${y} sit amet ${z} bla bla...
@@ -21,27 +22,30 @@ defs{
     }
 
     // variable is same as template without arguments, invoke as ${var_name}
-    variable1{1.0.3}
+    var variable1{1.0.3}
 
     // array is same as variable, but with empty string element with children
     // elements with non-empty string will be substituted as is when accessed by index
-    array{
-        {element1 bla bla} {element2} {element3} {this is b{element} 4} ${variable} sinle_word_element
+    var array{
+        {element1 bla bla} {element2} {element3} {this is b{element} 4} ${variable} sinle_word_element ""{trololo trololo}
         complex{element bla bla}
     }
 }
 
-// Template invokation:
+// Template invocation:
 my_template{x{bla} y{bal} z{lba}}
 // or
+my_template{bla bal lba}
+// or
 ${my_template x{bla} y{bla} z{bla}}
+// or
+${my_template bla bal lba}
 
 // array:
 size{array} // size of array
 array{10} // element access by index. Elements which are empty string with children will be unwrapped, i.e. only children will be substituted
-${array}
-
-
+${array 10}
+${array} // this will substitute all array elements as is, without any unwrapping
 
 ={ header1 puudoc document markup concept }
 
@@ -49,15 +53,26 @@ ${array}
 
 p{
     Hello world! b{how are you doing today}? I'm fine, thanks!
-    How ab +b+{o}ut you? I'm fine too. Version ${variable1}.
+    How ab +b+{o} ut you? I'm fine too. Version ${variable1}.
     // to link bold letter to left and right words use +
+}
+
+code{
+    bla bla
+}
+
+`{@{lang{cpp}}
+R"qwerty(
+    multiline code
+    snippet
+)qwerty"
 }
 
 // template with arguemnts can be invoked without ${}
 my_template{ x{pre-dolor} y{pre-sit} z{pre-bla} }
 
 p{
-    Lorem i{ipsum} bi{dolor} sit amet bla bla.
+    Lorem i{ipsum} bi{dolor} sit `{amet} bla bla.
     link{http://blabla.net}.
     image{my_image.png}
 }
@@ -84,4 +99,5 @@ p{
     -{ bla bla }
 
 }
+
 ....
