@@ -26,10 +26,22 @@ defs{
     // array is same as variable, but with empty string element with children
     // elements with non-empty string will be substituted as is when accessed by index
     array{
-        {element1 bla bla} {element2} {element3} {this is b{element} 4} {${variable}} sinle_word_element
+        {element1 bla bla} {element2} {element3} {this is b{element} 4} ${variable} sinle_word_element
         complex{element bla bla}
     }
 }
+
+// Template invokation:
+my_template{x{bla} y{bal} z{lba}}
+// or
+${my_template x{bla} y{bla} z{bla}}
+
+// array:
+size{array} // size of array
+array{10} // element access by index. Elements which are empty string with children will be unwrapped, i.e. only children will be substituted
+${array}
+
+
 
 ={ header1 puudoc document markup concept }
 
@@ -37,7 +49,8 @@ defs{
 
 p{
     Hello world! b{how are you doing today}? I'm fine, thanks!
-    How about you? I'm fine too. Version ${variable1}.
+    How ab +b+{o}ut you? I'm fine too. Version ${variable1}.
+    // to link bold letter to left and right words use +
 }
 
 // template with arguemnts can be invoked without ${}
@@ -50,7 +63,7 @@ p{
 }
 
 for{
-    i{ from{3} to{size{array}}} step{2} }
+    i{ from{3} to{size{array}} step{2} }
     // or
     i{ in{ 3 4 6} }
 
