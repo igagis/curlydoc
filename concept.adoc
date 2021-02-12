@@ -61,12 +61,10 @@ code{
     bla bla
 }
 
-`cpp{
-R"qwerty(
+`cpp{R"qwerty(
     multiline code
     snippet
-)qwerty"
-}
+)qwerty"}
 
 // template with arguemnts can be invoked without ${}
 my_template{ x{pre-dolor} y{pre-sit} z{pre-bla} }
