@@ -1,6 +1,6 @@
 = curlydoc document markup concept
 
-Using link:http:://github.com/cppfw/treeml[treeml] markup.
+Using `treeml` markup.
 
 ....
 include{some_file.cdoc}
