@@ -49,17 +49,19 @@ p{
     // to link bold letter to left and right words use -
 }
 
-code{
+code{ { lang{cpp} } // the parameter block must be the first child empty string with children, it mabe absent
+    bla bla
+}
+// alias: code=`
+`{
     bla bla
 }
 
+// possible template for cpp code block
 `cpp{R"qwerty(
     multiline code
     snippet
 )qwerty"}
-
-// template with arguemnts can be invoked without ${}
-my_template{ x{pre-dolor} y{pre-sit} z{pre-bla} }
 
 p{
     Lorem i{ipsum} bi{dolor} sit `{amet} bla bla.
@@ -68,15 +70,15 @@ p{
 }
 
 for{
+    // the first child of the 'for' must be the iterator declaration
 	i{ 3 4 6 }
     // or
 	i{ range{from{3} to{size{array}} step{2}} }
 	// or
 	i{ {first one} {second one} third{one} }
 
-    {
-        my_tempplate{ x{${i}} y{${array ${i}}} z{bye} }
-    }
+    
+    my_tempplate{ x{${i}} y{${array ${i}}} z{bye} }
 }
 
 p{
