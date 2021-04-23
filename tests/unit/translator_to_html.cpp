@@ -12,7 +12,8 @@ tst::set set("traslator_to_html", [](auto& suite){
 			"curlydoc_element_to_html_element",
 			{
 				{"p{hello world!}", "<p>hello world!</p>"},
-				{"b{bold text}", "<b>bold text</b>"}
+				{"b{bold text}", "<b>bold text</b>"},
+				{"mi c{wj} b{dd} c{wj} le", "mi<b>dd</b>le"}
 			},
 			[](const auto& p){
 				const auto in = treeml::read(p.first.c_str());
