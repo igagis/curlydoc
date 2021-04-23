@@ -13,9 +13,36 @@
 			]
 		},
 		{
+			"label": "build_dbg",
+			"type": "shell",
+			"command": "make autojobs=true config=dbg",
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
 			"label": "clean",
 			"type": "shell",
 			"command": "make clean",
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
+			"label": "clean_dbg",
+			"type": "shell",
+			"command": "make clean config=dbg",
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
+			"label": "clean-all",
+			"type": "shell",
+			"command": "make clean-all",
 			"group": "build",
 			"problemMatcher": [
 				"$gcc"
@@ -36,6 +63,14 @@
 			"group": "build",
 			"problemMatcher": [],
 			"dependsOn": "build"
+		},
+		{
+			"label": "test_dbg",
+			"type": "shell",
+			"command": "make test autojobs=true config=dbg",
+			"group": "build",
+			"problemMatcher": [],
+			"dependsOn": "build_dbg"
 		}
 	]
 }

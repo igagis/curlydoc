@@ -12,15 +12,19 @@ public:
 	typedef std::function<void(const std::string&)> word_handler_type;
 private:
 	std::unordered_map<std::string, keyword_handler_type> handlers;
-	word_handler_type word_handler;
 public:
 	virtual ~translator_base(){}
 
 	void translate(treeml::forest::const_iterator begin, treeml::forest::const_iterator end);
 
-	void add_keyword(std::string&& keyword, keyword_handler_type&& handler);
+	void translate(const treeml::forest& forest){
+		this->translate(forest.begin(), forest.end());
+	}
 
-	void set_word_handler(word_handler_type&& handler);
+	void add_keyword(const std::string& keyword, keyword_handler_type&& handler);
+
+	virtual void handle_space() = 0;
+	virtual void handle_word(const std::string& word) = 0;
 };
 
 }

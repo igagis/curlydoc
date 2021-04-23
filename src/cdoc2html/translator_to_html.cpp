@@ -6,6 +6,16 @@ translator_to_html::translator_to_html(){
 	// TODO:
 }
 
-void translator_to_html::handle_paragraph(const treeml::forest& tokens){
-	// TODO:
+void translator_to_html::handle_space(){
+	this->ss << ' ';
+}
+
+void translator_to_html::handle_word(const std::string& word){
+	this->ss << word;
+}
+
+void translator_to_html::handle_paragraph(const treeml::forest& forest){
+	this->ss << "<p>";
+	this->translate(forest);
+	this->ss << "</p>";
 }

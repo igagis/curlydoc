@@ -1,4 +1,6 @@
 #include <tst/set.hpp>
+#include <tst/check.hpp>
+
 #include <treeml/tree.hpp>
 
 #include "../../src/cdoc2html/translator_to_html.hpp"
@@ -13,7 +15,8 @@ tst::set set("traslator_to_html", [](auto& suite){
 
 		tr.translate(input.begin(), input.end());
 
-		// TODO: check
+		auto str = tr.ss.str();
+		tst::check(str == "<p>hello world!</p>", SL) << "str = " << str;
 	});
 });
 }

@@ -3,16 +3,37 @@
 using namespace curlydoc;
 
 void translator_base::translate(treeml::forest::const_iterator begin, treeml::forest::const_iterator end){
-	// TODO:
-}
+	for(auto i = begin; i != end; ++i){
+		const auto& string = i->value.to_string();
 
-void translator_base::add_keyword(std::string&& keyword, keyword_handler_type&& handler){
-	// TODO:
-}
+		if(i->children.empty()){
+			if(i != begin){
+				this->handle_space();
+			}
+			this->handle_word(string);
+			continue;
+		}
 
-void translator_base::set_word_handler(word_handler_type&& handler){
-	if(this->word_handler){
-		throw std::logic_error("word handler is already set");
+		auto h = this->handlers.find(string);
+		if(h != this->handlers.end()){
+			ASSERT(h->second)
+			h->second(i->children);
+			continue;
+		}
+
+		// TODO: handle macros
+
+		std::stringstream ss;
+		ss << "unknown keyword encountered: " << string;
+		throw std::invalid_argument(ss.str());
 	}
-	this->word_handler = std::move(handler);
+}
+
+void translator_base::add_keyword(const std::string& keyword, keyword_handler_type&& handler){
+	auto res = this->handlers.insert(std::make_pair(std::move(keyword), std::move(handler)));
+	if(!res.second){
+		std::stringstream ss;
+		ss << "keyword '" << keyword << "' is already added";
+		throw std::logic_error(ss.str());
+	}
 }
