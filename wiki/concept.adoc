@@ -44,9 +44,9 @@ ${array} // this will substitute all array elements as is, without any unwrappin
 =={ header2 curlydoc code example }
 
 p{
-    Hello world! *{how are you doing today}? I'm fine, thanks!
-    How ab -b-{o} ut you? I'm _{fine} too. Version ${variable1}.
-    // to link bold letter to left and right words use -
+    Hello world! *{how are you doing today} ? I'm fine, thanks!
+    How ab cmd{+} b{o} cmd{+} ut you? I'm _{fine} too. Version ${variable1}.
+    // to link bold letter to left and right words using cmd{+}
 }
 
 code{ { lang{cpp} } // the parameter block must be the first child empty string with children, it mabe absent

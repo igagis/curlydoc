@@ -1,11 +1,12 @@
 = elements
 
 - `p` - paragraph
-- `b` - bold
-- `i` - italic
-- `bi` or `ib` - bold italic
-- `=` or `h1` - header 1
-- `==` or `h2` - header 2
-- `===` or `h3` - header 3
-- `====` or `h4` - header 4
-- `code` or back tick - monospace
+- `b`, `*` - bold
+- `i`, `/` - italic
+- `u`, `_` - underline
+- `s`, `-` - strike through
+- `h1`, `=` - header 1
+- `h2`, `==` - header 2
+- `h3`, `===` - header 3
+- `h4`, `====` - header 4
+- `code`, `{backtick}` - monospace

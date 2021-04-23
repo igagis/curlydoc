@@ -4,12 +4,13 @@ using namespace curlydoc;
 
 void translator_base::translate(treeml::forest::const_iterator begin, treeml::forest::const_iterator end){
 	for(auto i = begin; i != end; ++i){
+		if(i != begin){
+			this->handle_space();
+		}
+
 		const auto& string = i->value.to_string();
 
 		if(i->children.empty()){
-			if(i != begin){
-				this->handle_space();
-			}
 			this->handle_word(string);
 			continue;
 		}
