@@ -1,4 +1,5 @@
 include prorab.mk
+include prorab-test.mk
 
 $(eval $(call prorab-config, ../../config))
 
@@ -13,6 +14,12 @@ this_ldlibs += $(this_libcurlydoc)
 
 $(eval $(prorab-build-app))
 
-$(eval $(call prorab-depend, $(this_libcurlydoc)))
+$(eval $(call prorab-depend, $(prorab_this_name), $(this_libcurlydoc)))
+
+this_run_name := $(this_name)
+this_test_cmd := $(d)$(this_out_dir)$(this_name)
+this_test_deps := $(prorab_this_name)
+this_test_ld_path := $(dir $(this_libcurlydoc))
+$(eval $(prorab-run))
 
 $(eval $(call prorab-include, ../lib/makefile))

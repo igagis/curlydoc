@@ -11,6 +11,13 @@
 			"problemMatcher": [
 				"$gcc"
 			]
+		},
+		{
+			"label": "run_cdoc2html",
+			"type": "shell",
+			"command": "make run_cdoc2html",
+			"group": "build",
+			"problemMatcher": []
 		}
 	]
 }
