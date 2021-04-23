@@ -13,11 +13,29 @@
 			]
 		},
 		{
+			"label": "clean",
+			"type": "shell",
+			"command": "make clean",
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
 			"label": "run_cdoc2html",
 			"type": "shell",
 			"command": "make run_cdoc2html",
 			"group": "build",
-			"problemMatcher": []
+			"problemMatcher": [],
+			"dependsOn": "build"
+		},
+		{
+			"label": "test_",
+			"type": "shell",
+			"command": "make test autojobs=true",
+			"group": "build",
+			"problemMatcher": [],
+			"dependsOn": "build"
 		}
 	]
 }
