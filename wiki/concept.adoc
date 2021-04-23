@@ -44,8 +44,8 @@ ${array} // this will substitute all array elements as is, without any unwrappin
 =={ header2 curlydoc code example }
 
 p{
-    Hello world! *{how are you doing today} ? I'm fine, thanks!
-    How ab cmd{+} b{o} cmd{+} ut you? I'm _{fine} too. Version ${variable1}.
+    Hello world! b{how are you doing today}???? I'm fine, thanks!
+    How ab _{+} b{o} _{+} ut you? I'm i{fine}" ", too. Version ${variable1}.
     // to link bold letter to left and right words using cmd{+}
 }
 
@@ -64,7 +64,7 @@ code{ { lang{cpp} } // the parameter block must be the first child empty string 
 )qwerty"}
 
 p{
-    Lorem i{ipsum} bi{dolor} sit `{amet} bla bla.
+    Lorem i{ipsum} bi{dolor} sit code{amet} bla bla.
     link{http://blabla.net}.
     image{my_image.png}
 }
@@ -83,14 +83,17 @@ for{
 
 p{
     numbered list:
-    .{ bla bla1 }
-    .{ bla bla2 }
-    .{ bla bla3 }
+    ol{
+		{bla bla}
+		{bla bla}
+		{bla bla}
+	}
 
     unnumbered list:
-    -{ bla bla }
-    -{ bla bla }
-    -{ bla bla }
+	ul{
+		{bla bla bla}
+		{bla bla bla}
+	}
 
 }
 

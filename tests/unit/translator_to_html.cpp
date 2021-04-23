@@ -8,15 +8,22 @@
 
 namespace{
 tst::set set("traslator_to_html", [](auto& suite){
-	suite.add("p_translates_to_html_p", [](){
-		const auto input = treeml::read("p{hello world!}");
+	suite.template add<std::pair<std::string, std::string>>(
+			"curlydoc_element_to_html_element",
+			{
+				{"p{hello world!}", "<p>hello world!</p>"},
+				{"b{bold text}", "<b>bold text</b>"}
+			},
+			[](const auto& p){
+				const auto in = treeml::read(p.first.c_str());
 
-		curlydoc::translator_to_html tr;
+				curlydoc::translator_to_html tr;
 
-		tr.translate(input.begin(), input.end());
+				tr.translate(in);
 
-		auto str = tr.ss.str();
-		tst::check(str == "<p>hello world!</p>", SL) << "str = " << str;
-	});
+				auto str = tr.ss.str();
+				tst::check(str == p.second, SL) << "str = " << str;
+			}
+		);
 });
 }

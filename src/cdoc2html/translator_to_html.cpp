@@ -19,3 +19,9 @@ void translator_to_html::handle_paragraph(const treeml::forest& forest){
 	this->translate(forest);
 	this->ss << "</p>";
 }
+
+void translator_to_html::handle_bold(const treeml::forest& forest){
+	this->ss << "<b>";
+	this->translate(forest);
+	this->ss << "</b>";
+}

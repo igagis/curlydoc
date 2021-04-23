@@ -1,12 +1,14 @@
 = elements
 
 - `p` - paragraph
-- `b`, `*` - bold
-- `i`, `/` - italic
-- `u`, `_` - underline
-- `s`, `-` - strike through
-- `h1`, `=` - header 1
-- `h2`, `==` - header 2
-- `h3`, `===` - header 3
-- `h4`, `====` - header 4
-- `code`, `{backtick}` - monospace
+- `b` - bold
+- `i` - italic
+- `u` - underline
+- `s` - strike through
+- `h` - header 1
+- `hh` or `h2` - header 2
+- `hhh` or `h3` - header 3
+- `hhhh` or `h4` - header 4
+- `code` - monospace
+- `ul` - unordered list item
+- `ol` - ordered list item

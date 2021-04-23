@@ -5,6 +5,7 @@ using namespace curlydoc;
 void translator_base::translate(treeml::forest::const_iterator begin, treeml::forest::const_iterator end){
 	for(auto i = begin; i != end; ++i){
 		if(i != begin){
+			// TODO: if word starts with space or ends with space, no need to handle space
 			this->handle_space();
 		}
 
