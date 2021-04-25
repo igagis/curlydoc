@@ -47,6 +47,7 @@ p{
     Hello world! b{how are you doing today}???? I'm fine, thanks!
     How ab _{+} b{o} _{+} ut you? I'm i{fine}" ", too. Version ${variable1}.
     // to link bold letter to left and right words using cmd{+}
+	Some "quoted b{stuff}" whould work? Or should it be some \"quoted b{stuff}\"?
 }
 
 code{ { lang{cpp} } // the parameter block must be the first child empty string with children, it mabe absent
