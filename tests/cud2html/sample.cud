@@ -4,6 +4,6 @@ p{
 	Hi, how _{are you} doing b{today}?
 }
 p{
-	I'm *{fine, thank you}! ~{How} "/"{about you?}
-	Today I was "planning literally " to go to somewhere...
+	I'm *{fine, thank you}! ~{How} /{about you?}
+	Today I was "planning *{literally}" to go to somewhere...
 }
