@@ -3,8 +3,7 @@
 
 #include <treeml/tree.hpp>
 
-#include "../../src/cdoc2html/translator_to_html.hpp"
-
+#include "../../src/cud2html/translator_to_html.hpp"
 
 namespace{
 tst::set set("traslator_to_html", [](auto& suite){
@@ -13,12 +12,13 @@ tst::set set("traslator_to_html", [](auto& suite){
 			{
 				{"p{hello world!}", "<p>hello world!</p>"},
 				{"b{bold text}", "<b>bold text</b>"},
-				{"mi c{wj} b{dd} c{wj} le", "mi<b>dd</b>le"}
+				{"pre b{bold} post", "pre <b>bold</b> post"},
+				{"mi\"b\"{dd}le", "mi<b>dd</b>le"},
 			},
 			[](const auto& p){
-				const auto in = treeml::read(p.first.c_str());
+				const auto in = treeml::read_ext(p.first.c_str());
 
-				curlydoc::translator_to_html tr;
+				curlydoc::translator_to_html tr("test.cud");
 
 				tr.translate(in);
 

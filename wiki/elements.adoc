@@ -1,5 +1,6 @@
 = elements
 
+- `c` - character
 - `p` - paragraph
 - `b` - bold
 - `i` - italic
@@ -9,6 +10,6 @@
 - `hh` or `h2` - header 2
 - `hhh` or `h3` - header 3
 - `hhhh` or `h4` - header 4
-- `code` - monospace
+- `m` - monospace
 - `ul` - unordered list item
 - `ol` - ordered list item
