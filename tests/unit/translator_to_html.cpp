@@ -10,10 +10,12 @@ tst::set set("traslator_to_html", [](auto& suite){
 	suite.template add<std::pair<std::string, std::string>>(
 			"curlydoc_element_to_html_element",
 			{
-				{"p{hello world!}", "<p>hello world!</p>"},
+				{"p{hello world!}", "<p>hello world!</p>\n"},
 				{"b{bold text}", "<b>bold text</b>"},
+				{"i{italic text}", "<i>italic text</i>"},
 				{"pre b{bold} post", "pre <b>bold</b> post"},
 				{"mi\"b\"{dd}le", "mi<b>dd</b>le"},
+				{"mi\"i\"{dd}le", "mi<i>dd</i>le"},
 				{"some \"quoted\" stuff", "some \"quoted\" stuff"}
 			},
 			[](const auto& p){

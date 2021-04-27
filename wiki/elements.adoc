@@ -1,15 +1,17 @@
 = elements
 
 - `c` - character
-- `p` - paragraph
-- `b` - bold
-- `i` - italic
-- `u` - underline
-- `s` - strike through
-- `h` - header 1
-- `hh` or `h2` - header 2
-- `hhh` or `h3` - header 3
-- `hhhh` or `h4` - header 4
-- `m` - monospace
-- `ul` - unordered list item
-- `ol` - ordered list item
+- `p` or `>` - paragraph
+- `b` or `*` - bold
+- `i` or `/` - italic
+- `u` or `_` - underline
+- `s` or `~` - strikethrough
+- `h1` or `=` - header 1
+- `h2` or `==` - header 2
+- `h3` or `===` - header 3
+- `h4` or `====` - header 4
+- `h5` or `=====` - header 5
+- `h6` or `======` - header 6
+- `m` or `{backtick}` - monospace
+- `ul` or `-` - unordered list item
+- `ol` or `.` - ordered list item
