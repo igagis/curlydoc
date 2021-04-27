@@ -16,14 +16,14 @@ void translator_to_html::handle_word(const std::string& word){
 	this->ss << word;
 }
 
-void translator_to_html::handle_paragraph(const treeml::forest_ext& forest){
+void translator_to_html::handle_paragraph(const treeml::tree_ext& tree){
 	this->ss << "<p>";
-	this->translate(forest);
+	this->translate(tree.children);
 	this->ss << "</p>";
 }
 
-void translator_to_html::handle_bold(const treeml::forest_ext& forest){
+void translator_to_html::handle_bold(const treeml::tree_ext& tree){
 	this->ss << "<b>";
-	this->translate(forest);
+	this->translate(tree.children);
 	this->ss << "</b>";
 }

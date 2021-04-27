@@ -9,19 +9,17 @@ namespace curlydoc{
 class translator_base{
 	const std::string file_name;
 public:
-	typedef std::function<void(const treeml::forest_ext&)> keyword_handler_type;
+	typedef std::function<void(const treeml::tree_ext&)> keyword_handler_type;
 	typedef std::function<void(const std::string&)> word_handler_type;
 private:
 	std::unordered_map<std::string, keyword_handler_type> handlers;
 
-	void handle_char(const treeml::tree_ext& ext);
+	void handle_char(const treeml::tree_ext& tree);
 protected:
 	void throw_syntax_error(std::string&& message, const treeml::tree_ext& node);
 
 public:
-	translator_base(std::string&& file_name) :
-			file_name(std::move(file_name))
-	{}
+	translator_base(std::string&& file_name);
 
 	virtual ~translator_base(){}
 

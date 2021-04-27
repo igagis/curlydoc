@@ -2,31 +2,41 @@
 
 using namespace curlydoc;
 
-void translator_base::translate(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end){
-	bool no_space = false;
-	for(auto i = begin; i != end; ++i){
-		if(i->value.to_string() == "c" && !i->children.empty()){
-			this->handle_char(*i);
-			no_space = true;
-			continue;
-		}
+namespace{
+const std::string quote = "\"";
+}
 
-		if(!no_space && i != begin && i->value.get_info().flags.get(treeml::flag::space)){
+translator_base::translator_base(std::string&& file_name) :
+		file_name(std::move(file_name))
+{
+	this->add_keyword("c", [this](auto& tree){
+		this->handle_char(tree);
+	});
+}
+
+void translator_base::translate(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end){
+	for(auto i = begin; i != end; ++i){
+		if(i != begin && i->value.get_info().flags.get(treeml::flag::space)){
 			this->handle_space();
 		}
-		no_space = false;
 
 		const auto& string = i->value.to_string();
 
 		if(i->children.empty()){
-			this->handle_word(string);
+			if(i->value.get_info().flags.get(treeml::flag::quoted)){
+				this->handle_word(quote);
+				this->handle_word(string);
+				this->handle_word(quote);
+			}else{
+				this->handle_word(string);
+			}
 			continue;
 		}
 
 		auto h = this->handlers.find(string);
 		if(h != this->handlers.end()){
 			ASSERT(h->second)
-			h->second(i->children);
+			h->second(*i);
 			continue;
 		}
 

@@ -14,8 +14,8 @@ public:
 
 	void handle_space()override;
 	void handle_word(const std::string& word)override;
-	void handle_paragraph(const treeml::forest_ext& forest)override;
-	void handle_bold(const treeml::forest_ext& forest)override;
+	void handle_paragraph(const treeml::tree_ext& tree)override;
+	void handle_bold(const treeml::tree_ext& tree)override;
 };
 
 }

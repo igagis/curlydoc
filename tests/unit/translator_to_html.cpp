@@ -14,6 +14,7 @@ tst::set set("traslator_to_html", [](auto& suite){
 				{"b{bold text}", "<b>bold text</b>"},
 				{"pre b{bold} post", "pre <b>bold</b> post"},
 				{"mi\"b\"{dd}le", "mi<b>dd</b>le"},
+				{"some \"quoted\" stuff", "some \"quoted\" stuff"}
 			},
 			[](const auto& p){
 				const auto in = treeml::read_ext(p.first.c_str());
