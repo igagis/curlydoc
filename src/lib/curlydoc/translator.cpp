@@ -11,6 +11,9 @@ translator::translator(std::string&& file_name) :
 
 	{
 		auto f = [this](auto& tree){
+			if(!this->is_first() && tree.value.get_info().flags.get(treeml::flag::space)){
+				this->handle_space();
+			}
 			this->handle_bold(tree);
 		};
 		this->add_keyword("*", f);
@@ -19,6 +22,9 @@ translator::translator(std::string&& file_name) :
 
 	{
 		auto f = [this](auto& tree){
+			if(!this->is_first() && tree.value.get_info().flags.get(treeml::flag::space)){
+				this->handle_space();
+			}
 			this->handle_italic(tree);
 		};
 		this->add_keyword("/", f);
@@ -27,6 +33,9 @@ translator::translator(std::string&& file_name) :
 
 	{
 		auto f = [this](auto& tree){
+			if(!this->is_first() && tree.value.get_info().flags.get(treeml::flag::space)){
+				this->handle_space();
+			}
 			this->handle_underline(tree);
 		};
 		this->add_keyword("_", f);
@@ -35,6 +44,9 @@ translator::translator(std::string&& file_name) :
 
 	{
 		auto f = [this](auto& tree){
+			if(!this->is_first() && tree.value.get_info().flags.get(treeml::flag::space)){
+				this->handle_space();
+			}
 			this->handle_strikethrough(tree);
 		};
 		this->add_keyword("~", f);

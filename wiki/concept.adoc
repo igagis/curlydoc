@@ -50,7 +50,7 @@ p{
 	Some "quoted b{stuff}" whould work? Or should it be some \"quoted b{stuff}\"?
 }
 
-code{ { lang{cpp} } // the parameter block must be the first child empty string with children, it mabe absent
+m{ { syntax{cpp} } // the parameter block must be the first child empty string with children, it maybe absent
     bla bla
 }
 // alias: code=`

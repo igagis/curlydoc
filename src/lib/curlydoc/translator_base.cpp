@@ -16,13 +16,19 @@ translator_base::translator_base(std::string&& file_name) :
 
 void translator_base::translate(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end){
 	for(auto i = begin; i != end; ++i){
-		if(i != begin && i->value.get_info().flags.get(treeml::flag::space)){
-			this->handle_space();
+		if(i == begin){
+			this->is_first_node = true;
+		}else{
+			this->is_first_node = false;
 		}
 
 		const auto& string = i->value.to_string();
 
 		if(i->children.empty()){
+			if(!this->is_first() && i->value.get_info().flags.get(treeml::flag::space)){
+				this->handle_space();
+			}
+			
 			if(i->value.get_info().flags.get(treeml::flag::quoted)){
 				this->handle_word(quote);
 				this->handle_word(string);
