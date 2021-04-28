@@ -5,13 +5,13 @@ using namespace curlydoc;
 translator::translator(std::string&& file_name) :
 		translator_base(std::move(file_name))
 {
-	this->add_keyword("p", [this](auto& tree){
+	this->add_keyword("p", [this](bool space, auto& tree){
 		this->handle_paragraph(tree);
 	});
 
 	{
-		auto f = [this](auto& tree){
-			if(!this->is_first() && tree.value.get_info().flags.get(treeml::flag::space)){
+		auto f = [this](bool space, auto& tree){
+			if(space){
 				this->handle_space();
 			}
 			this->handle_bold(tree);
@@ -21,8 +21,8 @@ translator::translator(std::string&& file_name) :
 	}
 
 	{
-		auto f = [this](auto& tree){
-			if(!this->is_first() && tree.value.get_info().flags.get(treeml::flag::space)){
+		auto f = [this](bool space, auto& tree){
+			if(space){
 				this->handle_space();
 			}
 			this->handle_italic(tree);
@@ -32,8 +32,8 @@ translator::translator(std::string&& file_name) :
 	}
 
 	{
-		auto f = [this](auto& tree){
-			if(!this->is_first() && tree.value.get_info().flags.get(treeml::flag::space)){
+		auto f = [this](bool space, auto& tree){
+			if(space){
 				this->handle_space();
 			}
 			this->handle_underline(tree);
@@ -43,8 +43,8 @@ translator::translator(std::string&& file_name) :
 	}
 
 	{
-		auto f = [this](auto& tree){
-			if(!this->is_first() && tree.value.get_info().flags.get(treeml::flag::space)){
+		auto f = [this](bool space, auto& tree){
+			if(space){
 				this->handle_space();
 			}
 			this->handle_strikethrough(tree);
@@ -54,7 +54,7 @@ translator::translator(std::string&& file_name) :
 	}
 
 	{
-		auto f = [this](auto& tree){
+		auto f = [this](bool space, auto& tree){
 			this->handle_header1(tree);
 		};
 		this->add_keyword("=", f);
@@ -62,7 +62,7 @@ translator::translator(std::string&& file_name) :
 	}
 
 	{
-		auto f = [this](auto& tree){
+		auto f = [this](bool space, auto& tree){
 			this->handle_header2(tree);
 		};
 		this->add_keyword("==", f);
@@ -70,7 +70,7 @@ translator::translator(std::string&& file_name) :
 	}
 
 	{
-		auto f = [this](auto& tree){
+		auto f = [this](bool space, auto& tree){
 			this->handle_header3(tree);
 		};
 		this->add_keyword("===", f);
@@ -78,7 +78,7 @@ translator::translator(std::string&& file_name) :
 	}
 
 	{
-		auto f = [this](auto& tree){
+		auto f = [this](bool space, auto& tree){
 			this->handle_header4(tree);
 		};
 		this->add_keyword("====", f);
@@ -86,7 +86,7 @@ translator::translator(std::string&& file_name) :
 	}
 	
 	{
-		auto f = [this](auto& tree){
+		auto f = [this](bool space, auto& tree){
 			this->handle_header5(tree);
 		};
 		this->add_keyword("=====", f);
@@ -94,7 +94,7 @@ translator::translator(std::string&& file_name) :
 	}
 
 	{
-		auto f = [this](auto& tree){
+		auto f = [this](bool space, auto& tree){
 			this->handle_header6(tree);
 		};
 		this->add_keyword("======", f);

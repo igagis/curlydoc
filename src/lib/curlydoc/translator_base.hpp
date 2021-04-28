@@ -9,20 +9,15 @@ namespace curlydoc{
 class translator_base{
 	const std::string file_name;
 public:
-	typedef std::function<void(const treeml::tree_ext&)> keyword_handler_type;
+	typedef std::function<void(bool, const treeml::tree_ext&)> keyword_handler_type;
 	typedef std::function<void(const std::string&)> word_handler_type;
 private:
 	std::unordered_map<std::string, keyword_handler_type> handlers;
 
 	void handle_char(const treeml::tree_ext& tree);
-
-	bool is_first_node;
 protected:
 	void throw_syntax_error(std::string&& message, const treeml::tree_ext& node);
 
-	bool is_first()const noexcept{
-		return this->is_first_node;
-	}
 public:
 	translator_base(std::string&& file_name);
 
