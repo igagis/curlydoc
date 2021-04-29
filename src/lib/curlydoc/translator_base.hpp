@@ -31,8 +31,11 @@ public:
 
 	void add_keyword(const std::string& keyword, keyword_handler_type&& handler);
 
-	virtual void handle_space() = 0;
 	virtual void handle_word(const std::string& word) = 0;
+
+	void handle_space(){
+		this->handle_word(" ");
+	}
 };
 
 }

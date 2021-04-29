@@ -8,10 +8,6 @@ translator_to_html::translator_to_html(std::string&& file_name) :
 	// TODO:
 }
 
-void translator_to_html::handle_space(){
-	this->ss << ' ';
-}
-
 void translator_to_html::handle_word(const std::string& word){
 	this->ss << word;
 }
