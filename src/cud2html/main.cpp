@@ -34,12 +34,12 @@ int main(int argc, const char** argv){
 			"<meta charset=utf-8>" "\n"
 			"<title>blah</title>" "\n"
 			"</head>" "\n"
-			"<body>" "\n"
+			"<body>"
 		;
 
 	outf << translator.ss.str();
 
-	outf << "</body>" "\n"
+	outf << "\n" "</body>" "\n"
 			"</html>" "\n";
 
 	return 0;

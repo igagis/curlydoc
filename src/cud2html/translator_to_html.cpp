@@ -17,9 +17,9 @@ void translator_to_html::handle_word(const std::string& word){
 }
 
 void translator_to_html::handle_paragraph(const treeml::tree_ext& tree){
-	this->ss << "<p>";
+	this->ss << '\n' << "<p>";
 	this->translate(tree.children);
-	this->ss << "</p>" << '\n';
+	this->ss << "</p>";
 }
 
 void translator_to_html::handle_bold(const treeml::tree_ext& tree){
@@ -47,37 +47,37 @@ void translator_to_html::handle_strikethrough(const treeml::tree_ext& tree){
 }
 
 void translator_to_html::handle_header1(const treeml::tree_ext& tree){
-	this->ss << "<h1>";
+	this->ss << '\n' << "<h1>";
 	this->translate(tree.children);
-	this->ss << "</h1>" << '\n';
+	this->ss << "</h1>";
 }
 
 void translator_to_html::handle_header2(const treeml::tree_ext& tree){
-	this->ss << "<h2>";
+	this->ss << '\n' << "<h2>";
 	this->translate(tree.children);
-	this->ss << "</h2>" << '\n';
+	this->ss << "</h2>";
 }
 
 void translator_to_html::handle_header3(const treeml::tree_ext& tree){
-	this->ss << "<h3>";
+	this->ss << '\n' << "<h3>";
 	this->translate(tree.children);
-	this->ss << "</h3>" << '\n';
+	this->ss << "</h3>";
 }
 
 void translator_to_html::handle_header4(const treeml::tree_ext& tree){
-	this->ss << "<h4>";
+	this->ss << '\n' << "<h4>";
 	this->translate(tree.children);
-	this->ss << "</h4>" << '\n';
+	this->ss << "</h4>";
 }
 
 void translator_to_html::handle_header5(const treeml::tree_ext& tree){
-	this->ss << "<h5>";
+	this->ss << '\n' << "<h5>";
 	this->translate(tree.children);
-	this->ss << "</h5>" << '\n';
+	this->ss << "</h5>";
 }
 
 void translator_to_html::handle_header6(const treeml::tree_ext& tree){
-	this->ss << "<h6>";
+	this->ss << '\n' << "<h6>";
 	this->translate(tree.children);
-	this->ss << "</h6>" << '\n';
+	this->ss << "</h6>";
 }
