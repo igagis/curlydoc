@@ -42,6 +42,12 @@ void translator_to_html::handle_strikethrough(const treeml::tree_ext& tree){
 	this->ss << "</s>";
 }
 
+void translator_to_html::handle_monospace(const treeml::tree_ext& tree){
+	this->ss << "<code>";
+	this->translate(tree.children);
+	this->ss << "</code>";
+}
+
 void translator_to_html::handle_header1(const treeml::tree_ext& tree){
 	this->ss << '\n' << "<h1>";
 	this->translate(tree.children);

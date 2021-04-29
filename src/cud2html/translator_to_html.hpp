@@ -18,6 +18,7 @@ public:
 	void handle_italic(const treeml::tree_ext& tree)override;
 	void handle_underline(const treeml::tree_ext& tree)override;
 	void handle_strikethrough(const treeml::tree_ext& tree)override;
+	void handle_monospace(const treeml::tree_ext& tree)override;
 
 	void handle_header1(const treeml::tree_ext& tree)override;
 	void handle_header2(const treeml::tree_ext& tree)override;

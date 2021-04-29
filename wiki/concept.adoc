@@ -3,16 +3,16 @@
 Using `treeml` markup.
 
 ....
-include{some_file.cdoc}
+include{some_file.cud}
 
 // templates, variables and arrays are all same. Difference is only in the way how those are invoked.
 // Template invokation must have at least one child with children.
 // Array element access must have one childless child.
 // Variable is invoked as ${var_name}.
 
-defs{
+def{
     my_template{
-        defs {${@}}
+        def {${@}}
         
 		==={ subheader }
 		p{
@@ -23,11 +23,10 @@ defs{
     // variable is same as template without arguments, invoke as ${var_name}
     variable1{1.0.3}
 
-    // array is same as variable, but with empty string element with children
-    // elements with non-empty string will be substituted as is when accessed by index
+    // array is same as variable, but with empty string element with children elements
     array{
-        {element1 bla bla} {element2} {element3} {this is b{element} 4} ${variable} sinle_word_element ""{trololo trololo}
-        complex{element bla bla}
+        {element1 bla bla} {element2} {element3} {this is b{element} 4} {${variable}} {sinle_word_element} {trololo trololo}
+        {complex{element bla bla}}
     }
 }
 
@@ -45,12 +44,11 @@ ${array} // this will substitute all array elements as is, without any unwrappin
 
 p{
     Hello world! b{how are you doing today}???? I'm fine, thanks!
-    How ab"b"{o}ut you? I'm i{fine}, too. Version ${variable1}.
-    // to link bold letter to left and right words using cmd{+}
-	Some "quoted b{stuff}" whould work? Or should it be some \"quoted b{stuff}\"?
+    How ab""b{o}ut you? I'm i{fine}, too. Version ${variable1}.
+	Some "quoted b{stuff}" produces double quotes, but it's internals are not evaluated.
 }
 
-m{ { syntax{cpp} } // the parameter block must be the first child empty string with children, it maybe absent
+m{ param{ syntax{cpp} } // the parameters block must be the first child, it maybe absent
     bla bla
 }
 // alias: code=`
@@ -65,7 +63,7 @@ m{ { syntax{cpp} } // the parameter block must be the first child empty string w
 )qwerty"}
 
 p{
-    Lorem i{ipsum} bi{dolor} sit code{amet} bla bla.
+    Lorem i{ipsum} b{i{dolor}} sit code{amet} bla bla.
     link{http://blabla.net}.
     image{my_image.png}
 }
@@ -76,10 +74,10 @@ for{
     // or
 	i{ range{from{3} to{size{array}} step{2}} }
 	// or
-	i{ {first one} {second one} third{one} }
+	i{ {first one} {second one} {third{one}} }
 
     
-    my_tempplate{ x{${i}} y{${array ${i}}} z{bye} }
+    my_template{ x{${i}} y{${array ${i}}} z{bye} }
 }
 
 p{

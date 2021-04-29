@@ -55,6 +55,17 @@ translator::translator(std::string&& file_name) :
 
 	{
 		auto f = [this](bool space, auto& tree){
+			if(space){
+				this->handle_space();
+			}
+			this->handle_monospace(tree);
+		};
+		this->add_keyword("`", f);
+		this->add_keyword("m", f);
+	}
+
+	{
+		auto f = [this](bool space, auto& tree){
 			this->handle_header1(tree);
 		};
 		this->add_keyword("=", f);

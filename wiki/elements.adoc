@@ -1,7 +1,8 @@
 = elements
 
-- `c` - character
+- `c` - character by unicode number
 - `p` - paragraph
+- `q` - double quotes
 - `b` or `*` - bold
 - `i` or `/` - italic
 - `u` or `_` - underline

@@ -7,5 +7,8 @@ p{
 	I'm *{fine, thank you}! ~{How} /{about you?}
 	Today I was "planning *{literally}" to go to somewhere...
 }
+p{
+	Here m{goes some b{monospace} text}, that's t.
+}
 
 =={Header 2}

@@ -14,6 +14,7 @@ public:
 	virtual void handle_italic(const treeml::tree_ext& tree) = 0;
 	virtual void handle_underline(const treeml::tree_ext& tree) = 0;
 	virtual void handle_strikethrough(const treeml::tree_ext& tree) = 0;
+	virtual void handle_monospace(const treeml::tree_ext& tree) = 0;
 
 	virtual void handle_header1(const treeml::tree_ext& tree) = 0;
 	virtual void handle_header2(const treeml::tree_ext& tree) = 0;
