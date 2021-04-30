@@ -19,4 +19,6 @@ Some q{more b{text} in quotes}, yes!
 
 //br{1}
 
-So, what do you think?
+So, cb{what do you} think?
+
+And q{q{q{triple quotes}}}, work fine.

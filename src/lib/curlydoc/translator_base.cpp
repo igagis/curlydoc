@@ -4,6 +4,8 @@ using namespace curlydoc;
 
 namespace{
 const std::string quote = "\"";
+const std::string curly_brace_open = "{";
+const std::string curly_brace_close = "}";
 }
 
 translator_base::translator_base(std::string&& file_name) :
@@ -23,6 +25,15 @@ translator_base::translator_base(std::string&& file_name) :
 		this->handle_word(quote);
 		this->translate(tree.children);
 		this->handle_word(quote);
+	});
+
+	this->add_keyword("cb", [this](bool space, auto& tree){
+		if(space){
+			this->handle_space();
+		}
+		this->handle_word(curly_brace_open);
+		this->translate(tree.children);
+		this->handle_word(curly_brace_close);
 	});
 }
 

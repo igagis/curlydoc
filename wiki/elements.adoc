@@ -2,8 +2,9 @@
 
 - `c` - character by unicode number, e.g. `c{042b}`
 - `p` - paragraph
-- `br` - break, e.g. `br{1}`, where number is the break height
+- `br` - break, e.g. `br{1}`, where number is the number of breaks
 - `q` - double quotes, e.g. `q{some b{quoted} text}`
+- `cb` - curly braces, eg `cb{some curly-braced text}`
 - `b` or `*` - bold, e.g. `some b{bold text}`
 - `i` or `/` - italic
 - `u` or `_` - underline
