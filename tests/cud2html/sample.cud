@@ -1,4 +1,6 @@
-={Hello wolrd!}
+= { Hello wolrd! }
+
+Text without paragrpah.
 
 p{
 	Hi, how _{are you} doing b{today}?
@@ -8,9 +10,13 @@ p{
 	Today I was "planning *{literally}" to go to somewhere...
 }
 p{
-	Here m{goes s"b"{o}me b{monospace} text}, that's t.
+	Here m{go""b{e}s s"b"{o}me b{monospace} text}, that's it.
 }
 
-=={Header 2}
+== { Header 2 }
 
 Some q{more b{text} in quotes}, yes!
+
+//br{1}
+
+So, what do you think?

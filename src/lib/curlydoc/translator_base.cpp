@@ -36,14 +36,7 @@ void translator_base::translate(treeml::forest_ext::const_iterator begin, treeml
 			if(space){
 				this->handle_space();
 			}
-			
-			if(i->value.get_info().flags.get(treeml::flag::quoted)){
-				this->handle_word(quote);
-				this->handle_word(string);
-				this->handle_word(quote);
-			}else{
-				this->handle_word(string);
-			}
+			this->handle_word(string);
 			continue;
 		}
 

@@ -44,8 +44,7 @@ ${array} // this will substitute all array elements as is, without any unwrappin
 
 p{
     Hello world! b{how are you doing today}???? I'm fine, thanks!
-    How ab"b"{o}ut you? I'm i{fine}, too. Version ${variable1}.
-	Some "quoted b{stuff}" produces double quotes, but it's internals are not evaluated.
+    How ab"b"{o}ut y""b{o}u? I'm i{fine}, too. Version ${variable1}.
 }
 
 m{ param{ syntax{cpp} } // the parameters block must be the first child, it maybe absent
