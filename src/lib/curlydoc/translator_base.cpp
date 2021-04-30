@@ -15,6 +15,15 @@ translator_base::translator_base(std::string&& file_name) :
 		}
 		this->handle_char(tree);
 	});
+
+	this->add_keyword("q", [this](bool space, auto& tree){
+		if(space){
+			this->handle_space();
+		}
+		this->handle_word(quote);
+		this->translate(tree.children);
+		this->handle_word(quote);
+	});
 }
 
 void translator_base::translate(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end){

@@ -1,9 +1,10 @@
 = elements
 
-- `c` - character by unicode number
+- `c` - character by unicode number, e.g. `c{042b}`
 - `p` - paragraph
-- `q` - double quotes
-- `b` or `*` - bold
+- `br` - break, example `br{1}`, where number is the break height
+- `q` - double quotes, e.g. `q{some b{quoted} text}`
+- `b` or `*` - bold, e.g. `some b{bold text}`
 - `i` or `/` - italic
 - `u` or `_` - underline
 - `s` or `~` - strikethrough

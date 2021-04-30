@@ -8,7 +8,9 @@ p{
 	Today I was "planning *{literally}" to go to somewhere...
 }
 p{
-	Here m{goes some b{monospace} text}, that's t.
+	Here m{goes s"b"{o}me b{monospace} text}, that's t.
 }
 
 =={Header 2}
+
+Some q{more b{text} in quotes}, yes!

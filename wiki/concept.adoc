@@ -44,23 +44,20 @@ ${array} // this will substitute all array elements as is, without any unwrappin
 
 p{
     Hello world! b{how are you doing today}???? I'm fine, thanks!
-    How ab""b{o}ut you? I'm i{fine}, too. Version ${variable1}.
+    How ab"b"{o}ut you? I'm i{fine}, too. Version ${variable1}.
 	Some "quoted b{stuff}" produces double quotes, but it's internals are not evaluated.
 }
 
 m{ param{ syntax{cpp} } // the parameters block must be the first child, it maybe absent
     bla bla
 }
-// alias: code=`
-`{
-    bla bla
-}
+
 
 // possible template for cpp code block
-`cpp{R"qwerty(
-    multiline code
-    snippet
-)qwerty"}
+cpp{"""
+multiline code
+snippet
+"""}
 
 p{
     Lorem i{ipsum} b{i{dolor}} sit code{amet} bla bla.

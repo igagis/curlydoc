@@ -32,7 +32,7 @@ int main(int argc, const char** argv){
 			"<html lang=en>" "\n"
 			"<head>" "\n"
 			"<meta charset=utf-8>" "\n"
-			"<title>blah</title>" "\n"
+			"<title>curlydoc</title>" "\n"
 			"</head>" "\n"
 			"<body>"
 		;
