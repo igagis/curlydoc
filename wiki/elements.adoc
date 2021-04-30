@@ -1,5 +1,6 @@
 = elements
 
+- empty string - convey contents, e.g. `{some b{text}}` is same as `some b{text}`
 - `c` - character by unicode number, e.g. `c{042b}`
 - `p` - paragraph
 - `br` - break, e.g. `br{1}`, where number is the number of breaks

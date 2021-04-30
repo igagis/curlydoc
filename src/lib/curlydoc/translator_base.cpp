@@ -11,6 +11,13 @@ const std::string curly_brace_close = "}";
 translator_base::translator_base(std::string&& file_name) :
 		file_name(std::move(file_name))
 {
+	this->add_keyword("", [this](bool space, auto& tree){
+		if(space){
+			this->handle_space();
+		}
+		this->translate(tree.children);
+	});
+
 	this->add_keyword("c", [this](bool space, auto& tree){
 		if(space){
 			this->handle_space();

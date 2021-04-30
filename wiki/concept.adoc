@@ -12,11 +12,11 @@ include{some_file.cud}
 
 def{
     my_template{
-        def {${@}}
+        def {$${@}}
         
 		==={ subheader }
 		p{
-			lorem ipsum ${x} dolor ${y} sit amet ${z} bla bla...
+			lorem ipsum $${x} dolor $${y} sit amet $${z} bla bla...
 		}
     }
 
