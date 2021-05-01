@@ -1,4 +1,4 @@
-#include "translator_base.hpp"
+#include "interpreter.hpp"
 
 using namespace curlydoc;
 
@@ -8,7 +8,7 @@ const std::string curly_brace_open = "{";
 const std::string curly_brace_close = "}";
 }
 
-translator_base::translator_base(std::string&& file_name) :
+interpreter::interpreter(std::string&& file_name) :
 		file_name(std::move(file_name))
 {
 	this->add_keyword("", [this](bool space, auto& tree){
@@ -44,7 +44,7 @@ translator_base::translator_base(std::string&& file_name) :
 	});
 }
 
-void translator_base::translate(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end){
+void interpreter::translate(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end){
 	for(auto i = begin; i != end; ++i){
 		bool space = i != begin && i->value.get_info().flags.get(treeml::flag::space);
 
@@ -73,7 +73,7 @@ void translator_base::translate(treeml::forest_ext::const_iterator begin, treeml
 	}
 }
 
-void translator_base::add_keyword(const std::string& keyword, keyword_handler_type&& handler){
+void interpreter::add_keyword(const std::string& keyword, keyword_handler_type&& handler){
 	auto res = this->handlers.insert(std::make_pair(std::move(keyword), std::move(handler)));
 	if(!res.second){
 		std::stringstream ss;
@@ -82,13 +82,13 @@ void translator_base::add_keyword(const std::string& keyword, keyword_handler_ty
 	}
 }
 
-void translator_base::throw_syntax_error(std::string&& message, const treeml::tree_ext& node){
+void interpreter::throw_syntax_error(std::string&& message, const treeml::tree_ext& node){
 	std::stringstream ss;
 	ss << this->file_name << ":" << node.value.get_info().location.line << ":" << node.value.get_info().location.offset << ": error: " << message;
 	throw std::invalid_argument(ss.str());
 }
 
-void translator_base::handle_char(const treeml::tree_ext& tree){
+void interpreter::handle_char(const treeml::tree_ext& tree){
 	if(tree.children.size() != 1){
 		std::stringstream ss;
 		ss << "'" << tree.value.to_string() << "' command has " << tree.children.size() << "arguments, expected exactly 1";

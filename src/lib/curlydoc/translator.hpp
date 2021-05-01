@@ -1,10 +1,10 @@
 #pragma once
 
-#include "translator_base.hpp"
+#include "interpreter.hpp"
 
 namespace curlydoc{
 
-class translator : public translator_base{
+class translator : public interpreter{
 public:
 	translator(std::string&& file_name);
 

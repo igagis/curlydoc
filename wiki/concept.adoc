@@ -23,7 +23,7 @@ def{
     // variable is same as template without arguments, invoke as ${var_name}
     variable1{1.0.3}
 
-    // array is same as variable, but with empty string element with children elements
+    // array is same as variable
     array{
         {element1 bla bla} {element2} {element3} {this is b{element} 4} {${variable}} {sinle_word_element} {trololo trololo}
         {complex{element bla bla}}
