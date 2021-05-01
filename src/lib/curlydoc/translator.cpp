@@ -6,7 +6,7 @@ translator::translator(std::string&& file_name) :
 		interpreter(std::move(file_name))
 {
 	this->add_keyword("p", [this](bool space, auto& tree){
-		this->handle_paragraph(tree);
+		this->on_paragraph(tree);
 	});
 
 	{
@@ -14,7 +14,7 @@ translator::translator(std::string&& file_name) :
 			if(space){
 				this->on_space();
 			}
-			this->handle_bold(tree);
+			this->on_bold(tree);
 		};
 		this->add_keyword("*", f);
 		this->add_keyword("b", f);
@@ -25,7 +25,7 @@ translator::translator(std::string&& file_name) :
 			if(space){
 				this->on_space();
 			}
-			this->handle_italic(tree);
+			this->on_italic(tree);
 		};
 		this->add_keyword("/", f);
 		this->add_keyword("i", f);
@@ -36,7 +36,7 @@ translator::translator(std::string&& file_name) :
 			if(space){
 				this->on_space();
 			}
-			this->handle_underline(tree);
+			this->on_underline(tree);
 		};
 		this->add_keyword("_", f);
 		this->add_keyword("u", f);
@@ -47,7 +47,7 @@ translator::translator(std::string&& file_name) :
 			if(space){
 				this->on_space();
 			}
-			this->handle_strikethrough(tree);
+			this->on_strikethrough(tree);
 		};
 		this->add_keyword("~", f);
 		this->add_keyword("s", f);
@@ -58,7 +58,7 @@ translator::translator(std::string&& file_name) :
 			if(space){
 				this->on_space();
 			}
-			this->handle_monospace(tree);
+			this->on_monospace(tree);
 		};
 		this->add_keyword("`", f);
 		this->add_keyword("m", f);
@@ -66,7 +66,7 @@ translator::translator(std::string&& file_name) :
 
 	{
 		auto f = [this](bool space, auto& tree){
-			this->handle_header1(tree);
+			this->on_header1(tree);
 		};
 		this->add_keyword("=", f);
 		this->add_keyword("h1", f);
@@ -74,7 +74,7 @@ translator::translator(std::string&& file_name) :
 
 	{
 		auto f = [this](bool space, auto& tree){
-			this->handle_header2(tree);
+			this->on_header2(tree);
 		};
 		this->add_keyword("==", f);
 		this->add_keyword("h2", f);
@@ -82,7 +82,7 @@ translator::translator(std::string&& file_name) :
 
 	{
 		auto f = [this](bool space, auto& tree){
-			this->handle_header3(tree);
+			this->on_header3(tree);
 		};
 		this->add_keyword("===", f);
 		this->add_keyword("h3", f);
@@ -90,7 +90,7 @@ translator::translator(std::string&& file_name) :
 
 	{
 		auto f = [this](bool space, auto& tree){
-			this->handle_header4(tree);
+			this->on_header4(tree);
 		};
 		this->add_keyword("====", f);
 		this->add_keyword("h4", f);
@@ -98,7 +98,7 @@ translator::translator(std::string&& file_name) :
 	
 	{
 		auto f = [this](bool space, auto& tree){
-			this->handle_header5(tree);
+			this->on_header5(tree);
 		};
 		this->add_keyword("=====", f);
 		this->add_keyword("h5", f);
@@ -106,7 +106,7 @@ translator::translator(std::string&& file_name) :
 
 	{
 		auto f = [this](bool space, auto& tree){
-			this->handle_header6(tree);
+			this->on_header6(tree);
 		};
 		this->add_keyword("======", f);
 		this->add_keyword("h6", f);
