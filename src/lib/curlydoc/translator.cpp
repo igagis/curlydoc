@@ -12,7 +12,7 @@ translator::translator(std::string&& file_name) :
 	{
 		auto f = [this](bool space, auto& tree){
 			if(space){
-				this->handle_space();
+				this->on_space();
 			}
 			this->handle_bold(tree);
 		};
@@ -23,7 +23,7 @@ translator::translator(std::string&& file_name) :
 	{
 		auto f = [this](bool space, auto& tree){
 			if(space){
-				this->handle_space();
+				this->on_space();
 			}
 			this->handle_italic(tree);
 		};
@@ -34,7 +34,7 @@ translator::translator(std::string&& file_name) :
 	{
 		auto f = [this](bool space, auto& tree){
 			if(space){
-				this->handle_space();
+				this->on_space();
 			}
 			this->handle_underline(tree);
 		};
@@ -45,7 +45,7 @@ translator::translator(std::string&& file_name) :
 	{
 		auto f = [this](bool space, auto& tree){
 			if(space){
-				this->handle_space();
+				this->on_space();
 			}
 			this->handle_strikethrough(tree);
 		};
@@ -56,7 +56,7 @@ translator::translator(std::string&& file_name) :
 	{
 		auto f = [this](bool space, auto& tree){
 			if(space){
-				this->handle_space();
+				this->on_space();
 			}
 			this->handle_monospace(tree);
 		};

@@ -13,34 +13,34 @@ interpreter::interpreter(std::string&& file_name) :
 {
 	this->add_keyword("", [this](bool space, auto& tree){
 		if(space){
-			this->handle_space();
+			this->on_space();
 		}
 		this->eval(tree.children);
 	});
 
 	this->add_keyword("c", [this](bool space, auto& tree){
 		if(space){
-			this->handle_space();
+			this->on_space();
 		}
 		this->handle_char(tree);
 	});
 
 	this->add_keyword("q", [this](bool space, auto& tree){
 		if(space){
-			this->handle_space();
+			this->on_space();
 		}
-		this->handle_word(quote);
+		this->on_word(quote);
 		this->eval(tree.children);
-		this->handle_word(quote);
+		this->on_word(quote);
 	});
 
 	this->add_keyword("cb", [this](bool space, auto& tree){
 		if(space){
-			this->handle_space();
+			this->on_space();
 		}
-		this->handle_word(curly_brace_open);
+		this->on_word(curly_brace_open);
 		this->eval(tree.children);
-		this->handle_word(curly_brace_close);
+		this->on_word(curly_brace_close);
 	});
 }
 
@@ -52,9 +52,9 @@ void interpreter::eval(treeml::forest_ext::const_iterator begin, treeml::forest_
 
 		if(i->children.empty()){
 			if(space){
-				this->handle_space();
+				this->on_space();
 			}
-			this->handle_word(string);
+			this->on_word(string);
 			continue;
 		}
 
@@ -100,11 +100,11 @@ void interpreter::handle_char(const treeml::tree_ext& tree){
 	// TODO: is needed? Add ${nbsp} variables for those?
 
 	if(str == "wj"){
-		this->handle_word(u8"\u2060");
+		this->on_word(u8"\u2060");
 	}else if(str == "nbsp"){
-		this->handle_word(u8"\u00A0");
+		this->on_word(u8"\u00A0");
 	}else if(str == "sp"){
-		this->handle_space();
+		this->on_space();
 	}else{
 		std::stringstream ss;
 		ss << "unknown argument to 'c' command: " << str;

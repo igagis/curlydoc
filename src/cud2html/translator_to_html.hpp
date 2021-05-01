@@ -12,7 +12,7 @@ public:
 
 	translator_to_html(std::string&& file_name);
 
-	void handle_word(const std::string& word)override;
+	void on_word(const std::string& word)override;
 	void handle_paragraph(const treeml::tree_ext& tree)override;
 	void handle_bold(const treeml::tree_ext& tree)override;
 	void handle_italic(const treeml::tree_ext& tree)override;
