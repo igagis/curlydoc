@@ -23,7 +23,7 @@ tst::set set("traslator_to_html", [](auto& suite){
 
 				curlydoc::translator_to_html tr("test.cud");
 
-				tr.translate(in);
+				tr.eval(in);
 
 				auto str = tr.ss.str();
 				tst::check(str == p.second, SL) << "str = " << str;

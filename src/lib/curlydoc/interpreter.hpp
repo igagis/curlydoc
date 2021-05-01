@@ -23,10 +23,10 @@ public:
 
 	virtual ~interpreter(){}
 
-	void translate(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end);
+	void eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end);
 
-	void translate(const treeml::forest_ext& forest){
-		this->translate(forest.begin(), forest.end());
+	void eval(const treeml::forest_ext& forest){
+		this->eval(forest.begin(), forest.end());
 	}
 
 	void add_keyword(const std::string& keyword, keyword_handler_type&& handler);

@@ -24,7 +24,7 @@ int main(int argc, const char** argv){
 
 	std::cout << "output file name = " << out_file_name << '\n';
 
-	translator.translate(treeml::read_ext(papki::fs_file(positional.front())));
+	translator.eval(treeml::read_ext(papki::fs_file(positional.front())));
 
 	std::ofstream outf(out_file_name, std::ios::binary);
 

@@ -15,7 +15,7 @@ interpreter::interpreter(std::string&& file_name) :
 		if(space){
 			this->handle_space();
 		}
-		this->translate(tree.children);
+		this->eval(tree.children);
 	});
 
 	this->add_keyword("c", [this](bool space, auto& tree){
@@ -30,7 +30,7 @@ interpreter::interpreter(std::string&& file_name) :
 			this->handle_space();
 		}
 		this->handle_word(quote);
-		this->translate(tree.children);
+		this->eval(tree.children);
 		this->handle_word(quote);
 	});
 
@@ -39,12 +39,12 @@ interpreter::interpreter(std::string&& file_name) :
 			this->handle_space();
 		}
 		this->handle_word(curly_brace_open);
-		this->translate(tree.children);
+		this->eval(tree.children);
 		this->handle_word(curly_brace_close);
 	});
 }
 
-void interpreter::translate(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end){
+void interpreter::eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end){
 	for(auto i = begin; i != end; ++i){
 		bool space = i != begin && i->value.get_info().flags.get(treeml::flag::space);
 
