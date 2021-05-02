@@ -11,14 +11,14 @@ include{some_file.cud}
 // Variable is invoked as ${var_name}.
 
 def{
-    my_template{
-        def {${@}}
+    my_template{asis{
+        def{}
         
 		==={ subheader }
 		p{
 			lorem ipsum ${x} dolor ${y} sit amet ${z} bla bla...
 		}
-    }
+    }}
 
     // variable is same as template without arguments, invoke as ${var_name}
     variable1{1.0.3}
@@ -31,12 +31,13 @@ def{
 }
 
 // Template invocation:
-my_template{x{bla} y{bal} z{lba}}
+my_template{map{x{bla} y{bal} z{lba}}}
 
 // array:
 size{array} // size of array
-${array 10} // element access by index. Elements which are empty string with children will be unwrapped, i.e. only children will be substituted
+get{10 ${array}} // element access by index.
 ${array} // this will substitute all array elements as is, without any unwrapping
+get{bla ${map}}
 
 ={ header1 curlydoc document markup concept }
 
@@ -47,7 +48,7 @@ p{
     How ab"b"{o}ut y""b{o}u? I'm i{fine}, too. Version ${variable1}.
 }
 
-m{ param{ syntax{cpp} } // the parameters block must be the first child, it maybe absent
+m{{ syntax{cpp} } // the parameters block must be the first child, it maybe absent
     bla bla
 }
 
@@ -57,6 +58,8 @@ cpp{"""
 multiline code
 snippet
 """}
+
+%{b{params} bla bla bla} %{/}
 
 p{
     Lorem i{ipsum} b{i{dolor}} sit code{amet} bla bla.
