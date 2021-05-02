@@ -25,7 +25,7 @@ interpreter::interpreter(std::string&& file_name) :
 		this->handle_char(tree);
 	});
 
-	this->add_keyword("q", [this](bool space, auto& tree){
+	this->add_keyword("dq", [this](bool space, auto& tree){
 		if(space){
 			this->on_space();
 		}

@@ -12,11 +12,11 @@ include{some_file.cud}
 
 def{
     my_template{
-        def {$${@}}
+        def {${@}}
         
 		==={ subheader }
 		p{
-			lorem ipsum $${x} dolor $${y} sit amet $${z} bla bla...
+			lorem ipsum ${x} dolor ${y} sit amet ${z} bla bla...
 		}
     }
 
@@ -64,7 +64,11 @@ p{
     image{my_image.png}
 }
 
-for{
+def{
+	index{3 4 6}
+}
+
+for{ param{ index{i} }
     // the first child of the 'for' must be the iterator declaration
 	i{ 3 4 6 }
     // or

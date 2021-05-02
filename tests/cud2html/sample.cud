@@ -16,7 +16,7 @@ p{
 == { Header 2 }
 
 p{
-	Some q{more b{text} in quotes}, yes!
+	Some dq{more b{text} in quotes}, yes!
 }
 
 //br{1}
@@ -24,7 +24,7 @@ p{
 	So, cb{what do you} think?
 }
 p{
-	And q{q{q{triple quotes}}}, work fine.
+	And dq{dq{dq{triple quotes}}}, work fine.
 }
 
 p{

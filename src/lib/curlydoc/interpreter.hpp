@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <vector>
 
 #include <treeml/tree_ext.hpp>
 
@@ -13,6 +14,10 @@ public:
 	typedef std::function<void(const std::string&)> word_handler_type;
 private:
 	std::unordered_map<std::string, keyword_handler_type> handlers;
+
+	std::vector<treeml::tree_ext> def;
+
+	
 
 	void handle_char(const treeml::tree_ext& tree);
 protected:
