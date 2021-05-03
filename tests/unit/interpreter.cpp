@@ -12,7 +12,8 @@ tst::set set0("interpreter", [](auto& suite){
                 {"hello world!", "hello world!"},
                 {"hello{} world!", "hello world!"},
                 {"{hello now} world!", "{hello now} world!"},
-                {"hello asis{world{and} by the way, {nice\"weather\"} }", "hello world{and} by the way, {nice\"weather\"}"}
+                {"hello asis{world{and} by the way, {nice\"weather\"} }", "hello world{and} by the way, {nice\"weather\"}"},
+                {"hello def{v{bla bla}}, I say ${v}", "hello , I say bla bla"},
             },
             [](auto& p){
                 curlydoc::interpreter interpreter;

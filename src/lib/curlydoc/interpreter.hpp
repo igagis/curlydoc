@@ -1,7 +1,7 @@
 #pragma once
 
 #include <unordered_map>
-#include <vector>
+#include <list>
 
 #include <treeml/tree_ext.hpp>
 
@@ -15,10 +15,20 @@ private:
 	std::unordered_map<std::string, function_type> functions;
 	
 	class context{
+		const context* const prev;
+		std::unordered_map<std::string, treeml::tree_ext> def;
 	public:
-		const context* const prev = nullptr;
-		std::unordered_map<std::string, treeml::tree> def;
+		context(const context* const prev = nullptr) : prev(prev){}
+
+		void add(treeml::tree_ext&& var);
+
+		const treeml::tree_ext& find(const std::string& name)const;
 	};
+
+	// NOTE: use std::list to avoid context objects to be moved
+	std::list<context> context_stack = {context()};
+
+	context& push_context(const context* prev = nullptr);
 
 	// void handle_char(const treeml::tree_ext& tree);
 protected:
@@ -29,10 +39,10 @@ public:
 
 	virtual ~interpreter(){}
 
-	treeml::forest_ext eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end, const context* ctx = nullptr);
+	treeml::forest_ext eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end);
 
-	treeml::forest_ext eval(const treeml::forest_ext& forest, const context* ctx = nullptr){
-		return this->eval(forest.begin(), forest.end(), ctx);
+	treeml::forest_ext eval(const treeml::forest_ext& forest){
+		return this->eval(forest.begin(), forest.end());
 	}
 
 	void add_function(const std::string& name, function_type&& func);

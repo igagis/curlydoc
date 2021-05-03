@@ -1,5 +1,7 @@
 #include "interpreter.hpp"
 
+#include <utki/util.hpp>
+
 using namespace curlydoc;
 
 // namespace{
@@ -112,6 +114,33 @@ void interpreter::add_function(const std::string& name, function_type&& func){
 // 	}
 // }
 
+void interpreter::context::add(treeml::tree_ext&& var){
+	auto i = this->def.insert(
+			std::make_pair(var.value.to_string(), std::move(var))
+		);
+	if(!i.second){
+		// TODO: throw exception
+		utki::assert(false, SL);
+	}
+}
+
+const treeml::tree_ext& interpreter::context::find(const std::string& name)const{
+	auto i = this->def.find(name);
+	if(i == this->def.end()){
+		// TODO: throw exception
+		utki::assert(false, SL);
+	}
+	return i->second;
+}
+
+interpreter::context& interpreter::push_context(const context* prev){
+	if(!prev){
+		prev = &this->context_stack.back();
+	}
+	this->context_stack.push_back(context{prev});
+	return this->context_stack.back();
+}
+
 interpreter::interpreter(){
 	this->add_function("asis", [](const treeml::tree_ext& args){
 		return args.children;
@@ -120,19 +149,52 @@ interpreter::interpreter(){
 	this->add_function("", [this](const treeml::tree_ext& args){
 		treeml::forest_ext ret;
 		treeml::tree_ext tree(args.value);
-		tree.children = this->eval(args.children); // TODO: context
+		tree.children = this->eval(args.children);
 		ret.push_back(std::move(tree));
 		return ret;
 	});
+
+	this->add_function("def", [this](const treeml::tree_ext& args){
+		auto& ctx = this->push_context();
+
+		for(const auto& c : args.children){
+			treeml::tree_ext var(c.value);
+			var.children = this->eval(c.children);
+			ctx.add(std::move(var));
+		}
+		return treeml::forest_ext();
+	});
+
+	this->add_function("$", [this](const treeml::tree_ext& args){
+		// eval?
+		ASSERT(!this->context_stack.empty())
+
+		if(args.children.size() != 1){
+			// TODO: log exception
+			utki::assert(false, SL);
+		}
+
+		const auto& v = this->context_stack.back().find(args.children.front().value.to_string());
+		return v.children;
+	});
 }
 
-treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end, const context* ctx){
+treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end){
 	treeml::forest_ext ret;
+
+	utki::scope_exit context_stack_scope_exit([this, context_stack_size = this->context_stack.size()](){
+		this->context_stack.resize(context_stack_size);
+	});
 
 	for(auto i = begin; i != end; ++i){
 		if(i->children.empty()){
 			ret.push_back(*i);
 			continue;
+		}
+
+		// search for macro
+		{
+
 		}
 
 		// search for function
@@ -144,6 +206,7 @@ treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, t
 				continue;
 			}
 			auto res = func_i->second(*i);
+			LOG([&](auto&o){o << "res.size() = " << res.size() << '\n';})
 			ret.insert(
 					ret.end(),
 					std::make_move_iterator(res.begin()),
