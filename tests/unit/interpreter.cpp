@@ -47,6 +47,19 @@ tst::set set0("interpreter", [](auto& suite){
 					I say tmpl{good}
 				)",
 				"hello I say hello hello good sir! sir!"},
+				{R"(
+					def{
+						v1{hello world!}
+					}
+
+					Hi
+					for{
+						i{10 20 ${v1} {${v1}} }
+
+						x = ${i} 
+					}
+					end
+				)", "Hi x = 10 x = 20 x = hello x = world! x =\"\"{hello world!}end"},
 			},
 			[](auto& p){
 				curlydoc::interpreter interpreter{"none"};

@@ -4,6 +4,10 @@
 
 using namespace curlydoc;
 
+interpreter::exception::exception(const std::string& message) :
+		std::invalid_argument(message + " at:")
+{}
+
 interpreter::exception::exception(const std::string& message, const std::string& file, const treeml::leaf_ext& leaf) :
 		std::invalid_argument([&](){
 			const auto& l = leaf.get_info().location;
@@ -102,6 +106,36 @@ interpreter::interpreter(std::string&& file_name) :
 		}
 
 		return *v.value;
+	});
+
+	this->add_function("for", [this](const treeml::forest_ext& args){
+		if(args.empty()){
+			throw exception("'for' requires iterator variable as its first argument");
+		}
+
+		auto iter_name = args[0].value.to_string();
+		auto iter_values = this->eval(args[0].children);
+
+		treeml::forest_ext ret;
+
+		for(const auto& i : iter_values){
+			auto& ctx = this->push_context();
+			utki::scope_exit context_scope_exit([this](){
+				this->context_stack.pop_back();
+			});
+
+			try{
+				ctx.add(iter_name, {i});
+			}catch(exception&){
+				ASSERT(false)
+			}
+
+			auto output = this->eval(std::next(args.begin()), args.end());
+
+			ret.insert(ret.end(), std::make_move_iterator(output.begin()), std::make_move_iterator(output.end()));
+		}
+
+		return ret;
 	});
 }
 

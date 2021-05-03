@@ -16,10 +16,7 @@ public:
 
 	class exception : public std::invalid_argument{
 	public:
-		exception(const std::string& message) :
-				std::invalid_argument(message + " at:")
-		{}
-
+		exception(const std::string& message);
 		exception(const std::string& message, const std::string& file, const treeml::leaf_ext& leaf);
 	};
 
