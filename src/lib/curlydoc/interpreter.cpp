@@ -189,7 +189,9 @@ interpreter::interpreter(std::string&& file_name) :
 
 		treeml::forest_ext ret;
 
-		
+		for(const auto& a : args){
+			ret.push_back(treeml::tree_ext(a.value, this->eval(a.children)));
+		}
 
 		return ret;
 	});

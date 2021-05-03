@@ -117,6 +117,21 @@ tst::set set0("interpreter", [](auto& suite){
 						if{${v}}else{bla}
 					}then{Hello}
 				)", "Hi"},
+
+				// map
+				{R"(
+					def{
+						v{bla bla}
+					}
+					map{ hi{${v}} ${v} bye{hi}}
+				)", "hi{bla bla} ${v} bye{hi}"},
+				{R"(
+					def{
+						v{bla bla}
+					}
+					Hello 
+					map{ hi{${v}} ${v} bye{hi}} world
+				)", "Hello hi{bla bla} ${v} bye{hi} world"},
 			},
 			[](auto& p){
 				curlydoc::interpreter interpreter{"none"};
