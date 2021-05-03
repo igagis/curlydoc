@@ -124,13 +124,19 @@ void interpreter::context::add(treeml::tree_ext&& var){
 	}
 }
 
-const treeml::tree_ext& interpreter::context::find(const std::string& name)const{
+interpreter::context::find_result interpreter::context::find(const std::string& name)const{
 	auto i = this->def.find(name);
 	if(i == this->def.end()){
+		if(this->prev){
+			return this->prev->find(name);
+		}
 		// TODO: throw exception
 		utki::assert(false, SL);
 	}
-	return i->second;
+	return {
+		i->second,
+		this
+	};
 }
 
 interpreter::context& interpreter::push_context(const context* prev){
@@ -174,8 +180,8 @@ interpreter::interpreter(){
 			utki::assert(false, SL);
 		}
 
-		const auto& v = this->context_stack.back().find(args.children.front().value.to_string());
-		return v.children;
+		auto v = this->context_stack.back().find(args.children.front().value.to_string());
+		return v.var.children;
 	});
 }
 

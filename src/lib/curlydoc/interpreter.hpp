@@ -22,7 +22,12 @@ private:
 
 		void add(treeml::tree_ext&& var);
 
-		const treeml::tree_ext& find(const std::string& name)const;
+		struct find_result{
+			const treeml::tree_ext& var;
+			const context* const ctx;
+		};
+
+		find_result find(const std::string& name)const;
 	};
 
 	// NOTE: use std::list to avoid context objects to be moved
