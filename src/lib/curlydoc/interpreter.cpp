@@ -130,12 +130,15 @@ interpreter::context::find_result interpreter::context::find(const std::string& 
 		if(this->prev){
 			return this->prev->find(name);
 		}
-		// TODO: throw exception
-		utki::assert(false, SL);
+		return {
+			nullptr,
+			*this
+		};
 	}
+	ASSERT(this->prev)
 	return {
-		i->second,
-		this
+		&i->second,
+		*this->prev
 	};
 }
 
@@ -172,16 +175,22 @@ interpreter::interpreter(){
 	});
 
 	this->add_function("$", [this](const treeml::tree_ext& args){
-		// eval?
+		// eval variable name?
 		ASSERT(!this->context_stack.empty())
 
 		if(args.children.size() != 1){
-			// TODO: log exception
+			// TODO: throw exception
 			utki::assert(false, SL);
 		}
 
 		auto v = this->context_stack.back().find(args.children.front().value.to_string());
-		return v.var.children;
+
+		if(!v.var){
+			// TODO: throw exception
+			utki::assert(false, SL);
+		}
+
+		return v.var->children;
 	});
 }
 
@@ -198,27 +207,40 @@ treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, t
 			continue;
 		}
 
+		treeml::forest_ext output;
+
 		// search for macro
-		{
+		auto v = this->context_stack.back().find(i->value.to_string());
+		if(v.var){
+			treeml::tree_ext dog(treeml::leaf_ext("@", i->value.get_info()));
+			dog.children = this->eval(i->children);
 
-		}
+			auto& ctx = this->push_context(&v.ctx);
+			utki::scope_exit macro_context_scope_exit([this](){
+				this->context_stack.pop_back();
+			});
 
-		// search for function
-		{
+			ctx.add(std::move(dog));
+
+			output = this->eval(v.var->children);
+		}else{
+			// search for function
+
 			auto func_i = this->functions.find(i->value.to_string());
 			if(func_i == this->functions.end()){
-				// TODO: throw exception
-				LOG([&](auto&o){o << "function not found: " << i->value.to_string() << '\n';})
-				continue;
+				// TODO: throw exception macro/function not found
+				LOG([&](auto&o){o << "function/macro not found: " << i->value.to_string() << '\n';})
+				utki::assert(false, SL);
 			}
-			auto res = func_i->second(*i);
-			LOG([&](auto&o){o << "res.size() = " << res.size() << '\n';})
-			ret.insert(
-					ret.end(),
-					std::make_move_iterator(res.begin()),
-					std::make_move_iterator(res.end())
-				);
+			output = func_i->second(*i);
 		}
+
+		LOG([&](auto&o){o << "output.size() = " << output.size() << '\n';})
+		ret.insert(
+				ret.end(),
+				std::make_move_iterator(output.begin()),
+				std::make_move_iterator(output.end())
+			);
 	}
 
 	return ret;

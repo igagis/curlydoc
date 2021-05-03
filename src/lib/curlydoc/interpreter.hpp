@@ -23,8 +23,8 @@ private:
 		void add(treeml::tree_ext&& var);
 
 		struct find_result{
-			const treeml::tree_ext& var;
-			const context* const ctx;
+			const treeml::tree_ext* var;
+			const context& ctx;
 		};
 
 		find_result find(const std::string& name)const;

@@ -16,6 +16,34 @@ tst::set set0("interpreter", [](auto& suite){
                 {"hello def{v{bla bla}}, I say ${v}", "hello , I say bla bla"},
                 {"hello def{v{asis{bla{bla{bla}} bla}}}, I say ${v}", "hello , I say bla{bla{bla}} bla"},
                 {"hello def{v{bla bla}} def{v2}, I say ${v}", "hello , I say bla bla"},
+                {R"(
+                    hello
+                    def{
+                        v{bla bla}
+                        tmpl{asis{
+                            hello ${@} sir!
+                        }}
+                    }
+                    def{v2}
+                    I say tmpl{good}
+                )",
+                "hello I say hello good sir!"},
+                {R"(
+                    hello
+                    def{
+                        v{bla bla}
+                        tmpl{asis{
+                            hello ${@} sir!
+                        }}
+                    }
+                    def{
+                        tmpl{asis{
+                            hello tmpl{${@}} sir!
+                        }}
+                    }
+                    I say tmpl{good}
+                )",
+                "hello I say hello hello good sir! sir!"},
             },
             [](auto& p){
                 curlydoc::interpreter interpreter;
