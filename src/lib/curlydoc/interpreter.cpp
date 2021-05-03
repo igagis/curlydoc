@@ -206,6 +206,11 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 
 		this->file->set_path(args.front().value.to_string());
 
+		this->file_name_stack.push_back(this->file->path());
+		utki::scope_exit file_name_stack_scope_exit([this](){
+			this->file_name_stack.pop_back();
+		});
+
 		return this->eval(
 				treeml::read_ext(*this->file),
 				true
