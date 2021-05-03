@@ -67,7 +67,7 @@ interpreter::interpreter(std::string&& file_name) :
 
 	this->add_function("", [this](const treeml::forest_ext& args){
 		treeml::forest_ext ret;
-		treeml::tree_ext t(treeml::leaf_ext(std::string(), treeml::extra_info{}));
+		treeml::tree_ext t(std::string(""));
 		t.children = this->eval(args);
 		ret.push_back(std::move(t));
 		return ret;
