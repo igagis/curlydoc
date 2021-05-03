@@ -44,6 +44,7 @@ private:
 
 	context& push_context(const context* prev = nullptr);
 
+	std::vector<bool> if_flag_stack = {false}; // initial flag for root scope
 public:
 	interpreter(std::string&& file_name);
 

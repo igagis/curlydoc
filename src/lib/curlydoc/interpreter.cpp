@@ -66,10 +66,14 @@ interpreter::interpreter(std::string&& file_name) :
 		file_name_stack{file_name}
 {
 	this->add_function("asis", [](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
 		return args;
 	});
 
 	this->add_function("", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
 		treeml::forest_ext ret;
 		treeml::tree_ext t(std::string(""));
 		t.children = this->eval(args);
@@ -78,6 +82,8 @@ interpreter::interpreter(std::string&& file_name) :
 	});
 
 	this->add_function("def", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
 		auto& ctx = this->push_context();
 
 		for(const auto& c : args){
@@ -91,6 +97,8 @@ interpreter::interpreter(std::string&& file_name) :
 	});
 
 	this->add_function("$", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
 		ASSERT(!this->context_stack.empty())
 
 		if(args.size() != 1){
@@ -109,9 +117,7 @@ interpreter::interpreter(std::string&& file_name) :
 	});
 
 	this->add_function("for", [this](const treeml::forest_ext& args){
-		if(args.empty()){
-			throw exception("'for' requires iterator variable as its first argument");
-		}
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
 		auto iter_name = args[0].value.to_string();
 		auto iter_values = this->eval(args[0].children);
@@ -134,6 +140,56 @@ interpreter::interpreter(std::string&& file_name) :
 
 			ret.insert(ret.end(), std::make_move_iterator(output.begin()), std::make_move_iterator(output.end()));
 		}
+
+		return ret;
+	});
+
+	this->add_function("if", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		treeml::forest_ext output = this->eval(args);
+
+		this->if_flag_stack.back() = !output.empty();
+
+		return treeml::forest_ext();
+	});
+
+	this->add_function("then", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		if(!this->if_flag_stack.back()){
+			return treeml::forest_ext();
+		}
+
+		this->if_flag_stack.push_back(false);
+		utki::scope_exit if_flag_scope_exit([this](){
+			this->if_flag_stack.pop_back();
+		});
+
+		return this->eval(args);
+	});
+
+	this->add_function("else", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		if(this->if_flag_stack.back()){
+			return treeml::forest_ext();
+		}
+
+		this->if_flag_stack.push_back(false);
+		utki::scope_exit if_flag_scope_exit([this](){
+			this->if_flag_stack.pop_back();
+		});
+
+		return this->eval(args);
+	});
+
+	this->add_function("map", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		treeml::forest_ext ret;
+
+		
 
 		return ret;
 	});

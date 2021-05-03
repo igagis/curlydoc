@@ -60,6 +60,63 @@ tst::set set0("interpreter", [](auto& suite){
 					}
 					end
 				)", "Hi x = 10 x = 20 x = hello x = world! x =\"\"{hello world!}end"},
+				{R"(
+					def{
+						v{bla bla}
+					}
+					if{${v}}
+				)", ""},
+				{R"(
+					def{
+						v{bla bla}
+					}
+					if{${v}}then{Hello}
+				)", "Hello"},
+				{R"(
+					def{
+						v{bla bla}
+						v1
+					}
+					if{${v1}}then{Hello}else{World}
+				)", "World"},
+				{R"(
+					def{
+						v{bla bla}
+						v1
+					}
+					if{${v1}}then{Hello}
+				)", ""},
+				{R"(
+					def{
+						v{bla bla}
+						v1
+					}
+					if{${v1}}else{World}
+				)", "World"},
+
+				// if inside then
+				{R"(
+					def{
+						v{bla bla}
+						v1
+					}
+					if{${v}}then{
+						Hi
+						if{${v1}}then{Hello}
+					}else{World}
+				)", "Hi"},
+
+				// if inside else
+				{R"(
+					def{
+						v{bla bla}
+						v1
+					}
+					if{${v1}}else{
+						Hi
+						if{${v}}else{bla}
+					}then{Hello}
+				)", "Hi"},
 			},
 			[](auto& p){
 				curlydoc::interpreter interpreter{"none"};

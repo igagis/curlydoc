@@ -74,7 +74,7 @@ def{
 	index{3 4 6}
 }
 
-for{ param{ index{i} }
+for{
     // the first child of the 'for' must be the iterator declaration
 	i{ 3 4 6 }
     // or
@@ -85,6 +85,8 @@ for{ param{ index{i} }
     
     my_template{ x{${i}} y{${array ${i}}} z{bye} }
 }
+
+if{bla}then{Hello}else{World!}
 
 p{
     numbered list:
