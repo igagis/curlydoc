@@ -2,15 +2,27 @@
 
 #include <unordered_map>
 #include <list>
+#include <vector>
 
 #include <treeml/tree_ext.hpp>
 
 namespace curlydoc{
 
 class interpreter{
-	const std::string file_name;
+	std::vector<std::string> file_name_stack;
+
 public:
 	typedef std::function<treeml::forest_ext(const treeml::tree_ext&)> function_type;
+
+	class exception : public std::invalid_argument{
+	public:
+		exception(const std::string& message) :
+				std::invalid_argument(message + " at:")
+		{}
+
+		exception(const std::string& message, const std::string& file, const treeml::leaf_ext& leaf);
+	};
+
 private:
 	std::unordered_map<std::string, function_type> functions;
 	
@@ -35,12 +47,8 @@ private:
 
 	context& push_context(const context* prev = nullptr);
 
-	// void handle_char(const treeml::tree_ext& tree);
-protected:
-	// void throw_syntax_error(std::string&& message, const treeml::tree_ext& node);
-
 public:
-	interpreter();
+	interpreter(std::string&& file_name);
 
 	virtual ~interpreter(){}
 
@@ -51,12 +59,6 @@ public:
 	}
 
 	void add_function(const std::string& name, function_type&& func);
-
-	// virtual void on_word(const std::string& word) = 0;
-
-	// void on_space(){
-	// 	this->on_word(" ");
-	// }
 };
 
 }
