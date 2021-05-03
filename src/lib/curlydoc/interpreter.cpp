@@ -62,8 +62,9 @@ interpreter::context& interpreter::push_context(const context* prev){
 	return this->context_stack.back();
 }
 
-interpreter::interpreter(std::string&& file_name) :
-		file_name_stack{file_name}
+interpreter::interpreter(std::unique_ptr<papki::file> file) :
+		file_name_stack{file ? file->path() : std::string()},
+		file(std::move(file))
 {
 	this->add_function("asis", [](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
@@ -195,13 +196,30 @@ interpreter::interpreter(std::string&& file_name) :
 
 		return ret;
 	});
+
+	this->add_function("include", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		if(!this->file){
+			throw exception("include is not supported");
+		}
+
+		this->file->set_path(args.front().value.to_string());
+
+		return this->eval(
+				treeml::read_ext(*this->file),
+				true
+			);
+	});
 }
 
-treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end){
+treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end, bool preserve_vars){
 	treeml::forest_ext ret;
 
-	utki::scope_exit context_stack_scope_exit([this, context_stack_size = this->context_stack.size()](){
-		this->context_stack.resize(context_stack_size);
+	utki::scope_exit context_stack_scope_exit([this, context_stack_size = this->context_stack.size(), preserve_vars](){
+		if(!preserve_vars){
+			this->context_stack.resize(context_stack_size);
+		}
 	});
 
 	for(auto i = begin; i != end; ++i){
@@ -240,7 +258,6 @@ treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, t
 				output = func_i->second(i->children);
 			}
 
-			LOG([&](auto&o){o << "output.size() = " << output.size() << '\n';})
 			ret.insert(
 					ret.end(),
 					std::make_move_iterator(output.begin()),

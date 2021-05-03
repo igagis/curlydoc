@@ -1,6 +1,8 @@
 #include <tst/set.hpp>
 #include <tst/check.hpp>
 
+#include <papki/fs_file.hpp>
+
 #include "../../src/lib/curlydoc/interpreter.hpp"
 
 namespace{
@@ -132,9 +134,16 @@ tst::set set0("interpreter", [](auto& suite){
 					Hello 
 					map{ hi{${v}} ${v} bye{hi}} world
 				)", "Hello hi{bla bla} ${v} bye{hi} world"},
+
+				// include
+				{R"(
+					Hello include{testdata/include.cud} World!
+					And inc_var1 = ${inc_var1},
+					inc_var2 = ${inc_var2}
+				)", "Hello Hi World! And inc_var1 = Hello , inc_var2 = bla bla{bla{bla}}bla bla"},
 			},
 			[](auto& p){
-				curlydoc::interpreter interpreter{"none"};
+				curlydoc::interpreter interpreter(std::make_unique<papki::fs_file>("none"));
 
 				const auto in = treeml::read_ext(p.first);
 

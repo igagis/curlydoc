@@ -45,15 +45,17 @@ private:
 	context& push_context(const context* prev = nullptr);
 
 	std::vector<bool> if_flag_stack = {false}; // initial flag for root scope
+
+	std::unique_ptr<papki::file> file; // for including files
 public:
-	interpreter(std::string&& file_name);
+	interpreter(std::unique_ptr<papki::file> file);
 
 	virtual ~interpreter(){}
 
-	treeml::forest_ext eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end);
+	treeml::forest_ext eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end, bool preserve_vars = false);
 
-	treeml::forest_ext eval(const treeml::forest_ext& forest){
-		return this->eval(forest.begin(), forest.end());
+	treeml::forest_ext eval(const treeml::forest_ext& forest, bool preserve_vars = false){
+		return this->eval(forest.begin(), forest.end(), preserve_vars);
 	}
 
 	void add_function(const std::string& name, function_type&& func);
