@@ -34,10 +34,13 @@ def{
 my_template{map{x{bla} y{bal} z{lba}}}
 
 // array:
-size{array} // size of array
-get{10 ${array}} // element access by index.
+//size{array} // size of array
+count{${array}} // count number of elements
+//at{10 array} // element access by index.
+pick{10 ${array}}
 ${array} // this will substitute all array elements as is, without any unwrapping
-get{bla ${map}}
+//get{bla map}
+find{bla ${map}}
 
 ={ header1 curlydoc document markup concept }
 

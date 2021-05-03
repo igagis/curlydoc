@@ -10,37 +10,38 @@ namespace curlydoc{
 class interpreter{
 	const std::string file_name;
 public:
-	typedef std::function<void(bool, const treeml::tree_ext&)> keyword_handler_type;
-	typedef std::function<void(const std::string&)> word_handler_type;
+	typedef std::function<treeml::forest_ext(const treeml::tree_ext&)> function_type;
 private:
-	std::unordered_map<std::string, keyword_handler_type> handlers;
-
-	std::vector<treeml::tree_ext> def;
-
+	std::unordered_map<std::string, function_type> functions;
 	
+	class context{
+	public:
+		const context* const prev = nullptr;
+		std::unordered_map<std::string, treeml::tree> def;
+	};
 
-	void handle_char(const treeml::tree_ext& tree);
+	// void handle_char(const treeml::tree_ext& tree);
 protected:
-	void throw_syntax_error(std::string&& message, const treeml::tree_ext& node);
+	// void throw_syntax_error(std::string&& message, const treeml::tree_ext& node);
 
 public:
-	interpreter(std::string&& file_name);
+	interpreter();
 
 	virtual ~interpreter(){}
 
-	void eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end);
+	treeml::forest_ext eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end, const context* ctx = nullptr);
 
-	void eval(const treeml::forest_ext& forest){
-		this->eval(forest.begin(), forest.end());
+	treeml::forest_ext eval(const treeml::forest_ext& forest, const context* ctx = nullptr){
+		return this->eval(forest.begin(), forest.end(), ctx);
 	}
 
-	void add_keyword(const std::string& keyword, keyword_handler_type&& handler);
+	void add_function(const std::string& name, function_type&& func);
 
-	virtual void on_word(const std::string& word) = 0;
+	// virtual void on_word(const std::string& word) = 0;
 
-	void on_space(){
-		this->on_word(" ");
-	}
+	// void on_space(){
+	// 	this->on_word(" ");
+	// }
 };
 
 }

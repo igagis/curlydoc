@@ -16,7 +16,7 @@ int main(int argc, const char** argv){
 		return 1;
 	}
 
-	curlydoc::translator_to_html translator(std::string(positional.front()));
+	// curlydoc::translator_to_html translator(std::string(positional.front()));
 
 	std::string out_file_name = utki::split(positional.front(), '.').front() + ".html";
 
@@ -24,7 +24,7 @@ int main(int argc, const char** argv){
 
 	std::cout << "output file name = " << out_file_name << '\n';
 
-	translator.eval(treeml::read_ext(papki::fs_file(positional.front())));
+	// translator.eval(treeml::read_ext(papki::fs_file(positional.front())));
 
 	std::ofstream outf(out_file_name, std::ios::binary);
 
@@ -37,7 +37,7 @@ int main(int argc, const char** argv){
 			"<body>"
 		;
 
-	outf << translator.ss.str();
+	// outf << translator.ss.str();
 
 	outf << "\n" "</body>" "\n"
 			"</html>" "\n";
