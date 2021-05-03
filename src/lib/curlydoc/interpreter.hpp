@@ -12,7 +12,7 @@ class interpreter{
 	std::vector<std::string> file_name_stack;
 
 public:
-	typedef std::function<treeml::forest_ext(const treeml::tree_ext&)> function_type;
+	typedef std::function<treeml::forest_ext(const treeml::forest_ext&)> function_type;
 
 	class exception : public std::invalid_argument{
 	public:
@@ -28,14 +28,14 @@ private:
 	
 	class context{
 		const context* const prev;
-		std::unordered_map<std::string, treeml::tree_ext> def;
+		std::unordered_map<std::string, treeml::forest_ext> def;
 	public:
 		context(const context* const prev = nullptr) : prev(prev){}
 
-		void add(treeml::tree_ext&& var);
+		void add(const std::string& name, treeml::forest_ext&& value);
 
 		struct find_result{
-			const treeml::tree_ext* var;
+			const treeml::forest_ext* value;
 			const context& ctx;
 		};
 

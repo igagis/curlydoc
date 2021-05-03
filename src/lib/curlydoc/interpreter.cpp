@@ -23,10 +23,9 @@ void interpreter::add_function(const std::string& name, function_type&& func){
 	}
 }
 
-void interpreter::context::add(treeml::tree_ext&& var){
-	const auto name = var.value.to_string();
+void interpreter::context::add(const std::string& name, treeml::forest_ext&& value){
 	auto i = this->def.insert(
-			std::make_pair(name, std::move(var))
+			std::make_pair(name, std::move(value))
 		);
 	if(!i.second){
 		throw exception("variable name already exists in this context");
@@ -62,26 +61,24 @@ interpreter::context& interpreter::push_context(const context* prev){
 interpreter::interpreter(std::string&& file_name) :
 		file_name_stack{file_name}
 {
-	this->add_function("asis", [](const treeml::tree_ext& args){
-		return args.children;
+	this->add_function("asis", [](const treeml::forest_ext& args){
+		return args;
 	});
 
-	this->add_function("", [this](const treeml::tree_ext& args){
+	this->add_function("", [this](const treeml::forest_ext& args){
 		treeml::forest_ext ret;
-		treeml::tree_ext tree(args.value);
-		tree.children = this->eval(args.children);
-		ret.push_back(std::move(tree));
+		treeml::tree_ext t(treeml::leaf_ext(std::string(), treeml::extra_info{}));
+		t.children = this->eval(args);
+		ret.push_back(std::move(t));
 		return ret;
 	});
 
-	this->add_function("def", [this](const treeml::tree_ext& args){
+	this->add_function("def", [this](const treeml::forest_ext& args){
 		auto& ctx = this->push_context();
 
-		for(const auto& c : args.children){
+		for(const auto& c : args){
 			try{
-				treeml::tree_ext var(c.value);
-				var.children = this->eval(c.children);
-				ctx.add(std::move(var));
+				ctx.add(c.value.to_string(), this->eval(c.children));
 			}catch(exception& e){
 				throw exception(e.what(), this->file_name_stack.back(), c.value);
 			}
@@ -89,22 +86,22 @@ interpreter::interpreter(std::string&& file_name) :
 		return treeml::forest_ext();
 	});
 
-	this->add_function("$", [this](const treeml::tree_ext& args){
+	this->add_function("$", [this](const treeml::forest_ext& args){
 		ASSERT(!this->context_stack.empty())
 
-		if(args.children.size() != 1){
+		if(args.size() != 1){
 			throw exception("$ expects 1 or 2 arguments");
 		}
 
-		const auto& name = args.children.front().value.to_string();
+		const auto& name = args.front().value.to_string();
 
 		auto v = this->context_stack.back().find(name);
 
-		if(!v.var){
+		if(!v.value){
 			throw exception(std::string("variable '") + name +"' not found");
 		}
 
-		return v.var->children;
+		return *v.value;
 	});
 }
 
@@ -126,9 +123,8 @@ treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, t
 
 			// search for macro
 			auto v = this->context_stack.back().find(i->value.to_string());
-			if(v.var){
-				treeml::tree_ext dog(treeml::leaf_ext("@", i->value.get_info()));
-				dog.children = this->eval(i->children);
+			if(v.value){
+				auto args = this->eval(i->children);
 
 				auto& ctx = this->push_context(&v.ctx);
 				utki::scope_exit macro_context_scope_exit([this](){
@@ -136,12 +132,12 @@ treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, t
 				});
 
 				try{
-					ctx.add(std::move(dog));
+					ctx.add("@", std::move(args));
 				}catch(exception&){
 					ASSERT(false)
 				}
 
-				output = this->eval(v.var->children);
+				output = this->eval(*v.value);
 			}else{
 				// search for function
 
@@ -149,7 +145,7 @@ treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, t
 				if(func_i == this->functions.end()){
 					throw exception(std::string("function/macro '") + i->value.to_string() + "' not found");
 				}
-				output = func_i->second(*i);
+				output = func_i->second(i->children);
 			}
 
 			LOG([&](auto&o){o << "output.size() = " << output.size() << '\n';})
