@@ -58,6 +58,8 @@ public:
 		return this->eval(forest.begin(), forest.end(), preserve_vars);
 	}
 
+	treeml::forest_ext eval();
+
 	void add_function(const std::string& name, function_type&& func);
 };
 

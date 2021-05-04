@@ -20,6 +20,12 @@ def{
 		}
     }}
 
+    b{asis{
+        map{b{
+            ${@}
+        }}
+    }}
+
     // variable is same as template without arguments, invoke as ${var_name}
     variable1{1.0.3}
 

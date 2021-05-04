@@ -63,7 +63,7 @@ interpreter::context& interpreter::push_context(const context* prev){
 }
 
 interpreter::interpreter(std::unique_ptr<papki::file> file) :
-		file_name_stack{file ? file->path() : std::string()},
+		file_name_stack{"unknown"},
 		file(std::move(file))
 {
 	this->add_function("asis", [](const treeml::forest_ext& args){
@@ -316,4 +316,19 @@ treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, t
 	}
 
 	return ret;
+}
+
+treeml::forest_ext interpreter::eval(){
+	if(!this->file){
+		throw std::logic_error("no file interface provided");
+	}
+
+	auto forest = treeml::read_ext(*this->file);
+
+	this->file_name_stack.push_back(this->file->path());
+	utki::scope_exit file_name_stack_scope_exit([this](){
+		this->file_name_stack.pop_back();
+	});
+
+	return this->eval(forest);
 }

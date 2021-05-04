@@ -1,8 +1,8 @@
 #pragma once
 
-#include "interpreter.hpp"
-
 #include <unordered_map>
+
+#include <treeml/tree_ext.hpp>
 
 namespace curlydoc{
 
