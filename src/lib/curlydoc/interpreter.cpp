@@ -102,10 +102,6 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 
 		ASSERT(!this->context_stack.empty())
 
-		if(args.size() != 1){
-			throw exception("$ expects 1 or 2 arguments");
-		}
-
 		const auto& name = args.front().value.to_string();
 
 		auto v = this->context_stack.back().find(name);
@@ -114,7 +110,53 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 			throw exception(std::string("variable '") + name +"' not found");
 		}
 
-		return *v.value;
+		const auto& val = *v.value;
+
+		if(args.size() >= 2){ // if access by index
+			if(!args.front().children.empty()){
+				throw exception("both ways of accessing array element specified (by index and by key)");
+			}
+
+			auto index = this->eval(std::next(args.begin()), args.end());
+
+			if(index.size() != 1){
+				throw exception("index evaluates to none or more than one value");
+			}
+
+			unsigned long i;
+			try{
+				i = std::stoul(index.front().value.to_string(), 0, 0);
+			}catch(std::exception& e){
+				throw exception(std::string("given index '") + index.front().value.to_string() + "' is not valid");
+			}
+
+			if(i >= v.value->size()){
+				std::stringstream ss;
+				ss << "index out of bounds (" << i << ")";
+				throw exception(ss.str());
+			}
+
+			return treeml::forest_ext{val[i]};
+		}else if(!args.front().children.empty()){ // access by key
+			ASSERT(args.size() == 1)
+
+			auto key = this->eval(args.front().children);
+
+			if(key.size() != 1){
+				throw exception("key evaluates to none or more than one value");
+			}
+
+			const auto& key_str = key.front().value.to_string();
+
+			auto i = std::find(val.begin(), val.end(), key_str);
+			if(i == val.end()){
+				throw exception(std::string("key '") + key_str + "' not found");
+			}
+
+			return i->children;
+		}else{ // whole variable value
+			return val;
+		}
 	});
 
 	this->add_function("for", [this](const treeml::forest_ext& args){

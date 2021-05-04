@@ -141,6 +141,24 @@ tst::set set0("interpreter", [](auto& suite){
 					And inc_var1 = ${inc_var1},
 					inc_var2 = ${inc_var2}
 				)", "Hello Hi World! And inc_var1 = Hello , inc_var2 = bla bla{bla{bla}}bla bla"},
+
+				// access array element by index
+				{R"(
+					def{
+						a{hello world map{how{map{are{you}}}} doing?}
+						i{2}
+					}
+					Hi ${a ${i}} man? I'm ${a 3} ${a 1} ${a 0}.
+				)", "Hi how{are{you}}man? I'm doing? world hello ."},
+
+				// access array element by key
+				{R"(
+					def{
+						a{map{x{bla bla} y{hey} z{asis{how{are{you}}}} bla}}
+					}
+
+					x = ${a{x}} y = ${a{y}} z = ${a{z}} bla = ${a{bla}}
+				)", "x = bla bla y = hey z = how{are{you}}bla ="},
 			},
 			[](auto& p){
 				curlydoc::interpreter interpreter(std::make_unique<papki::fs_file>("none"));
