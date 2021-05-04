@@ -7,9 +7,11 @@
 
 namespace{
 tst::set set("traslator_to_html", [](auto& suite){
-	suite.template add_disabled<std::pair<std::string, std::string>>(
+	suite.template add<std::pair<std::string, std::string>>(
 			"curlydoc_element_to_html_element",
 			{
+				{"{hello world!}", "hello world!"},
+				{"hi{} {hello world!}", "hi hello world!"},
 				{"p{hello world!}", "\n<p>hello world!</p>"},
 				{"b{bold text}", "<b>bold text</b>"},
 				{"i{italic text}", "<i>italic text</i>"},
@@ -19,14 +21,14 @@ tst::set set("traslator_to_html", [](auto& suite){
 				{"some \"quoted\" stuff", "some quoted stuff"}
 			},
 			[](const auto& p){
-				// const auto in = treeml::read_ext(p.first.c_str());
+				const auto in = treeml::read_ext(p.first.c_str());
 
-				// curlydoc::translator_to_html tr("test.cud");
+				curlydoc::translator_to_html tr;
 
-				// tr.eval(in);
+				tr.translate(in);
 
-				// auto str = tr.ss.str();
-				// tst::check(str == p.second, SL) << "str = " << str;
+				auto str = tr.ss.str();
+				tst::check(str == p.second, SL) << "str = " << str;
 			}
 		);
 });
