@@ -10,7 +10,7 @@ interpreter::exception::exception(const std::string& message) :
 
 interpreter::exception::exception(const std::string& message, const std::string& file, const treeml::leaf_ext& leaf) :
 		std::invalid_argument([&](){
-			const auto& l = leaf.get_info().location;
+			const auto& l = leaf.info.location;
 			std::stringstream ss;
 			ss << message << '\n';
 			ss << "  " << file << ":" << l.line << ":" << l.offset << ": " << leaf.to_string();
@@ -24,6 +24,27 @@ void interpreter::add_function(const std::string& name, function_type&& func){
 		std::stringstream ss;
 		ss << "function '" << name << "' is already added";
 		throw std::logic_error(ss.str());
+	}
+}
+
+void interpreter::add_repeater_function(const std::string& name){
+	this->add_function(name, [this, name](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		treeml::forest_ext ret;
+		ret.emplace_back(name);
+		ret.back().children = this->eval(args);
+		return ret;
+	});
+}
+
+void interpreter::add_repeater_functions(utki::span<const std::string> names){
+	for(const auto& n : names){
+		if(n.empty()){
+			// empty-named repeater function is already added in constructor
+			continue;
+		}
+		this->add_repeater_function(n);
 	}
 }
 
@@ -66,20 +87,12 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		file_name_stack{"unknown"},
 		file(std::move(file))
 {
+	this->add_repeater_function("");
+
 	this->add_function("asis", [](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
 		return args;
-	});
-
-	this->add_function("", [this](const treeml::forest_ext& args){
-		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
-
-		treeml::forest_ext ret;
-		treeml::tree_ext t(std::string(""));
-		t.children = this->eval(args);
-		ret.push_back(std::move(t));
-		return ret;
 	});
 
 	this->add_function("map", [this](const treeml::forest_ext& args){
@@ -316,6 +329,13 @@ treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, t
 					throw exception(std::string("function/macro '") + i->value.to_string() + "' not found");
 				}
 				output = func_i->second(i->children);
+
+				if(!output.empty()){
+					output.front().value.info.flags.set(
+							treeml::flag::space,
+							i->value.info.flags.get(treeml::flag::space)
+						);
+				}
 			}
 
 			ret.insert(

@@ -28,6 +28,8 @@ int main(int argc, const char** argv){
 
 	curlydoc::translator_to_html translator;
 
+	interpreter.add_repeater_functions(utki::make_span(translator.list_tags()));
+
 	std::cout << "Hello cdoc2html!" << '\n';
 
 	std::cout << "output file name = " << out_file_name << '\n';

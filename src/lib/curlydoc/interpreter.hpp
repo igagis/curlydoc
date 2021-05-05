@@ -61,6 +61,10 @@ public:
 	treeml::forest_ext eval();
 
 	void add_function(const std::string& name, function_type&& func);
+
+	void add_repeater_function(const std::string& name);
+
+	void add_repeater_functions(utki::span<const std::string> names);
 };
 
 }

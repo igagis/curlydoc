@@ -2,12 +2,34 @@
 
 using namespace curlydoc;
 
+namespace{
+const std::string double_quote = "\"";
+const std::string curly_brace_open = "{";
+const std::string curly_brace_close = "}";
+}
+
 translator::translator(){
     this->add_tag("", [this](bool space, auto& forest){
         ASSERT(!forest.empty())
         this->report_space(space);
         this->translate(forest);
     });
+
+	this->add_tag("dq", [this](bool space, auto& forest){
+		ASSERT(!forest.empty())
+		this->report_space(space);
+		this->on_word(double_quote);
+		this->translate(forest);
+		this->on_word(double_quote);
+	});
+
+	this->add_tag("cb", [this](bool space, auto& forest){
+		ASSERT(!forest.empty())
+		this->report_space(space);
+		this->on_word(curly_brace_open);
+		this->translate(forest);
+		this->on_word(curly_brace_close);
+	});
 
 	this->add_tag("p", [this](bool space, auto& forest){
 		this->on_paragraph(forest);
@@ -116,9 +138,19 @@ void translator::add_tag(const std::string& tag, handler_type&& func){
     }
 }
 
+std::vector<std::string> translator::list_tags()const{
+	std::vector<std::string> tags;
+
+	for(const auto& h : this->handlers){
+		tags.push_back(h.first);
+	}
+
+	return tags;
+}
+
 void translator::translate(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end){
     for(auto i = begin; i != end; ++i){
-        bool space = i != begin && i->value.get_info().flags.get(treeml::flag::space);
+        bool space = i != begin && i->value.info.flags.get(treeml::flag::space);
 
         if(i->children.empty()){
             this->report_space(space);

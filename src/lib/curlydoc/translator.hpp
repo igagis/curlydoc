@@ -19,6 +19,8 @@ public:
 	translator();
     virtual ~translator(){}
 
+	std::vector<std::string> list_tags()const;
+
     void add_tag(const std::string& tag, handler_type&& func);
 
     void translate(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end);
