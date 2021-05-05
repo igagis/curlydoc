@@ -82,6 +82,31 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		return ret;
 	});
 
+	this->add_function("map", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		treeml::forest_ext ret;
+
+		for(const auto& a : args){
+			ret.push_back(treeml::tree_ext(a.value, this->eval(a.children)));
+		}
+
+		return ret;
+	});
+
+	this->add_function("param", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		treeml::forest_ext ret;
+		ret.emplace_back("param");
+
+		for(const auto& a : args){
+			ret.back().children.push_back(treeml::tree_ext(a.value, this->eval(a.children)));
+		}
+
+		return ret;
+	});
+
 	this->add_function("def", [this](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
@@ -225,18 +250,6 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		});
 
 		return this->eval(args);
-	});
-
-	this->add_function("map", [this](const treeml::forest_ext& args){
-		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
-
-		treeml::forest_ext ret;
-
-		for(const auto& a : args){
-			ret.push_back(treeml::tree_ext(a.value, this->eval(a.children)));
-		}
-
-		return ret;
 	});
 
 	this->add_function("include", [this](const treeml::forest_ext& args){
