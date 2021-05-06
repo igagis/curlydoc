@@ -160,13 +160,13 @@ tst::set set0("interpreter", [](auto& suite){
 					x = ${a{x}} y = ${a{y}} z = ${a{z}} bla = ${a{bla}}
 				)", "x = bla bla y = hey z = how{are{you}}bla ="},
 
-				// param
+				// opt
 				{R"(
 					def{
 						v{var}
 					}
-					param{x{bla} y{${v}}}
-				)", "param{x{bla}y{var}}"},
+					opt{x{bla} y{${v}}}
+				)", "opt{x{bla}y{var}}"},
 			},
 			[](auto& p){
 				curlydoc::interpreter interpreter(std::make_unique<papki::fs_file>("none"));

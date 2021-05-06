@@ -40,10 +40,6 @@ void interpreter::add_repeater_function(const std::string& name){
 
 void interpreter::add_repeater_functions(utki::span<const std::string> names){
 	for(const auto& n : names){
-		if(n.empty()){
-			// empty-named repeater function is already added in constructor
-			continue;
-		}
 		this->add_repeater_function(n);
 	}
 }
@@ -107,11 +103,11 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		return ret;
 	});
 
-	this->add_function("param", [this](const treeml::forest_ext& args){
+	this->add_function("opt", [this](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
 		treeml::forest_ext ret;
-		ret.emplace_back("param");
+		ret.emplace_back("opt");
 
 		for(const auto& a : args){
 			ret.back().children.push_back(treeml::tree_ext(a.value, this->eval(a.children)));

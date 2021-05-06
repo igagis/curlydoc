@@ -15,6 +15,10 @@ translator::translator(){
         this->translate(forest);
     });
 
+	this->add_tag("opt", [](bool space, auto& forest){
+		// ignore
+	});
+
 	this->add_tag("dq", [this](bool space, auto& forest){
 		ASSERT(!forest.empty())
 		this->report_space(space);
@@ -133,7 +137,17 @@ translator::translator(){
 		this->handle_image(forest);
 	});
 
-	// TODO:
+	this->add_tag("table", [this](bool space, auto& forest){
+		this->handle_table(forest);
+	});
+
+	{
+		auto f = [this](bool space, auto& forest){
+			this->handle_cell(forest);
+		};
+		this->add_tag("|", f);
+		this->add_tag("cell", f);
+	}
 }
 
 void translator::add_tag(const std::string& tag, handler_type&& func){
@@ -147,6 +161,9 @@ std::vector<std::string> translator::list_tags()const{
 	std::vector<std::string> tags;
 
 	for(const auto& h : this->handlers){
+		if(h.first.empty() || h.first == "opt"){
+			continue;
+		}
 		tags.push_back(h.first);
 	}
 
@@ -178,34 +195,30 @@ void translator::report_space(bool report){
     }
 }
 
-bool translator::is_param(const treeml::tree_ext& tree)noexcept{
-	return tree == "param" && !tree.children.empty();
+bool translator::is_options(const treeml::tree_ext& tree)noexcept{
+	return tree == "opt" && !tree.children.empty();
 }
 
-void translator::check_param(const treeml::tree_ext& tree){
+void translator::check_option(const treeml::tree_ext& tree){
 	if(tree.children.empty()){
 		throw std::invalid_argument(std::string("no value specified for '") + tree.value.to_string() + "' parameter");
-	}
-
-	if(tree.children.size() > 1){
-		throw std::invalid_argument(std::string("more than one value specified for '") + tree.value.to_string() + "' parameter");
 	}
 }
 
 void translator::handle_image(const treeml::forest_ext& forest){
-	image_param param;
+	image_params params;
 
 	ASSERT(!forest.empty())
 	auto i = forest.begin();
 
-	if(is_param(*i)){
+	if(is_options(*i)){
 		for(const auto& p : i->children){
-			check_param(p);
+			check_option(p);
 
 			if(p == "width"){
-				param.width = p.children.front().value.to_uint32();
+				params.width = p.children.front().value.to_uint32();
 			}else if(p == "height"){
-				param.height = p.children.front().value.to_uint32();
+				params.height = p.children.front().value.to_uint32();
 			}
 		}
 		++i;
@@ -215,7 +228,55 @@ void translator::handle_image(const treeml::forest_ext& forest){
 		throw std::invalid_argument("image source is not specified");
 	}
 
-	param.url = i->value.to_string();
+	params.url = i->value.to_string();
 
-	this->on_image(param, forest);
+	this->on_image(params, forest);
+}
+
+void translator::handle_table(const treeml::forest_ext& forest){
+	table_params params;
+
+	ASSERT(!forest.empty())
+	auto i = forest.begin();
+
+	if(is_options(*i)){
+		for(const auto& p : i->children){
+			check_option(p);
+
+			if(p == "cols"){
+				params.num_cols = p.children.front().value.to_uint32();
+			}
+		}
+	}
+
+	if(params.num_cols == 0){
+		throw std::invalid_argument("table number of columns is not specified");
+	}
+
+	this->on_table(params, forest);
+}
+
+void translator::handle_cell(const treeml::forest_ext& forest){
+	cell_params params;
+
+	ASSERT(!forest.empty())
+	auto i = forest.begin();
+
+	if(is_options(*i)){
+		for(const auto& p : i->children){
+			check_option(p);
+
+			if(p == "span"){
+				auto i = p.children.begin();
+
+				params.row_span = i->value.to_uint32();
+				++i;
+				if(i != p.children.end()){
+					params.col_span = i->value.to_uint32();
+				}
+			}
+		}
+	}
+
+	this->on_cell(params, forest);
 }

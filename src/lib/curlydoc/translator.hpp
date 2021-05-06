@@ -15,11 +15,13 @@ private:
     std::unordered_map<std::string, handler_type> handlers;
 
 	void handle_image(const treeml::forest_ext& forest);
+	void handle_table(const treeml::forest_ext& forest);
+	void handle_cell(const treeml::forest_ext& forest);
 protected:
     void report_space(bool report);
 
-	static bool is_param(const treeml::tree_ext& forest)noexcept;
-	static void check_param(const treeml::tree_ext& forest);
+	static bool is_options(const treeml::tree_ext& forest)noexcept;
+	static void check_option(const treeml::tree_ext& forest);
 public:
 	translator();
     virtual ~translator(){}
@@ -51,15 +53,26 @@ public:
 	virtual void on_header5(const treeml::forest_ext& forest) = 0;
 	virtual void on_header6(const treeml::forest_ext& forest) = 0;
 
-	struct image_param{
+	struct image_params{
 		std::string url;
 		std::optional<uint32_t> width;
 		std::optional<uint32_t> height;
 	};
 
-	virtual void on_image(const image_param& param, const treeml::forest_ext& forest) = 0;
+	virtual void on_image(const image_params& params, const treeml::forest_ext& forest) = 0;
 
-	// TODO:
+	struct table_params{
+		unsigned num_cols = 0;
+	};
+
+	virtual void on_table(const table_params& params, const treeml::forest_ext& forest) = 0;
+
+	struct cell_params{
+		unsigned row_span = 1;
+		unsigned col_span = 1;
+	};
+
+	virtual void on_cell(const cell_params& params, const treeml::forest_ext& forest) = 0;
 };
 
 }

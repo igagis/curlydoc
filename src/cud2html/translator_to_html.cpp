@@ -84,16 +84,28 @@ void translator_to_html::on_header6(const treeml::forest_ext& forest){
 	this->ss << "</h6>";
 }
 
-void translator_to_html::on_image(const image_param& param, const treeml::forest_ext& forest){
-	this->ss << "<img src=\"" << param.url << "\"";
+void translator_to_html::on_image(const image_params& params, const treeml::forest_ext& forest){
+	this->ss << "<img src=\"" << params.url << "\"";
 
-	if(param.width){
-		this->ss << " width=\"" << param.width.value() << "\"";
+	if(params.width){
+		this->ss << " width=\"" << params.width.value() << "\"";
 	}
 
-	if(param.height){
-		this->ss << " height=\"" << param.height.value() << "\"";
+	if(params.height){
+		this->ss << " height=\"" << params.height.value() << "\"";
 	}
 
 	this->ss << "/>";
+}
+
+void translator_to_html::on_table(const table_params& params, const treeml::forest_ext& forest){
+	this->ss << '\n' << "<table>";
+
+	this->translate(forest);
+
+	this->ss << "</table>";
+}
+
+void translator_to_html::on_cell(const cell_params& params, const treeml::forest_ext& forest){
+	// TODO:
 }
