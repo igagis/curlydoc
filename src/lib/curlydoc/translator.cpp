@@ -161,8 +161,8 @@ std::vector<std::string> translator::list_tags()const{
 	std::vector<std::string> tags;
 
 	for(const auto& h : this->handlers){
-		if(h.first.empty() || h.first == "opt"){
-			continue;
+		if(h.first == "opt"){
+			continue; // opt is not a tag, and it is just ignored by translator
 		}
 		tags.push_back(h.first);
 	}

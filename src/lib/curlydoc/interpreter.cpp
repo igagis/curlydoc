@@ -40,6 +40,9 @@ void interpreter::add_repeater_function(const std::string& name){
 
 void interpreter::add_repeater_functions(utki::span<const std::string> names){
 	for(const auto& n : names){
+		if(n.empty()){
+			continue; // empty repeater is already registered
+		}
 		this->add_repeater_function(n);
 	}
 }
