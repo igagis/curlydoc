@@ -6,6 +6,8 @@ namespace{
 const std::string double_quote = "\"";
 const std::string curly_brace_open = "{";
 const std::string curly_brace_close = "}";
+
+const std::string table_tag = "table";
 }
 
 translator::translator(){
@@ -137,7 +139,7 @@ translator::translator(){
 		this->handle_image(forest);
 	});
 
-	this->add_tag("table", [this](bool space, auto& forest){
+	this->add_tag(table_tag, [this](bool space, auto& forest){
 		this->handle_table(forest);
 	});
 
@@ -180,12 +182,26 @@ void translator::translate(treeml::forest_ext::const_iterator begin, treeml::for
             continue;
         }
 
-        auto handler_i = this->handlers.find(i->value.to_string());
+		const auto& tag = i->value.to_string();
+
+        auto handler_i = this->handlers.find(tag);
         if(handler_i == this->handlers.end()){
-            throw std::invalid_argument(std::string("tag not found: ") + i->value.to_string());
+            throw std::invalid_argument(std::string("tag not found: ") + tag);
         }
 
-        handler_i->second(space, i->children);
+		this->cur_tag.push_back(tag);
+		utki::scope_exit cur_tag_scope_exit([this](){
+			this->cur_tag.pop_back();
+		});
+
+		try{
+        	handler_i->second(space, i->children);
+		}catch(std::exception& e){
+			std::stringstream ss;
+			ss << e.what() << " at:" << '\n';
+			ss << "  " << i->value.info.location.line << ":" << i->value.info.location.offset << ": " << tag;
+			throw std::invalid_argument(ss.str());
+		}
     }
 }
 
@@ -257,6 +273,12 @@ void translator::handle_table(const treeml::forest_ext& forest){
 }
 
 void translator::handle_cell(const treeml::forest_ext& forest){
+	ASSERT(this->cur_tag.size() >= 2)
+
+	if(*std::next(this->cur_tag.rbegin()) != table_tag){
+		throw std::invalid_argument("'cell' tag is only allowed directly inside of 'table' tag");
+	}
+
 	cell_params params;
 
 	ASSERT(!forest.empty())

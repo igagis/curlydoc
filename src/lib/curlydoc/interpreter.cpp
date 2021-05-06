@@ -13,7 +13,7 @@ interpreter::exception::exception(const std::string& message, const std::string&
 			const auto& l = leaf.info.location;
 			std::stringstream ss;
 			ss << message << '\n';
-			ss << "  " << file << ":" << l.line << ":" << l.offset << ": " << leaf.to_string();
+			ss << "    " << file << ":" << l.line << ":" << l.offset << ": " << leaf.to_string();
 			return ss.str();
 		}())
 {}
@@ -28,14 +28,7 @@ void interpreter::add_function(const std::string& name, function_type&& func){
 }
 
 void interpreter::add_repeater_function(const std::string& name){
-	this->add_function(name, [this, name](const treeml::forest_ext& args){
-		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
-
-		treeml::forest_ext ret;
-		ret.emplace_back(name);
-		ret.back().children = this->eval(args);
-		return ret;
-	});
+	this->add_function(name, nullptr);
 }
 
 void interpreter::add_repeater_functions(utki::span<const std::string> names){
@@ -327,13 +320,20 @@ treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, t
 				if(func_i == this->functions.end()){
 					throw exception(std::string("function/macro '") + i->value.to_string() + "' not found");
 				}
-				output = func_i->second(i->children);
 
-				if(!output.empty()){
-					output.front().value.info.flags.set(
-							treeml::flag::space,
-							i->value.info.flags.get(treeml::flag::space)
-						);
+				if(func_i->second){
+					output = func_i->second(i->children);
+
+					if(!output.empty()){
+						output.front().value.info.flags.set(
+								treeml::flag::space,
+								i->value.info.flags.get(treeml::flag::space)
+							);
+					}
+				}else{
+					// repeater function, which means the tag remains as is, but its children are evaluated
+					output.emplace_back(i->value);
+					output.back().children = this->eval(i->children);
 				}
 			}
 

@@ -14,7 +14,10 @@ public:
 private:
     std::unordered_map<std::string, handler_type> handlers;
 
+	std::vector<std::string> cur_tag = {""};
+
 	void handle_image(const treeml::forest_ext& forest);
+
 	void handle_table(const treeml::forest_ext& forest);
 	void handle_cell(const treeml::forest_ext& forest);
 protected:
