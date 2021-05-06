@@ -8,5 +8,7 @@ this_bin := ../../src/cud2html/out/$(c)/cud2html$(dot_exe)
 this_test_deps := $(this_bin)
 this_test_ld_path := ../../src/lib/out/$(c)
 
-this_test_cmd := $(this_bin) sample.cud
+this_test_cmd := $(this_bin) *.cud
 $(eval $(prorab-test))
+
+$(eval $(call prorab-include, ../../src/cud2html/makefile))

@@ -26,6 +26,8 @@ public:
 	void on_header4(const treeml::forest_ext& tree)override;
 	void on_header5(const treeml::forest_ext& tree)override;
 	void on_header6(const treeml::forest_ext& tree)override;
+
+	void on_image(const image_param& param, const treeml::forest_ext& tree)override;
 };
 
 }

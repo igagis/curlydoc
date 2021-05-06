@@ -19,3 +19,7 @@
 - `m` or `{backtick}` - monospace
 - `ul` or `-` - unordered list item
 - `ol` or `.` - ordered list item
+- `image` - image, `image{param{width{200}} me.jpg}`
+- `table` - table
+- `row` - table row
+- `cell` - table cell

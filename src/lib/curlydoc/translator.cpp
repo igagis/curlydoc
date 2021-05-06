@@ -128,6 +128,11 @@ translator::translator(){
 		this->add_tag("h6", f);
 	}
 	
+	this->add_tag("image", [this](bool space, auto& forest){
+		this->report_space(space);
+		this->handle_image(forest);
+	});
+
 	// TODO:
 }
 
@@ -171,4 +176,46 @@ void translator::report_space(bool report){
     if(report){
         this->on_word(" ");
     }
+}
+
+bool translator::is_param(const treeml::tree_ext& tree)noexcept{
+	return tree == "param" && !tree.children.empty();
+}
+
+void translator::check_param(const treeml::tree_ext& tree){
+	if(tree.children.empty()){
+		throw std::invalid_argument(std::string("no value specified for '") + tree.value.to_string() + "' parameter");
+	}
+
+	if(tree.children.size() > 1){
+		throw std::invalid_argument(std::string("more than one value specified for '") + tree.value.to_string() + "' parameter");
+	}
+}
+
+void translator::handle_image(const treeml::forest_ext& forest){
+	image_param param;
+
+	ASSERT(!forest.empty())
+	auto i = forest.begin();
+
+	if(is_param(*i)){
+		for(const auto& p : i->children){
+			check_param(p);
+
+			if(p == "width"){
+				param.width = p.children.front().value.to_uint32();
+			}else if(p == "height"){
+				param.height = p.children.front().value.to_uint32();
+			}
+		}
+		++i;
+	}
+
+	if(i == forest.end()){
+		throw std::invalid_argument("image source is not specified");
+	}
+
+	param.url = i->value.to_string();
+
+	this->on_image(param, forest);
 }

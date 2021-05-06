@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <optional>
 
 #include <treeml/tree_ext.hpp>
 
@@ -13,8 +14,12 @@ public:
 private:
     std::unordered_map<std::string, handler_type> handlers;
 
+	void handle_image(const treeml::forest_ext& forest);
 protected:
     void report_space(bool report);
+
+	static bool is_param(const treeml::tree_ext& forest)noexcept;
+	static void check_param(const treeml::tree_ext& forest);
 public:
 	translator();
     virtual ~translator(){}
@@ -31,20 +36,28 @@ public:
 
     virtual void on_word(const std::string& word) = 0;
 
-	virtual void on_paragraph(const treeml::forest_ext& tree) = 0;
+	virtual void on_paragraph(const treeml::forest_ext& forest) = 0;
 
-	virtual void on_bold(const treeml::forest_ext& tree) = 0;
-	virtual void on_italic(const treeml::forest_ext& tree) = 0;
-	virtual void on_underline(const treeml::forest_ext& tree) = 0;
-	virtual void on_strikethrough(const treeml::forest_ext& tree) = 0;
-	virtual void on_monospace(const treeml::forest_ext& tree) = 0;
+	virtual void on_bold(const treeml::forest_ext& forest) = 0;
+	virtual void on_italic(const treeml::forest_ext& forest) = 0;
+	virtual void on_underline(const treeml::forest_ext& forest) = 0;
+	virtual void on_strikethrough(const treeml::forest_ext& forest) = 0;
+	virtual void on_monospace(const treeml::forest_ext& forest) = 0;
 
-	virtual void on_header1(const treeml::forest_ext& tree) = 0;
-	virtual void on_header2(const treeml::forest_ext& tree) = 0;
-	virtual void on_header3(const treeml::forest_ext& tree) = 0;
-	virtual void on_header4(const treeml::forest_ext& tree) = 0;
-	virtual void on_header5(const treeml::forest_ext& tree) = 0;
-	virtual void on_header6(const treeml::forest_ext& tree) = 0;
+	virtual void on_header1(const treeml::forest_ext& forest) = 0;
+	virtual void on_header2(const treeml::forest_ext& forest) = 0;
+	virtual void on_header3(const treeml::forest_ext& forest) = 0;
+	virtual void on_header4(const treeml::forest_ext& forest) = 0;
+	virtual void on_header5(const treeml::forest_ext& forest) = 0;
+	virtual void on_header6(const treeml::forest_ext& forest) = 0;
+
+	struct image_param{
+		std::string url;
+		std::optional<uint32_t> width;
+		std::optional<uint32_t> height;
+	};
+
+	virtual void on_image(const image_param& param, const treeml::forest_ext& forest) = 0;
 
 	// TODO:
 };

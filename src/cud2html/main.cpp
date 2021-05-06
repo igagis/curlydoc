@@ -8,22 +8,12 @@
 
 #include "translator_to_html.hpp"
 
-int main(int argc, const char** argv){
-	clargs::parser cli;
-
-	auto positional = cli.parse(argc, argv);
-
-	if(positional.size() != 1){
-		std::cout << "error: input file is not given" << '\n';
-		return 1;
-	}
-
-	std::string out_file_name = utki::split(positional.front(), '.').front() + ".html";
+namespace{
+void translate(const std::string& file_name){
+	std::string out_file_name = utki::split(file_name, '.').front() + ".html";
 
 	curlydoc::interpreter interpreter(
-			std::make_unique<papki::fs_file>(
-					positional.front()
-				)
+			std::make_unique<papki::fs_file>(file_name)
 		);
 
 	curlydoc::translator_to_html translator;
@@ -51,6 +41,24 @@ int main(int argc, const char** argv){
 
 	outf << "\n" "</body>" "\n"
 			"</html>" "\n";
+}
+}
+
+int main(int argc, const char** argv){
+	clargs::parser cli;
+
+	std::cout << "arg = " << argv[1] << '\n';
+
+	auto positional = cli.parse(argc, argv);
+
+	if(positional.empty()){
+		std::cout << "error: input file is not given" << '\n';
+		return 1;
+	}
+
+	for(const auto& f : positional){
+		translate(f);
+	}
 
 	return 0;
 }

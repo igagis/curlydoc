@@ -1,5 +1,7 @@
 #include "translator_to_html.hpp"
 
+#include <optional>
+
 using namespace curlydoc;
 
 translator_to_html::translator_to_html(){
@@ -80,4 +82,18 @@ void translator_to_html::on_header6(const treeml::forest_ext& forest){
 	this->ss << '\n' << "<h6>";
 	this->translate(forest);
 	this->ss << "</h6>";
+}
+
+void translator_to_html::on_image(const image_param& param, const treeml::forest_ext& forest){
+	this->ss << "<img src=\"" << param.url << "\"";
+
+	if(param.width){
+		this->ss << " width=\"" << param.width.value() << "\"";
+	}
+
+	if(param.height){
+		this->ss << " height=\"" << param.height.value() << "\"";
+	}
+
+	this->ss << "/>";
 }
