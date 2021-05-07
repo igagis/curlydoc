@@ -99,7 +99,7 @@ void translator_to_html::on_image(const image_params& params, const treeml::fore
 }
 
 void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& forest){
-	this->ss << '\n' << "<table width=\"100%\">";
+	this->ss << '\n' << "<table width=\"100%\" border=\"1px solid black\" style=\"border-spacing: 0;border-collapse: collapse;\">";
 
 	bool is_first_row = true;
 	for(const auto& r : tbl.rows){
