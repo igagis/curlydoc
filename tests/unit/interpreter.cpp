@@ -144,6 +144,38 @@ tst::set set0("interpreter", [](auto& suite){
 					if{bla}and{${v1}}and{${v2}}then{hello}else{bye}
 				)", "bye"},
 
+				// or
+				{R"(
+					if{bla}or{true}then{hello}
+				)", "hello"},
+				{R"(
+					def{
+						v1
+					}
+					if{${v1}}or{true}then{hello}
+				)", "hello"},
+				{R"(
+					def{
+						v1
+						v2
+					}
+					if{${v1}}or{${v2}}then{hello}else{bye}
+				)", "bye"},
+				{R"(
+					def{
+						v1
+						v2
+					}
+					if{true}or{${v1}}and{${v2}}then{hello}else{bye}
+				)", "hello"},
+				{R"(
+					def{
+						v1
+						v2
+					}
+					if{${v1}}or{true}and{${v2}}then{hello}else{bye}
+				)", "bye"},
+
 				// map
 				{R"(
 					def{

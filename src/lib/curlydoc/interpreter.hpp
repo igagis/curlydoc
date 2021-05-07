@@ -46,7 +46,12 @@ private:
 
 	context& push_context(const context* prev = nullptr);
 
-	std::vector<bool> if_flag_stack = {false}; // initial flag for root scope
+	struct bool_state{
+		bool flag = false;
+		bool true_before_or = false;
+	};
+
+	std::vector<bool_state> if_flag_stack = {bool_state()}; // initial flag for root scope
 
 	std::unique_ptr<papki::file> file; // for including files
 public:
