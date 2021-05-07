@@ -101,10 +101,15 @@ void translator_to_html::on_image(const image_params& params, const treeml::fore
 void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& forest){
 	this->ss << '\n' << "<table width=\"100%\">";
 
+	bool is_first_row = true;
 	for(const auto& r : tbl.rows){
 		this->ss << '\n' << "<tr>";
+
+		const char* td = is_first_row ? "th" : "td";
+		is_first_row = false;
+
 		for(const auto& c : r.cells){
-			this->ss << '\n' << "<td";
+			this->ss << '\n' << '<' << td;
 			const auto& col_span = std::get<0>(c.span);
 			const auto& row_span = std::get<1>(c.span);
 			ASSERT(col_span >= 1)
@@ -117,7 +122,7 @@ void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& fo
 			}
 			this->ss << '>';
 			this->translate(c.begin, c.end);
-			this->ss << "</td>";
+			this->ss << "</" << td << '>';
 		}
 		this->ss << '\n' << "</tr>";
 	}
