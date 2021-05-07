@@ -285,6 +285,10 @@ void translator::handle_table(const treeml::forest_ext& forest){
 				tbl.num_cols = p.children.front().value.to_uint32();
 			}else if(p == "border"){
 				tbl.border = p.children.front().value.to_uint32();
+			}else if(p == "weight"){
+				for(const auto& w : p.children){
+					tbl.weights.push_back(w.value.to_uint32());
+				}
 			}
 		}
 		++i;
@@ -292,6 +296,14 @@ void translator::handle_table(const treeml::forest_ext& forest){
 
 	if(tbl.num_cols == 0){
 		throw std::invalid_argument("table number of columns is not specified");
+	}
+
+	if(tbl.weights.empty()){
+		tbl.weights.push_back(1);
+	}
+
+	while(tbl.weights.size() < tbl.num_cols){
+		tbl.weights.push_back(tbl.weights.back());
 	}
 
 	this->translate(i, forest.end());

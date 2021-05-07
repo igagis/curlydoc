@@ -1,6 +1,6 @@
 #include "translator_to_html.hpp"
 
-#include <optional>
+#include <numeric>
 
 using namespace curlydoc;
 
@@ -101,23 +101,47 @@ void translator_to_html::on_image(const image_params& params, const treeml::fore
 void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& forest){
 	this->ss << '\n' << "<table width=\"100%\">";
 
+	ASSERT(tbl.weights.size() == tbl.num_cols)
+
+	size_t total_weight = std::accumulate(tbl.weights.begin(), tbl.weights.end(), decltype(tbl.weights)::value_type(0));
+
+	std::vector<size_t> weight_percent;
+
+	for(const auto& w : tbl.weights){
+		weight_percent.push_back(
+			w * 100 / total_weight
+		);
+	}
+
 	for(const auto& r : tbl.rows){
 		this->ss << '\n' << "<tr>";
 
+		size_t span = 0;
 		for(const auto& c : r.cells){
+			std::vector<std::string> style;
 			this->ss << '\n' << "<td";
 			if(c.col_span){
 				this->ss << " colspan=\"" << c.col_span.value() << '\"';
+			}else{
+				style.push_back(std::string("width:") + std::to_string(weight_percent[span]) + "%");
 			}
 			if(c.row_span){
 				this->ss << " rowspan=\"" << c.row_span.value() << '\"';
 			}
 			if(tbl.border){
-				this->ss << " style=\"border-width: " << tbl.border.value() << "px;\"";
+				style.push_back(std::string("border-width:") + std::to_string(tbl.border.value()) + "px");
+			}
+			if(!style.empty()){
+				this->ss << " style=\"";
+				for(const auto& s : style){
+					this->ss << s << ";";
+				}
+				this->ss << '\"';
 			}
 			this->ss << '>';
 			this->translate(c.begin, c.end);
 			this->ss << "</td>";
+			span += c.get_col_span();
 		}
 		this->ss << '\n' << "</tr>";
 	}

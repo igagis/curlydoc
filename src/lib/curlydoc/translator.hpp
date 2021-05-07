@@ -88,10 +88,18 @@ public:
 		size_t span = 0;
 	};
 
+	enum class align{
+		left,
+		right,
+		center
+	};
+
 	struct table{
 		size_t num_cols = 0;
 		std::vector<table_row> rows;
 		std::optional<unsigned> border;
+		std::vector<size_t> weights;
+		std::vector<align> aligns;
 
 		size_t cur_row = 0;
 		void push(cell&& c);
