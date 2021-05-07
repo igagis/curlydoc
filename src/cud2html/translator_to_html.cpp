@@ -104,9 +104,20 @@ void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& fo
 	for(const auto& r : tbl.rows){
 		this->ss << '\n' << "<tr>";
 		for(const auto& c : r.cells){
-			this->ss << '\n' << "<tc>";
+			this->ss << '\n' << "<td";
+			const auto& col_span = std::get<0>(c.span);
+			const auto& row_span = std::get<1>(c.span);
+			ASSERT(col_span >= 1)
+			ASSERT(row_span >= 1)
+			if(col_span != 1){
+				this->ss << " colspan=\"" << col_span << '\"';
+			}
+			if(row_span != 1){
+				this->ss << " rowspan=\"" << row_span << '\"';
+			}
+			this->ss << '>';
 			this->translate(c.begin, c.end);
-			this->ss << "</tc>";
+			this->ss << "</td>";
 		}
 		this->ss << '\n' << "</tr>";
 	}

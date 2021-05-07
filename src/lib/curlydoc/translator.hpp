@@ -70,8 +70,7 @@ public:
 	struct cell{
 		treeml::forest_ext::const_iterator begin;
 		treeml::forest_ext::const_iterator end;
-		size_t row_span = 1;
-		size_t col_span = 1;
+		std::tuple<size_t, size_t> span = {1, 1};
 	};
 
 	struct table_row{
