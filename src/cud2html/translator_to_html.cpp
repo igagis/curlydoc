@@ -98,14 +98,18 @@ void translator_to_html::on_image(const image_params& params, const treeml::fore
 	this->ss << "/>";
 }
 
-void translator_to_html::on_table(const table_params& params, const treeml::forest_ext& forest){
+void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& forest){
 	this->ss << '\n' << "<table>";
 
-	this->translate(forest);
+	for(const auto& r : tbl.rows){
+		this->ss << '\n' << "<tr>";
+		for(const auto& c : r.cells){
+			this->ss << '\n' << "<tc>";
+			this->translate(c.begin, c.end);
+			this->ss << "</tc>";
+		}
+		this->ss << '\n' << "</tr>";
+	}
 
-	this->ss << "</table>";
-}
-
-void translator_to_html::on_cell(const cell_params& params, const treeml::forest_ext& forest){
-	// TODO:
+	this->ss << '\n' << "</table>";
 }

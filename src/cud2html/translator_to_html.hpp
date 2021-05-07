@@ -29,8 +29,7 @@ public:
 
 	void on_image(const image_params& params, const treeml::forest_ext& forest)override;
 
-	void on_table(const table_params& params, const treeml::forest_ext& forest)override;
-	void on_cell(const cell_params& params, const treeml::forest_ext& forest)override;
+	void on_table(const table& tbl, const treeml::forest_ext& forest)override;
 };
 
 }

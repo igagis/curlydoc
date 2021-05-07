@@ -8,6 +8,7 @@ const std::string curly_brace_open = "{";
 const std::string curly_brace_close = "}";
 
 const std::string table_tag = "table";
+const std::string cell_tag = "cell";
 }
 
 translator::translator(){
@@ -172,6 +173,29 @@ std::vector<std::string> translator::list_tags()const{
 	return tags;
 }
 
+void translator::translate(bool space, const treeml::tree_ext& tree){
+	const auto& tag = tree.value.to_string();
+
+	auto handler_i = this->handlers.find(tag);
+	if(handler_i == this->handlers.end()){
+		throw std::invalid_argument(std::string("tag not found: ") + tag);
+	}
+
+	this->cur_tag.push_back(tag);
+	utki::scope_exit cur_tag_scope_exit([this](){
+		this->cur_tag.pop_back();
+	});
+
+	try{
+		handler_i->second(space, tree.children);
+	}catch(std::exception& e){
+		std::stringstream ss;
+		ss << e.what() << " at:" << '\n';
+		ss << "    " << tree.value.info.location.line << ":" << tree.value.info.location.offset << ": " << tag;
+		throw std::invalid_argument(ss.str());
+	}
+}
+
 void translator::translate(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end){
     for(auto i = begin; i != end; ++i){
         bool space = i != begin && i->value.info.flags.get(treeml::flag::space);
@@ -182,26 +206,7 @@ void translator::translate(treeml::forest_ext::const_iterator begin, treeml::for
             continue;
         }
 
-		const auto& tag = i->value.to_string();
-
-        auto handler_i = this->handlers.find(tag);
-        if(handler_i == this->handlers.end()){
-            throw std::invalid_argument(std::string("tag not found: ") + tag);
-        }
-
-		this->cur_tag.push_back(tag);
-		utki::scope_exit cur_tag_scope_exit([this](){
-			this->cur_tag.pop_back();
-		});
-
-		try{
-        	handler_i->second(space, i->children);
-		}catch(std::exception& e){
-			std::stringstream ss;
-			ss << e.what() << " at:" << '\n';
-			ss << "  " << i->value.info.location.line << ":" << i->value.info.location.offset << ": " << tag;
-			throw std::invalid_argument(ss.str());
-		}
+		this->translate(space, *i);
     }
 }
 
@@ -250,26 +255,74 @@ void translator::handle_image(const treeml::forest_ext& forest){
 }
 
 void translator::handle_table(const treeml::forest_ext& forest){
-	table_params params;
-
 	ASSERT(!forest.empty())
 	auto i = forest.begin();
+
+	this->cur_table.emplace_back();
+	utki::scope_exit cur_table_scope_exit([this](){
+		this->cur_table.pop_back();
+	});
+
+	auto& tbl = this->cur_table.back();
 
 	if(is_options(*i)){
 		for(const auto& p : i->children){
 			check_option(p);
 
 			if(p == "cols"){
-				params.num_cols = p.children.front().value.to_uint32();
+				tbl.num_cols = p.children.front().value.to_uint32();
 			}
 		}
+		++i;
 	}
 
-	if(params.num_cols == 0){
+	if(tbl.num_cols == 0){
 		throw std::invalid_argument("table number of columns is not specified");
 	}
 
-	this->on_table(params, forest);
+	this->translate(i, forest.end());
+
+	if(!tbl.rows.empty()){
+		const auto& last_row = tbl.rows.back();
+		if(last_row.cells.empty() || last_row.span != tbl.num_cols){
+			throw std::invalid_argument("cells col span values mismatch, table has empty rows");
+		}
+	}
+
+	this->on_table(tbl, forest);
+}
+
+void translator::table::push(cell&& c){
+	ASSERT(this->cur_row <= this->rows.size())
+
+	ASSERT(c.col_span >= 1)
+
+	for(size_t i = 0; i != c.col_span; ++i){
+		size_t index = i + this->cur_row;
+		ASSERT(index <= this->rows.size())
+		if(index == this->rows.size()){
+			this->rows.emplace_back();
+		}
+
+		auto& row = this->rows[index];
+		ASSERT(c.row_span >= 1)
+		row.span += c.row_span;
+	}
+
+	ASSERT(this->cur_row < this->rows.size())
+	auto& row = this->rows[this->cur_row];
+
+	row.cells.push_back(std::move(c));
+
+	if(row.span > this->num_cols){
+		std::stringstream ss;
+		ss << "table number of columns (" << this->num_cols << ") and cells row span (" << row.span << ") mismatch";
+		throw std::invalid_argument(ss.str());
+	}
+
+	if(row.span == this->num_cols){
+		++this->cur_row;
+	}
 }
 
 void translator::handle_cell(const treeml::forest_ext& forest){
@@ -279,7 +332,7 @@ void translator::handle_cell(const treeml::forest_ext& forest){
 		throw std::invalid_argument("'cell' tag is only allowed directly inside of 'table' tag");
 	}
 
-	cell_params params;
+	cell c;
 
 	ASSERT(!forest.empty())
 	auto i = forest.begin();
@@ -291,14 +344,23 @@ void translator::handle_cell(const treeml::forest_ext& forest){
 			if(p == "span"){
 				auto i = p.children.begin();
 
-				params.row_span = i->value.to_uint32();
+				c.row_span = i->value.to_uint32();
 				++i;
 				if(i != p.children.end()){
-					params.col_span = i->value.to_uint32();
+					c.col_span = i->value.to_uint32();
 				}
 			}
 		}
+		++i;
 	}
 
-	this->on_cell(params, forest);
+	if(c.row_span < 1 || c.col_span < 1){
+		throw std::invalid_argument("cell row/col span cannot be 0");
+	}
+
+	c.begin = i;
+	c.end = forest.end();
+
+	ASSERT(!this->cur_table.empty())
+	this->cur_table.back().push(std::move(c));
 }

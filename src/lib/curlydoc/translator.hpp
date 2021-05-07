@@ -20,11 +20,14 @@ private:
 
 	void handle_table(const treeml::forest_ext& forest);
 	void handle_cell(const treeml::forest_ext& forest);
+
+	void translate(bool space, const treeml::tree_ext& tree);
 protected:
     void report_space(bool report);
 
 	static bool is_options(const treeml::tree_ext& forest)noexcept;
 	static void check_option(const treeml::tree_ext& forest);
+
 public:
 	translator();
     virtual ~translator(){}
@@ -64,18 +67,29 @@ public:
 
 	virtual void on_image(const image_params& params, const treeml::forest_ext& forest) = 0;
 
-	struct table_params{
-		unsigned num_cols = 0;
+	struct cell{
+		treeml::forest_ext::const_iterator begin;
+		treeml::forest_ext::const_iterator end;
+		size_t row_span = 1;
+		size_t col_span = 1;
 	};
 
-	virtual void on_table(const table_params& params, const treeml::forest_ext& forest) = 0;
-
-	struct cell_params{
-		unsigned row_span = 1;
-		unsigned col_span = 1;
+	struct table_row{
+		std::vector<cell> cells;
+		size_t span = 0;
 	};
 
-	virtual void on_cell(const cell_params& params, const treeml::forest_ext& forest) = 0;
+	struct table{
+		size_t num_cols = 0;
+		std::vector<table_row> rows;
+
+		size_t cur_row = 0;
+		void push(cell&& c);
+	};
+private:
+	std::vector<table> cur_table;
+public:
+	virtual void on_table(const table& tbl, const treeml::forest_ext& forest) = 0;
 };
 
 }

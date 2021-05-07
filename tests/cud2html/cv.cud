@@ -7,6 +7,6 @@ table{
 		Hello wolrd
 	}
 	
-	cell{ hi } cell{ opt{span{2 1}} non-empty } cell{hey}
+	cell{ hi } cell{ opt{span{1 1}} non-empty } cell{hey} cell{hey}
 
 }
