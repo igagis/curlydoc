@@ -99,7 +99,7 @@ void translator_to_html::on_image(const image_params& params, const treeml::fore
 }
 
 void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& forest){
-	this->ss << '\n' << "<table>";
+	this->ss << '\n' << "<table width=\"100%\">";
 
 	for(const auto& r : tbl.rows){
 		this->ss << '\n' << "<tr>";
