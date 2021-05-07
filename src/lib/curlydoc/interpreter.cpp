@@ -49,11 +49,11 @@ void interpreter::context::add(const std::string& name, treeml::forest_ext&& val
 	}
 }
 
-interpreter::context::find_result interpreter::context::find(const std::string& name)const{
+interpreter::context::find_result interpreter::context::try_find(const std::string& name)const{
 	auto i = this->def.find(name);
 	if(i == this->def.end()){
 		if(this->prev){
-			return this->prev->find(name);
+			return this->prev->try_find(name);
 		}
 		return {
 			nullptr,
@@ -65,6 +65,16 @@ interpreter::context::find_result interpreter::context::find(const std::string& 
 		&i->second,
 		*this->prev
 	};
+}
+
+const treeml::forest_ext& interpreter::context::find(const std::string& name)const{
+	auto v = this->try_find(name);
+
+	if(!v.value){
+		throw exception(std::string("variable '") + name +"' not found");
+	}
+
+	return *v.value;
 }
 
 interpreter::context& interpreter::push_context(const context* prev){
@@ -134,13 +144,7 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 
 		const auto& name = args.front().value.to_string();
 
-		auto v = this->context_stack.back().find(name);
-
-		if(!v.value){
-			throw exception(std::string("variable '") + name +"' not found");
-		}
-
-		const auto& val = *v.value;
+		const auto& val = this->context_stack.back().find(name);
 
 		if(args.size() >= 2){ // if access by index
 			if(!args.front().children.empty()){
@@ -160,7 +164,7 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 				throw exception(std::string("given index '") + index.front().value.to_string() + "' is not valid");
 			}
 
-			if(i >= v.value->size()){
+			if(i >= val.size()){
 				std::stringstream ss;
 				ss << "index out of bounds (" << i << ")";
 				throw exception(ss.str());
@@ -276,6 +280,26 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 				true
 			);
 	});
+
+	this->add_function("size", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		auto res = this->eval(args);
+
+		if(res.size() != 1){
+			throw exception("none or more than one argument supplied to 'size' function");
+		}
+
+		if(!res.front().children.empty()){
+			throw exception("variable name has children");
+		}
+
+		const auto& v = this->context_stack.back().find(res.front().value.to_string());
+
+		treeml::tree_ext size{std::to_string(v.size())};
+
+		return treeml::forest_ext{std::move(size)};
+	});
 }
 
 treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end, bool preserve_vars){
@@ -297,7 +321,7 @@ treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, t
 			treeml::forest_ext output;
 
 			// search for macro
-			auto v = this->context_stack.back().find(i->value.to_string());
+			auto v = this->context_stack.back().try_find(i->value.to_string());
 			if(v.value){
 				auto args = this->eval(i->children);
 

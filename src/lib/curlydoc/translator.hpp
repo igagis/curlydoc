@@ -14,7 +14,8 @@ public:
 private:
     std::unordered_map<std::string, handler_type> handlers;
 
-	std::vector<std::string> cur_tag = {""};
+	std::vector<std::string> cur_tag;
+	const std::string& get_parent_tag()const noexcept;
 
 	void handle_image(const treeml::forest_ext& forest);
 

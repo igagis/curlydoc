@@ -7,6 +7,7 @@ const std::string double_quote = "\"";
 const std::string curly_brace_open = "{";
 const std::string curly_brace_close = "}";
 
+const std::string empty_tag = "";
 const std::string table_tag = "table";
 const std::string cell_tag = "cell";
 }
@@ -160,6 +161,17 @@ void translator::add_tag(const std::string& tag, handler_type&& func){
     }
 }
 
+const std::string& translator::get_parent_tag()const noexcept{
+	ASSERT(!this->cur_tag.empty())
+	for(auto i = std::next(this->cur_tag.rbegin()); i != this->cur_tag.rend(); ++i){
+		if(!i->empty()){
+			// std::cout << "ret = " << *i << '\n';
+			return *i;
+		}
+	}
+	return empty_tag;
+}
+
 std::vector<std::string> translator::list_tags()const{
 	std::vector<std::string> tags;
 
@@ -191,7 +203,7 @@ void translator::translate(bool space, const treeml::tree_ext& tree){
 	}catch(std::exception& e){
 		std::stringstream ss;
 		ss << e.what() << " at:" << '\n';
-		ss << "    " << tree.value.info.location.line << ":" << tree.value.info.location.offset << ": " << tag;
+		ss << "    " << tree.value.info.location.line << ":" << tree.value.info.location.offset << ": " << (tag.empty() ? "\"\"" : tag);
 		throw std::invalid_argument(ss.str());
 	}
 }
@@ -330,7 +342,7 @@ void translator::table::push(cell&& c){
 void translator::handle_cell(const treeml::forest_ext& forest){
 	ASSERT(this->cur_tag.size() >= 2)
 
-	if(*std::next(this->cur_tag.rbegin()) != table_tag){
+	if(this->get_parent_tag() != table_tag){
 		throw std::invalid_argument("'cell' tag is only allowed directly inside of 'table' tag");
 	}
 

@@ -36,7 +36,9 @@ private:
 			const context& ctx;
 		};
 
-		find_result find(const std::string& name)const;
+		find_result try_find(const std::string& name)const;
+
+		const treeml::forest_ext& find(const std::string& name)const;
 	};
 
 	// NOTE: use std::list to avoid context objects to be moved

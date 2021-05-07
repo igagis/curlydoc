@@ -167,6 +167,21 @@ tst::set set0("interpreter", [](auto& suite){
 					}
 					opt{x{bla} y{${v}}}
 				)", "opt{x{bla}y{var}}"},
+
+				// size
+				{R"(
+					def{
+						v{bla bla asis{hello} {bla bla} {bla bla bla} bla}
+					}
+					size{v}
+				)", "6"},
+				{R"(
+					def{
+						v{bla bla asis{hello} {bla bla} {bla bla bla} bla}
+						var{v}
+					}
+					size{${var}}
+				)", "6"},
 			},
 			[](auto& p){
 				curlydoc::interpreter interpreter(std::make_unique<papki::fs_file>("none"));
