@@ -266,6 +266,32 @@ void translator::handle_image(const treeml::forest_ext& forest){
 	this->on_image(params, forest);
 }
 
+namespace{
+translator::align parse_align(const std::string& str){
+	if(str == "left"){
+		return translator::align::left;
+	}else if(str == "center"){
+		return translator::align::center;
+	}else if(str == "right"){
+		return translator::align::right;
+	}
+	throw std::invalid_argument(std::string("unknown alignment keyword: ") + str);
+}
+}
+
+namespace{
+translator::valign parse_valign(const std::string& str){
+	if(str == "top"){
+		return translator::valign::top;
+	}else if(str == "center"){
+		return translator::valign::center;
+	}else if(str == "bottom"){
+		return translator::valign::bottom;
+	}
+	throw std::invalid_argument(std::string("unknown vertical alignment keyword: ") + str);
+}
+}
+
 void translator::handle_table(const treeml::forest_ext& forest){
 	ASSERT(!forest.empty())
 	auto i = forest.begin();
@@ -275,47 +301,68 @@ void translator::handle_table(const treeml::forest_ext& forest){
 		this->cur_table.pop_back();
 	});
 
-	auto& tbl = this->cur_table.back();
+	auto& t = this->cur_table.back();
 
 	if(is_options(*i)){
 		for(const auto& p : i->children){
 			check_option(p);
 
 			if(p == "cols"){
-				tbl.num_cols = p.children.front().value.to_uint32();
+				t.num_cols = p.children.front().value.to_uint32();
 			}else if(p == "border"){
-				tbl.border = p.children.front().value.to_uint32();
+				t.border = p.children.front().value.to_uint32();
 			}else if(p == "weight"){
 				for(const auto& w : p.children){
-					tbl.weights.push_back(w.value.to_uint32());
+					t.weights.push_back(w.value.to_uint32());
+				}
+			}else if(p == "align"){
+				for(const auto& a : p.children){
+					t.aligns.push_back(parse_align(a.value.to_string()));
+				}
+			}else if(p == "valign"){
+				for(const auto& a : p.children){
+					t.valigns.push_back(parse_valign(a.value.to_string()));
 				}
 			}
 		}
 		++i;
 	}
 
-	if(tbl.num_cols == 0){
+	if(t.num_cols == 0){
 		throw std::invalid_argument("table number of columns is not specified");
 	}
 
-	if(tbl.weights.empty()){
-		tbl.weights.push_back(1);
+	if(t.weights.empty()){
+		t.weights.push_back(1);
+	}
+	while(t.weights.size() < t.num_cols){
+		t.weights.push_back(t.weights.back());
 	}
 
-	while(tbl.weights.size() < tbl.num_cols){
-		tbl.weights.push_back(tbl.weights.back());
+	if(t.aligns.empty()){
+		t.aligns.push_back(align::center);
+	}
+	while(t.aligns.size() < t.num_cols){
+		t.aligns.push_back(t.aligns.back());
+	}
+
+	if(t.valigns.empty()){
+		t.valigns.push_back(valign::center);
+	}
+	while(t.valigns.size() < t.num_cols){
+		t.valigns.push_back(t.valigns.back());
 	}
 
 	this->translate(i, forest.end());
 
-	if(!tbl.rows.empty()){
-		const auto& last_row = tbl.rows.back();
-		if(last_row.cells.empty() || last_row.span != tbl.num_cols){
+	if(!t.rows.empty()){
+		const auto& last_row = t.rows.back();
+		if(last_row.cells.empty() || last_row.span != t.num_cols){
 			throw std::invalid_argument("cells col span values mismatch, table has empty rows");
 		}
 	}
 
-	this->on_table(tbl, forest);
+	this->on_table(t, forest);
 }
 
 void translator::table::push(cell&& c){

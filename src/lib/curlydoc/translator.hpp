@@ -90,8 +90,14 @@ public:
 
 	enum class align{
 		left,
-		right,
-		center
+		center,
+		right
+	};
+
+	enum class valign{
+		top,
+		center,
+		bottom
 	};
 
 	struct table{
@@ -100,6 +106,7 @@ public:
 		std::optional<unsigned> border;
 		std::vector<size_t> weights;
 		std::vector<align> aligns;
+		std::vector<valign> valigns;
 
 		size_t cur_row = 0;
 		void push(cell&& c);

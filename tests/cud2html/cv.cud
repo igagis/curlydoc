@@ -1,26 +1,16 @@
 image{ opt{ width{200} } me.jpg}
 
 table{
-	opt{ cols{3} border{2} weight{1 1 3} align{right left center} valign{top bottom center}}
+	opt{ cols{3} border{2} weight{1 1 3} align{right left center} valign{center bottom center}}
 
-	""{ // header row
-		def{
-			cell{asis{
-				cell{
-					b{${@}}
-				}
-			}}
-		}
-
-		cell{ opt{ span{1 1} }
-			Hello wolrd
-		}
-		
-		cell{ hi }
-
-		cell{ hi2 }
+	cell{ opt{ span{1 2} }
+		Hello wolrd
 	}
 	
-	cell{ opt{span{1 1}} non-empty } cell{opt{span{2 1}} hey}
+	cell{ hi }
+
+	cell{ hi2 }
+	
+	cell{ opt{span{1 1}} non-empty } cell{opt{span{1 1}} hey}
 
 }

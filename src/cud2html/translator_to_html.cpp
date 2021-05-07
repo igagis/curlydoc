@@ -98,10 +98,44 @@ void translator_to_html::on_image(const image_params& params, const treeml::fore
 	this->ss << "/>";
 }
 
+namespace{
+std::string to_string(translator::align a){
+	switch(a){
+		case translator::align::left:
+			return "left";
+		case translator::align::right:
+			return "right";
+		case translator::align::center:
+			return "center";
+		default:
+			ASSERT(false)
+			return std::string();
+	}
+}
+}
+
+namespace{
+std::string to_string(translator::valign a){
+	switch(a){
+		case translator::valign::top:
+			return "top";
+		case translator::valign::bottom:
+			return "bottom";
+		case translator::valign::center:
+			return "middle";
+		default:
+			ASSERT(false)
+			return std::string();
+	}
+}
+}
+
 void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& forest){
 	this->ss << '\n' << "<table width=\"100%\">";
 
 	ASSERT(tbl.weights.size() == tbl.num_cols)
+	ASSERT(tbl.aligns.size() == tbl.num_cols)
+	ASSERT(tbl.valigns.size() == tbl.num_cols)
 
 	size_t total_weight = std::accumulate(tbl.weights.begin(), tbl.weights.end(), decltype(tbl.weights)::value_type(0));
 
@@ -131,6 +165,8 @@ void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& fo
 			if(tbl.border){
 				style.push_back(std::string("border-width:") + std::to_string(tbl.border.value()) + "px");
 			}
+			style.push_back(std::string("text-align: ") + to_string(tbl.aligns[span]));
+			style.push_back(std::string("vertical-align: ") + to_string(tbl.valigns[span]));
 			if(!style.empty()){
 				this->ss << " style=\"";
 				for(const auto& s : style){
