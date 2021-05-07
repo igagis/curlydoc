@@ -70,7 +70,16 @@ public:
 	struct cell{
 		treeml::forest_ext::const_iterator begin;
 		treeml::forest_ext::const_iterator end;
-		std::tuple<size_t, size_t> span = {1, 1};
+		std::optional<size_t> col_span;
+		std::optional<size_t> row_span;
+
+		decltype(col_span)::value_type get_col_span()const noexcept{
+			return this->col_span ? this->col_span.value() : 1;
+		}
+
+		decltype(row_span)::value_type get_row_span()const noexcept{
+			return this->row_span ? this->row_span.value() : 1;
+		}
 	};
 
 	struct table_row{
@@ -81,6 +90,7 @@ public:
 	struct table{
 		size_t num_cols = 0;
 		std::vector<table_row> rows;
+		std::optional<unsigned> border;
 
 		size_t cur_row = 0;
 		void push(cell&& c);

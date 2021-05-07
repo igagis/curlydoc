@@ -99,7 +99,7 @@ void translator_to_html::on_image(const image_params& params, const treeml::fore
 }
 
 void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& forest){
-	this->ss << '\n' << "<table width=\"100%\" border=\"1px solid black\" style=\"border-spacing: 0;border-collapse: collapse;\">";
+	this->ss << '\n' << "<table width=\"100%\">";
 
 	bool is_first_row = true;
 	for(const auto& r : tbl.rows){
@@ -110,15 +110,14 @@ void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& fo
 
 		for(const auto& c : r.cells){
 			this->ss << '\n' << '<' << td;
-			const auto& col_span = std::get<0>(c.span);
-			const auto& row_span = std::get<1>(c.span);
-			ASSERT(col_span >= 1)
-			ASSERT(row_span >= 1)
-			if(col_span != 1){
-				this->ss << " colspan=\"" << col_span << '\"';
+			if(c.col_span){
+				this->ss << " colspan=\"" << c.col_span.value() << '\"';
 			}
-			if(row_span != 1){
-				this->ss << " rowspan=\"" << row_span << '\"';
+			if(c.row_span){
+				this->ss << " rowspan=\"" << c.row_span.value() << '\"';
+			}
+			if(tbl.border){
+				this->ss << " style=\"border-width: " << tbl.border.value() << "px;\"";
 			}
 			this->ss << '>';
 			this->translate(c.begin, c.end);

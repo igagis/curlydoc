@@ -271,6 +271,8 @@ void translator::handle_table(const treeml::forest_ext& forest){
 
 			if(p == "cols"){
 				tbl.num_cols = p.children.front().value.to_uint32();
+			}else if(p == "border"){
+				tbl.border = p.children.front().value.to_uint32();
 			}
 		}
 		++i;
@@ -295,9 +297,9 @@ void translator::handle_table(const treeml::forest_ext& forest){
 void translator::table::push(cell&& c){
 	ASSERT(this->cur_row <= this->rows.size())
 
-	ASSERT(std::get<1>(c.span) >= 1)
+	ASSERT(c.get_row_span() >= 1)
 
-	for(size_t i = 0; i != std::get<1>(c.span); ++i){
+	for(size_t i = 0; i != c.get_row_span(); ++i){
 		size_t index = i + this->cur_row;
 		ASSERT(index <= this->rows.size())
 		if(index == this->rows.size()){
@@ -305,8 +307,8 @@ void translator::table::push(cell&& c){
 		}
 
 		auto& row = this->rows[index];
-		ASSERT(std::get<0>(c.span) >= 1)
-		row.span += std::get<0>(c.span);
+		ASSERT(c.get_col_span() >= 1)
+		row.span += c.get_col_span();
 	}
 
 	ASSERT(this->cur_row < this->rows.size())
@@ -344,17 +346,17 @@ void translator::handle_cell(const treeml::forest_ext& forest){
 			if(p == "span"){
 				auto i = p.children.begin();
 
-				std::get<0>(c.span) = i->value.to_uint32();
+				c.col_span = i->value.to_uint32();
 				++i;
 				if(i != p.children.end()){
-					std::get<1>(c.span) = i->value.to_uint32();
+					c.row_span = i->value.to_uint32();
 				}
 			}
 		}
 		++i;
 	}
 
-	if(std::get<0>(c.span) < 1 || std::get<0>(c.span) < 1){
+	if(c.get_col_span() < 1 || c.get_row_span() < 1){
 		throw std::invalid_argument("cell row/col span cannot be 0");
 	}
 

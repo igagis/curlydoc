@@ -33,6 +33,19 @@ void translate(const std::string& file_name){
 			"<head>" "\n"
 			"<meta charset=utf-8>" "\n"
 			"<title>curlydoc</title>" "\n"
+			R"(
+			<style>
+				table{
+					border-spacing: 0;
+					border-collapse: collapse;
+				}
+				td, th{
+					border-width: 1px;
+					border-color: black;
+					border-style: solid;
+				}
+			</style>
+			)" "\n"
 			"</head>" "\n"
 			"<body>"
 		;

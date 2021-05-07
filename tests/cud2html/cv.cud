@@ -1,7 +1,7 @@
 image{ opt{ width{200} } me.jpg}
 
 table{
-	opt{ cols{3} weights{1 1 3} aligns{right left center}}
+	opt{ cols{3} border{0} weights{1 1 3} aligns{right left center}}
 
 	cell{ opt{ span{1 2} }
 		Hello wolrd
