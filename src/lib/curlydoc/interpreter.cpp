@@ -261,6 +261,18 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		return this->eval(args);
 	});
 
+	this->add_function("and", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		if(!this->if_flag_stack.back()){
+			return treeml::forest_ext();
+		}
+
+		this->if_flag_stack.back() = !this->eval(args).empty();
+
+		return treeml::forest_ext();
+	});
+
 	this->add_function("include", [this](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 

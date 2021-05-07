@@ -120,6 +120,30 @@ tst::set set0("interpreter", [](auto& suite){
 					}then{Hello}
 				)", "Hi"},
 
+				// and
+				{R"(
+					if{bla}and{hi}then{hello}
+				)", "hello"},
+				{R"(
+					def{
+						v1
+					}
+					if{bla}and{${v1}}then{hello}else{bye}
+				)", "bye"},
+				{R"(
+					def{
+						v1{true}
+					}
+					if{bla}and{${v1}}then{hello}else{bye}
+				)", "hello"},
+				{R"(
+					def{
+						v1{true}
+						v2
+					}
+					if{bla}and{${v1}}and{${v2}}then{hello}else{bye}
+				)", "bye"},
+
 				// map
 				{R"(
 					def{
