@@ -354,6 +354,12 @@ tst::set set0("interpreter", [](auto& suite){
 				{R"(
 					val{asis{hello{bla{bla}}}}
 				)", "hello"},
+				{R"(
+					def{
+						v
+					}
+					val{${v}}
+				)", ""},
 
 				// args
 				{R"(
@@ -373,6 +379,12 @@ tst::set set0("interpreter", [](auto& suite){
 					}
 					args{map{bla{${v}}}}
 				)", "hello world{bla bla{hi}}"},
+				{R"(
+					def{
+						v
+					}
+					args{${v}}
+				)", ""},
 
 				// eq
 				{R"(
