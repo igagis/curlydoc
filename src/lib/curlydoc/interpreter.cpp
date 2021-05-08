@@ -415,6 +415,21 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		}
 		return treeml::forest_ext();
 	});
+
+	this->add_function("gt", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		auto res = this->eval(args);
+
+		if(res.size() != 2){
+			throw exception("'eq' function requires exactly 2 arguments");
+		}
+
+		if(res.front().value.to_int64() > res.back().value.to_int64()){
+			return treeml::forest_ext{{"true"}};
+		}
+		return treeml::forest_ext();
+	});
 }
 
 treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end, bool preserve_vars){

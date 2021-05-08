@@ -400,6 +400,51 @@ tst::set set0("interpreter", [](auto& suite){
 					if{eq{asis{bla{bla bla} bla{bla hi}}}}else{hello}
 				)", "hello"},
 
+				// gt
+				{R"(
+					if{gt{10 0}}then{hello}else{world}
+				)", "hello"},
+				{R"(
+					if{gt{10 3}}then{hello}else{world}
+				)", "hello"},
+				{R"(
+					if{gt{0 10}}then{hello}else{world}
+				)", "world"},
+				{R"(
+					if{gt{3 10}}then{hello}else{world}
+				)", "world"},
+				{R"(
+					if{gt{10 -3}}then{hello}else{world}
+				)", "hello"},
+				{R"(
+					if{gt{-3 10}}then{hello}else{world}
+				)", "world"},
+				{R"(
+					if{gt{-3 -5}}then{hello}else{world}
+				)", "hello"},
+				{R"(
+					if{gt{-5 -3}}then{hello}else{world}
+				)", "world"},
+				{R"(
+					def{
+						v{4}
+					}
+					if{gt{${v} 10}}then{hello}else{world}
+				)", "world"},
+				{R"(
+					def{
+						v{4}
+						v2{9}
+					}
+					if{gt{${v} ${v2}}}then{hello}else{world}
+				)", "world"},
+				{R"(
+					def{
+						v{4}
+						v2{9}
+					}
+					if{gt{${v2} ${v}}}then{hello}else{world}
+				)", "hello"},
 			},
 			[](auto& p){
 				curlydoc::interpreter interpreter(std::make_unique<papki::fs_file>("none"));
