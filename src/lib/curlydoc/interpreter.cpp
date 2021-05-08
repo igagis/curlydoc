@@ -376,11 +376,29 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 
 		treeml::forest_ext ret;
 
-		for(const auto& a : this->eval(args)){
-			ret.push_back(treeml::tree_ext(a.value));
+		auto evaled = this->eval(args);
+
+		if(evaled.size() == 1){
+			ret.push_back(treeml::tree_ext(evaled.front().value));
+		}else if(!evaled.empty()){
+			throw exception("more than one value passed to 'val' function");
 		}
 
 		return ret;
+	});
+
+	this->add_function("args", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		auto evaled = this->eval(args);
+
+		if(evaled.size() == 1){
+			return evaled.front().children;
+		}else if(!evaled.empty()){
+			throw exception("more than one value passed to 'val' function");
+		}
+
+		return treeml::forest_ext();
 	});
 
 	this->add_function("eq", [this](const treeml::forest_ext& args){

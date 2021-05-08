@@ -358,7 +358,7 @@ void translator::handle_table(const treeml::forest_ext& forest){
 	if(!t.rows.empty()){
 		const auto& last_row = t.rows.back();
 		if(last_row.cells.empty() || last_row.span != t.num_cols){
-			throw std::invalid_argument("cells col span values mismatch, table has empty rows");
+			throw std::invalid_argument("cells col span values mismatch");
 		}
 	}
 

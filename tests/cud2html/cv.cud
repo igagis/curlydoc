@@ -5,8 +5,16 @@ table{
 
 	""{ // header
 		def{
+			get_opt{asis{
+				${@{opt}}
+			}}
+		}
+
+		def{
 			cell{asis{
 				cell{
+					//map{opt{ get_opt{${@}} }}
+					//b{${@}}
 					${@}
 				}
 			}}

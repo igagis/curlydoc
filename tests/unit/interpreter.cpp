@@ -282,7 +282,14 @@ tst::set set0("interpreter", [](auto& suite){
 				// access array element by key
 				{R"(
 					def{
-						a{map{x{bla bla} y{hey} z{asis{how{are{you}}}} bla}}
+						a{map{
+							x{bla bla}
+							y{hey}
+							z{asis{
+								how{are{you}}
+							}}
+							bla
+						}}
 					}
 
 					x = ${a{x}} y = ${a{y}} z = ${a{z}} bla = ${a{bla}}
@@ -342,14 +349,30 @@ tst::set set0("interpreter", [](auto& suite){
 					val{hello}
 				)", "hello"},
 				{R"(
-					val{hello world}
+					val{asis{hello{bla}}}
+				)", "hello"},
+				{R"(
+					val{asis{hello{bla{bla}}}}
+				)", "hello"},
+
+				// args
+				{R"(
+					args{bla}
+				)", ""},
+				{R"(
+					args{map{bla{hello}}}
+				)", "hello"},
+				{R"(
+					args{map{bla{hello world}}}
 				)", "hello world"},
 				{R"(
-					val{asis{hello{bla} world}}
-				)", "hello world"},
-				{R"(
-					val{asis{hello{bla} world{bla{bla} bla}}}
-				)", "hello world"},
+					def{
+						v{asis{
+							hello world{bla bla{hi}}
+						}}
+					}
+					args{map{bla{${v}}}}
+				)", "hello world{bla bla{hi}}"},
 
 				// eq
 				{R"(

@@ -9,8 +9,13 @@
 #include "translator_to_html.hpp"
 
 namespace{
-void translate(const std::string& file_name){
+void translate(const std::string& file_name, bool save_evaled){
 	std::string out_file_name = utki::split(file_name, '.').front() + ".html";
+	std::string evaled_file_name;
+	if(save_evaled){
+		evaled_file_name = utki::split(file_name, '.').front() + ".cud_evaled";
+	}
+
 
 	curlydoc::interpreter interpreter(
 			std::make_unique<papki::fs_file>(file_name)
@@ -24,7 +29,15 @@ void translate(const std::string& file_name){
 
 	std::cout << "output file name = " << out_file_name << '\n';
 
-	translator.translate(interpreter.eval());
+	auto evaled = interpreter.eval();
+
+	if(save_evaled){
+		std::ofstream outf(evaled_file_name, std::ios::binary);
+
+		outf << treeml::to_non_ext(evaled);
+	}
+
+	translator.translate(evaled);
 
 	std::ofstream outf(out_file_name, std::ios::binary);
 
@@ -60,7 +73,9 @@ void translate(const std::string& file_name){
 int main(int argc, const char** argv){
 	clargs::parser cli;
 
-	std::cout << "arg = " << argv[1] << '\n';
+	bool save_evaled = false;
+
+	cli.add("save-evaled", "save interpreter output", [&save_evaled](){save_evaled = true;});
 
 	auto positional = cli.parse(argc, argv);
 
@@ -70,7 +85,7 @@ int main(int argc, const char** argv){
 	}
 
 	for(const auto& f : positional){
-		translate(f);
+		translate(f, save_evaled);
 	}
 
 	return 0;
