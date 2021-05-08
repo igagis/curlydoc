@@ -359,6 +359,17 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 
 		return treeml::forest_ext{std::move(size)};
 	});
+
+	this->add_function("is_word", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		auto res = this->eval(args);
+
+		if(res.size() == 1 && res.front().children.empty()){
+			return treeml::forest_ext{{"true"}};
+		}
+		return treeml::forest_ext();
+	});
 }
 
 treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end, bool preserve_vars){

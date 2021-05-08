@@ -310,6 +310,32 @@ tst::set set0("interpreter", [](auto& suite){
 					}
 					size{${var}}
 				)", "6"},
+
+				// is_word
+				{R"(
+					if{is_word{bla}}then{hello}
+				)", "hello"},
+				{R"(
+					if{not{is_word{bla}}}else{hello}
+				)", "hello"},
+				{R"(
+					def{
+						v
+					}
+					if{is_word{${v}}}else{hello}
+				)", "hello"},
+				{R"(
+					def{
+						v{bla}
+					}
+					if{is_word{${v}}}then{hello}else{world}
+				)", "hello"},
+				{R"(
+					def{
+						v{map{bla{hi}}}
+					}
+					if{is_word{${v}}}then{world}else{hello}
+				)", "hello"},
 			},
 			[](auto& p){
 				curlydoc::interpreter interpreter(std::make_unique<papki::fs_file>("none"));
