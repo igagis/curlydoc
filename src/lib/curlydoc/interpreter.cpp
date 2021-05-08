@@ -370,6 +370,18 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		}
 		return treeml::forest_ext();
 	});
+
+	this->add_function("val", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		treeml::forest_ext ret;
+
+		for(const auto& a : this->eval(args)){
+			ret.push_back(treeml::tree_ext(a.value));
+		}
+
+		return ret;
+	});
 }
 
 treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end, bool preserve_vars){
