@@ -74,6 +74,8 @@ public:
 		std::optional<size_t> col_span;
 		std::optional<size_t> row_span;
 
+		size_t col_index;
+
 		decltype(col_span)::value_type get_col_span()const noexcept{
 			return this->col_span ? this->col_span.value() : 1;
 		}
@@ -85,7 +87,21 @@ public:
 
 	struct table_row{
 		std::vector<cell> cells;
-		size_t span = 0;
+
+		std::vector<bool> occupied_cols;
+		size_t span = 0; // total row span
+
+		table_row(size_t num_cols) :
+				occupied_cols(num_cols) // bool values will be initialized to false
+		{}
+
+		size_t get_free_col_index(size_t span);
+
+		void set_occupied(size_t index, size_t span);
+
+		bool is_full()const noexcept;
+	private:
+		bool is_free_span(decltype(occupied_cols)::const_iterator iter, size_t span)const noexcept;
 	};
 
 	enum class align{

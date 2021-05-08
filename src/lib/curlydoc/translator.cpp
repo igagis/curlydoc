@@ -365,8 +365,64 @@ void translator::handle_table(const treeml::forest_ext& forest){
 	this->on_table(t, forest);
 }
 
+bool translator::table_row::is_free_span(decltype(occupied_cols)::const_iterator iter, size_t span)const noexcept{
+	size_t n = 0;
+	for(auto i = iter; n != span; ++i, ++n){
+		if(i == this->occupied_cols.end() || *i){
+			return false;
+		}
+	}
+	return true;
+}
+
+bool translator::table_row::is_full()const noexcept{
+	for(const auto& i : this->occupied_cols){
+		if(!i){
+			return false;
+		}
+	}
+	return true;
+}
+
+size_t translator::table_row::get_free_col_index(size_t span){
+	for(auto i = this->occupied_cols.begin(); i != this->occupied_cols.end(); ++i){
+		if(!(*i)){
+			if(this->is_free_span(i, span)){
+				return std::distance(this->occupied_cols.begin(), i);
+			}
+			break;
+		}
+	}
+	throw std::invalid_argument("cell with requested col span does not fit");
+}
+
+void translator::table_row::set_occupied(size_t index, size_t span){
+	ASSERT(index <= this->occupied_cols.size() - span)
+	for(auto i = std::next(this->occupied_cols.begin(), index);
+			i != std::next(this->occupied_cols.begin(), index + span);
+			++i
+		)
+	{
+		ASSERT(!(*i))
+		*i = true;
+	}
+	this->span += span;
+}
+
 void translator::table::push(cell&& c){
 	ASSERT(this->cur_row <= this->rows.size())
+
+	if(this->cur_row == this->rows.size()){
+		this->rows.emplace_back(this->num_cols);
+	}
+
+	auto col_span = c.get_col_span();
+
+	{
+		ASSERT(this->cur_row < this->rows.size())
+		auto& row = this->rows[this->cur_row];
+		c.col_index = row.get_free_col_index(col_span);
+	}
 
 	ASSERT(c.get_row_span() >= 1)
 
@@ -374,26 +430,26 @@ void translator::table::push(cell&& c){
 		size_t index = i + this->cur_row;
 		ASSERT(index <= this->rows.size())
 		if(index == this->rows.size()){
-			this->rows.emplace_back();
+			this->rows.emplace_back(this->num_cols);
 		}
 
 		auto& row = this->rows[index];
-		ASSERT(c.get_col_span() >= 1)
-		row.span += c.get_col_span();
+		ASSERT(col_span >= 1)
+		row.set_occupied(c.col_index, col_span);
 	}
 
-	ASSERT(this->cur_row < this->rows.size())
 	auto& row = this->rows[this->cur_row];
 
 	row.cells.push_back(std::move(c));
 
 	if(row.span > this->num_cols){
 		std::stringstream ss;
-		ss << "table number of columns (" << this->num_cols << ") and cells row span (" << row.span << ") mismatch";
+		ss << "table number of columns (" << this->num_cols << ") and cells row span (" << row.span << ") mismatch for row #" << (this->cur_row + 1);
 		throw std::invalid_argument(ss.str());
 	}
 
 	if(row.span == this->num_cols){
+		ASSERT(row.is_full())
 		++this->cur_row;
 	}
 }

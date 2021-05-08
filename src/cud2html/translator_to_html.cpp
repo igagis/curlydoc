@@ -150,14 +150,13 @@ void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& fo
 	for(const auto& r : tbl.rows){
 		this->ss << '\n' << "<tr>";
 
-		size_t span = 0;
 		for(const auto& c : r.cells){
 			std::vector<std::string> style;
 			this->ss << '\n' << "<td";
 			if(c.col_span){
 				this->ss << " colspan=\"" << c.col_span.value() << '\"';
 			}else{
-				style.push_back(std::string("width:") + std::to_string(weight_percent[span]) + "%");
+				style.push_back(std::string("width:") + std::to_string(weight_percent[c.col_index]) + "%");
 			}
 			if(c.row_span){
 				this->ss << " rowspan=\"" << c.row_span.value() << '\"';
@@ -165,8 +164,8 @@ void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& fo
 			if(tbl.border){
 				style.push_back(std::string("border-width:") + std::to_string(tbl.border.value()) + "px");
 			}
-			style.push_back(std::string("text-align: ") + to_string(tbl.aligns[span]));
-			style.push_back(std::string("vertical-align: ") + to_string(tbl.valigns[span]));
+			style.push_back(std::string("text-align: ") + to_string(tbl.aligns[c.col_index]));
+			style.push_back(std::string("vertical-align: ") + to_string(tbl.valigns[c.col_index]));
 			if(!style.empty()){
 				this->ss << " style=\"";
 				for(const auto& s : style){
@@ -177,7 +176,6 @@ void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& fo
 			this->ss << '>';
 			this->translate(c.begin, c.end);
 			this->ss << "</td>";
-			span += c.get_col_span();
 		}
 		this->ss << '\n' << "</tr>";
 	}
