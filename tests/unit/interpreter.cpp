@@ -351,6 +351,20 @@ tst::set set0("interpreter", [](auto& suite){
 					val{asis{hello{bla} world{bla{bla} bla}}}
 				)", "hello world"},
 
+				// eq
+				{R"(
+					if{eq{bla bla}}then{hello}
+				)", "hello"},
+				{R"(
+					if{eq{bla hi}}else{hello}
+				)", "hello"},
+				{R"(
+					if{eq{asis{bla{bla bla} bla{bla bla}}}}then{hello}
+				)", "hello"},
+				{R"(
+					if{eq{asis{bla{bla bla} bla{bla hi}}}}else{hello}
+				)", "hello"},
+
 			},
 			[](auto& p){
 				curlydoc::interpreter interpreter(std::make_unique<papki::fs_file>("none"));
