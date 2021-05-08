@@ -224,10 +224,14 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 	this->add_function("if", [this](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
-		treeml::forest_ext output = this->eval(args);
+		bool flag;
+		{
+			if_flag_push if_flag_push(*this);
+			flag = !this->eval(args).empty();
+		}
 
 		auto& bs = this->if_flag_stack.back();
-		bs.flag = !output.empty();
+		bs.flag = flag;
 		bs.true_before_or = false;
 
 		return treeml::forest_ext();
@@ -242,10 +246,7 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 			return treeml::forest_ext();
 		}
 
-		this->if_flag_stack.emplace_back();
-		utki::scope_exit if_flag_scope_exit([this](){
-			this->if_flag_stack.pop_back();
-		});
+		if_flag_push if_flag_push(*this);
 
 		return this->eval(args);
 	});
@@ -259,10 +260,7 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 			return treeml::forest_ext();
 		}
 
-		this->if_flag_stack.emplace_back();
-		utki::scope_exit if_flag_scope_exit([this](){
-			this->if_flag_stack.pop_back();
-		});
+		if_flag_push if_flag_push(*this);
 
 		return this->eval(args);
 	});
@@ -270,13 +268,21 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 	this->add_function("and", [this](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
-		auto& bs = this->if_flag_stack.back();
+		{
+			auto& bs = this->if_flag_stack.back();
 
-		if(!bs.flag || bs.true_before_or){
-			return treeml::forest_ext();
+			if(!bs.flag || bs.true_before_or){
+				return treeml::forest_ext();
+			}
 		}
 
-		bs.flag = !this->eval(args).empty();
+		bool flag;
+		{
+			if_flag_push if_flag_push(*this);
+			flag = !this->eval(args).empty();
+		}
+
+		this->if_flag_stack.back().flag = flag;
 
 		return treeml::forest_ext();
 	});
@@ -284,14 +290,22 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 	this->add_function("or", [this](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
-		auto& bs = this->if_flag_stack.back();
+		{
+			auto& bs = this->if_flag_stack.back();
 
-		if(bs.flag){
-			bs.true_before_or = true;
-			return treeml::forest_ext();
+			if(bs.flag){
+				bs.true_before_or = true;
+				return treeml::forest_ext();
+			}
 		}
 
-		bs.flag = !this->eval(args).empty();
+		bool flag;
+		{
+			if_flag_push if_flag_push(*this);
+			flag = !this->eval(args).empty();
+		}
+
+		this->if_flag_stack.back().flag = flag;
 
 		return treeml::forest_ext();
 	});

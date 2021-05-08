@@ -53,6 +53,16 @@ private:
 
 	std::vector<bool_state> if_flag_stack = {bool_state()}; // initial flag for root scope
 
+	struct if_flag_push{
+		interpreter& owner;
+		if_flag_push(interpreter& owner) : owner(owner){
+			this->owner.if_flag_stack.emplace_back();
+		}
+		~if_flag_push(){
+			this->owner.if_flag_stack.pop_back();
+		}
+	};
+
 	std::unique_ptr<papki::file> file; // for including files
 public:
 	interpreter(std::unique_ptr<papki::file> file);

@@ -18,7 +18,7 @@ tst::set set0("interpreter", [](auto& suite){
 				{"hello asis{world{and} by the way, {nice\"weather\"} }", "hello world{and} by the way, {nice\"weather\"}"},
 				{"hello def{v{bla bla}}, I say ${v}", "hello , I say bla bla"},
 				{"hello def{v{asis{bla{bla{bla}} bla}}}, I say ${v}", "hello , I say bla{bla{bla}} bla"},
-				{"hello def{v{bla bla}} def{v2}, I say ${v}", "hello , I say bla bla"},
+				{"hello def{v{bla bla}} def{v2}, I say ${v}", "hello , I say bla bla"}, // #7
 				{
 					R"(
 						hello
@@ -61,7 +61,9 @@ tst::set set0("interpreter", [](auto& suite){
 						x = ${i} 
 					}
 					end
-				)", "Hi x = 10 x = 20 x = hello x = world! x =\"\"{hello world!}end"},
+				)", "Hi x = 10 x = 20 x = hello x = world! x =\"\"{hello world!}end"}, // #10
+
+				// if
 				{R"(
 					def{
 						v{bla bla}
@@ -94,7 +96,33 @@ tst::set set0("interpreter", [](auto& suite){
 						v1
 					}
 					if{${v1}}else{World}
-				)", "World"},
+				)", "World"}, // #15
+
+				// if inside if
+				{R"(
+					def{
+						v{bla}
+					}
+					if{if{${v}}then{true}}then{hello}
+				)", "hello"},
+				{R"(
+					def{
+						v
+					}
+					if{if{${v}}else{true}}then{hello}
+				)", "hello"},
+				{R"(
+					def{
+						v
+					}
+					if{if{${v}}then{true}}else{hello}
+				)", "hello"},
+				{R"(
+					def{
+						v{bla}
+					}
+					if{if{${v}}else{true}}else{hello}
+				)", "hello"},
 
 				// if inside then
 				{R"(
@@ -144,6 +172,20 @@ tst::set set0("interpreter", [](auto& suite){
 					if{bla}and{${v1}}and{${v2}}then{hello}else{bye}
 				)", "bye"},
 
+				// if inside and
+				{R"(
+					def{
+						v{bla}
+					}
+					if{bla}and{if{${v}}then{true}}then{hello}
+				)", "hello"},
+				{R"(
+					def{
+						v
+					}
+					if{bla}and{if{${v}}else{true}}then{hello}
+				)", "hello"},
+
 				// or
 				{R"(
 					if{bla}or{true}then{hello}
@@ -175,6 +217,22 @@ tst::set set0("interpreter", [](auto& suite){
 					}
 					if{${v1}}or{true}and{${v2}}then{hello}else{bye}
 				)", "bye"},
+
+				// if inside or
+				{R"(
+					def{
+						v
+						v2{bla}
+					}
+					if{${v}}or{if{${v2}}then{true}}then{hello}
+				)", "hello"},
+				{R"(
+					def{
+						v
+						v2{bla}
+					}
+					if{${v}}or{if{${v}}else{true}}then{hello}
+				)", "hello"},
 
 				// map
 				{R"(
