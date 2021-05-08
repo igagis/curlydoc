@@ -234,6 +234,20 @@ tst::set set0("interpreter", [](auto& suite){
 					if{${v}}or{if{${v}}else{true}}then{hello}
 				)", "hello"},
 
+				// not
+				{R"(
+					def{
+						v
+					}
+					if{not{${v}}}then{hello}
+				)", "hello"},
+				{R"(
+					def{
+						v{bla}
+					}
+					if{not{${v}}}else{hello}
+				)", "hello"},
+
 				// map
 				{R"(
 					def{
