@@ -29,6 +29,8 @@ void translate(const std::string& file_name, bool save_evaled){
 
 	std::cout << "output file name = " << out_file_name << '\n';
 
+	interpreter.init_std_lib();
+	
 	auto evaled = interpreter.eval();
 
 	if(save_evaled){

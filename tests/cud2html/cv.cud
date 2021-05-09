@@ -5,42 +5,6 @@ table{
 
 	""{ // header
 		def{
-			// check if the first element is an options element
-			is_opt{asis{
-				if{ gt{ size{${@}} 0 } } // size > 0
-						and{ eq{ val{ at{0 ${@}} } opt} } // @[0].value == opt
-						and{ gt{ size{ args{ at{0 ${@}} }} 0} } // @[0].children.size > 0
-						then{
-							true
-						}
-			}}
-		}
-		def{
-			// get options value
-			get_opt{asis{
-				if{ is_opt{${@}} } // if there are options
-				then{
-					args{at{0 ${@}}}
-				}
-			}}
-
-			// strip out options
-			no_opt{asis{
-				if{ is_opt{${@}} } // if there are options
-				then{
-					slice{1 end ${@}}
-				}else{
-					${@}
-				}
-			}}
-
-			// define options if non-empty
-			opt?{asis{
-				if{${@}}then{map{opt{ ${@} }}}
-			}}
-		}
-
-		def{
 			cell{asis{
 				cell{
 					opt?{get_opt{${@}}}

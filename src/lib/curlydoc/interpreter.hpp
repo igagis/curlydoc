@@ -82,6 +82,8 @@ public:
 	void add_repeater_function(const std::string& name);
 
 	void add_repeater_functions(utki::span<const std::string> names);
+
+	void init_std_lib();
 };
 
 }
