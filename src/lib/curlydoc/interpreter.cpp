@@ -343,21 +343,11 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 	this->add_function("size", [this](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
+		// TODO: optimize for the case of size{${v}}, since variables are stored evaluated, no need to copy variable contents via eval()
+
 		auto res = this->eval(args);
 
-		if(res.size() != 1){
-			throw exception("none or more than one argument supplied to 'size' function");
-		}
-
-		if(!res.front().children.empty()){
-			throw exception("variable name has children");
-		}
-
-		const auto& v = this->context_stack.back().find(res.front().value.to_string());
-
-		treeml::tree_ext size{std::to_string(v.size())};
-
-		return treeml::forest_ext{std::move(size)};
+		return treeml::forest_ext{{std::to_string(res.size())}};
 	});
 
 	this->add_function("is_word", [this](const treeml::forest_ext& args){

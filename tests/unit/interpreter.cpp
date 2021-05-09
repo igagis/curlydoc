@@ -308,15 +308,15 @@ tst::set set0("interpreter", [](auto& suite){
 					def{
 						v{bla bla asis{hello} {bla bla} {bla bla bla} bla}
 					}
-					size{v}
+					size{${v}}
 				)", "6"},
 				{R"(
 					def{
 						v{bla bla asis{hello} {bla bla} {bla bla bla} bla}
 						var{v}
 					}
-					size{${var}}
-				)", "6"},
+					size{hello asis{world{bla bla} bla} hi}
+				)", "4"},
 
 				// is_word
 				{R"(
