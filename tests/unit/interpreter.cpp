@@ -276,7 +276,14 @@ tst::set set0("interpreter", [](auto& suite){
 						a{hello world map{how{map{are{you}}}} doing?}
 						i{2}
 					}
-					Hi ${a ${i}} man? I'm ${a 3} ${a 1} ${a 0}.
+					Hi at{${i} ${a}} man? I'm at{3 ${a}} at{1 ${a}} at{0 ${a}}.
+				)", "Hi how{are{you}}man? I'm doing? world hello ."},
+				{R"(
+					def{
+						a{hello world map{how{map{are{you}}}} doing?}
+						i{-2}
+					}
+					Hi at{${i} ${a}} man? I'm at{-1 ${a}} at{-3 ${a}} at{-4 ${a}}.
 				)", "Hi how{are{you}}man? I'm doing? world hello ."},
 
 				// access array element by key
