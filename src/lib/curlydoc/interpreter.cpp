@@ -367,6 +367,60 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		throw exception(ss.str());
 	});
 
+	this->add_function("slice", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		// TODO: optimize for the case of slice{some_expr some_expr ${v}}, since variables are stored evaluated, no need to copy variable contents via eval()
+
+		auto evaled = this->eval(args);
+
+		if(evaled.size() < 2){
+			throw exception("too few arguments given to 'slice' function, expected at least 2");
+		}
+
+		int64_t size = evaled.size() - 2;
+
+		int64_t begin = evaled.front().value.to_int64();
+
+		int64_t end;
+		{
+			const auto& v = std::next(evaled.begin())->value;
+			if(v == "end"){
+				end = size;
+			}else{
+				end = v.to_int64();
+			}
+		}
+
+		if(begin < 0){
+			begin = size  + begin;
+		}
+		if(end < 0){
+			end = size  + end;
+		}
+
+		if(begin < 0 || size <= begin){
+			std::stringstream ss;
+			ss << "begin index (" << begin << ") out of bounds (" << size << ")";
+			throw exception(ss.str());
+		}
+		if(end < 0 || size < end){
+			std::stringstream ss;
+			ss << "end index (" << end << ") out of bounds (" << size << ")";
+			throw exception(ss.str());
+		}
+
+		treeml::forest_ext ret;
+
+		std::copy(
+				std::next(evaled.begin(), begin + 2),
+				std::next(evaled.begin(), end + 2),
+				std::back_inserter(ret)
+			);
+
+		return ret;
+	});
+
 	this->add_function("is_word", [this](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 

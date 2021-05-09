@@ -302,6 +302,56 @@ tst::set set0("interpreter", [](auto& suite){
 					x = get{x ${a}} y = get{y ${a}} z = get{z ${a}} bla = get{bla ${a}}
 				)", "x = bla bla y = hey z = how{are{you}}bla ="},
 
+				// slice
+				{R"(
+					def{
+						v{bla bla bla}
+					}
+					slice{0 end ${v}}
+				)", "bla bla bla"},
+				{R"(
+					def{
+						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
+					}
+					slice{0 end ${v}}
+				)", "bla bla{hi}bla hello{world{how{are{you}}}}"},
+				{R"(
+					def{
+						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
+					}
+					slice{0 4 ${v}}
+				)", "bla bla{hi}bla hello{world{how{are{you}}}}"},
+				{R"(
+					def{
+						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
+					}
+					slice{2 end ${v}}
+				)", "bla hello{world{how{are{you}}}}"},
+				{R"(
+					def{
+						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
+					}
+					slice{-2 end ${v}}
+				)", "bla hello{world{how{are{you}}}}"},
+				{R"(
+					def{
+						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
+					}
+					slice{1 -1 ${v}}
+				)", "bla{hi}bla"},
+				{R"(
+					def{
+						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
+					}
+					slice{-3 3 ${v}}
+				)", "bla{hi}bla"},
+				{R"(
+					def{
+						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
+					}
+					slice{-2 -1 ${v}}
+				)", "bla"},
+
 				// opt
 				{R"(
 					def{
