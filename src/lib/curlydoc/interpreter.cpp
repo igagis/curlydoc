@@ -378,6 +378,30 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		return treeml::forest_ext{res[index + 1]};
 	});
 
+	this->add_function("get", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		// TODO: optimize for the case of get{some_expr ${v}}, since variables are stored evaluated, no need to copy variable contents via eval()
+
+		auto res = this->eval(args);
+
+		if(res.empty()){
+			throw exception("no key argument is given to 'get' function");
+		}
+
+		const auto& key = res.front().value.to_string();
+
+		for(auto i = std::next(res.begin()); i != res.end(); ++i){
+			if(i->value == key){
+				return i->children;
+			}
+		}
+
+		std::stringstream ss;
+		ss << "key (" << key << ") not found";
+		throw exception(ss.str());
+	});
+
 	this->add_function("is_word", [this](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 

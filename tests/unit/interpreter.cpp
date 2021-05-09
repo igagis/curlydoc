@@ -299,7 +299,7 @@ tst::set set0("interpreter", [](auto& suite){
 						}}
 					}
 
-					x = ${a{x}} y = ${a{y}} z = ${a{z}} bla = ${a{bla}}
+					x = get{x ${a}} y = get{y ${a}} z = get{z ${a}} bla = get{bla ${a}}
 				)", "x = bla bla y = hey z = how{are{you}}bla ="},
 
 				// opt
