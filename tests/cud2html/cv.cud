@@ -1,27 +1,156 @@
-image{ opt{ width{200} } me.jpg}
+def{
+	cell_n{asis{
+		cell{
+			opt?{ get_opt{${@}} }
+			b{ no_opt{${@}}: }
+		}
+	}}
+}
+
+// basic info
+table{
+	opt{ cols{3} border{0} weight{1 2 2} align{right left center} valign{top}}
+
+	cell_n{Name} cell{Ivan Gagis} cell{opt{span{1 7}} image{ opt{ width{200} } me.jpg} }
+	cell_n{Birth date} cell{15.02.83}
+	cell_n{Location} cell{Helsinki, Finland}
+	cell_n{Tel.} cell{+358 438 242 969}
+	cell_n{Email} cell{igagis@gmail.com}
+	cell_n{GitHub} cell{"http://github.com/cppfw/svgren http://github.com/cppfw"}
+	cell_n{Website} cell{"http://izdelie.icu"}
+	cell_n{Summary} cell{ opt{ span{2} }
+		About 15 years developing commercial software. Excellent C/C++ and Java programming skills.
+		Familiarity with agile and non-agile development methodologies and processes.
+		Good skills of existing code base analysis and maintenance, self-studying,
+		learning new technologies, digging information, communicating with customers.
+	}
+}
+
+={Work experience}
 
 table{
-	opt{ cols{3} border{2} weight{1 1 3} align{right left center} valign{bottom top center}}
+	opt{ cols{3} border{1} weight{1 3 1} align{center left center}}
 
-	""{ // header
-		def{
-			cell{asis{
-				cell{
-					opt?{get_opt{${@}}}
-					b{ no_opt{${@}} }
-				}
-			}}
-		}
-
-		cell{ opt{ span{1 2} }
-			Hello wolrd
-		}
-		
-		cell{ hi }
-
-		cell{ hi2 }
+	def{
+		row{asis{
+			cell{get{time ${@}}}
+			cell{b{get{title ${@}}} p{get{text ${@}}}}
+			cell{get{firm ${@}}}
+		}}
 	}
-	
-	cell{ opt{span{1 1}} non-empty } cell{opt{span{1 1}} hey}
 
+	row{map{
+		time{2018 - now}
+		title{Software Engineer}
+		firm{Korulab Oy}
+		text{
+			Development of embedded GUI library for wearable devices like smartwatch and sport trackers. Coding in C and javascript. Working with embedded systems, embedded Linux and RTOS as well as desktop PC systems: Linux, Mac OS, Windows.
+			Configuring and maintaining CI/CD on gitlab.
+		}
+	}}
+
+	row{map{
+		time{2017 - 2018}
+		title{Software Engineer}
+		firm{ThermoFisher Scientific}
+		text{
+			Development of control software for mass spectrometry In Vitro Diagnostic machine. Coding in C# using Visual Studio and .NET framework.
+			Development of automated unit tests.
+			Development of complementary standalone tools for method research and development.
+		}
+	}}
+
+	row{map{
+		time{2016 - 2017}
+		title{Software Engineer}
+		firm{Space Systems Finland}
+		text{
+			Development of a debugger tool for on-board command language (OCL) for meteorological satellites. Along with that, maintenance of OCL interpreter which is part of the on-board satellite software.
+			Development of instrument control unit software for meteorological satellite.
+			The development is done in plain C for embedded environment and the target processor of SPARC architecture.
+			Development of data processing and visualizing tool for on-ground use, coding in C++ using Qt.
+		}
+	}}
+
+	row{map{
+		time{2012 - 2015}
+		title{Senior Software Engineer}
+		firm{Tieto / Nordea}
+		text{
+			Development and maintenance of Mobile Bank client application for Android. The application is a Front End app which communicates with the backend via REST protocol and allows user to control their bank accounts and money.
+			I was a lead engineer responsible for Danish modification of the app, developing new features requested by customer, assessing resources and estimating tasks, distributing tasks between 2 engineers from India and supervising their work. I was also communicating with customer to report the progress or in case there was something to figure out or clarify regarding technical details of the implementation.
+		}
+	}}
+
+	row{map{
+		time{2010 - 2012}
+		title{Senior Software Engineer}
+		firm{Tieto / Nokia}
+		text{
+			Development of Email, Twitter client and Facebook client applications to be preinstalled on Nokia N9 phone.
+			The development was done in C++ using Qt, QML and Meegotouch UI frameworks for Meego, Linux-based mobile platform.
+		}
+	}}
+
+	row{map{
+		time{2008 - 2009}
+		title{Senior Software Engineer}
+		firm{Motorola}
+		text{
+			Development of Visual Voicemail client application for Motorola Android phone. The app allows fetching and listening to voicemail messages without need to call anywhere. I was a lead engineer in a team of 4 engineers, implementing the app, estimating tasks and resources, designing architecture of the app, developing automated unit tests, reviewing the code.
+		}
+	}}
+
+	row{map{
+		time{2006 - 2008}
+		title{Software Engineer}
+		firm{Motorola}
+		text{
+			* Porting Java virtual machine to a mobile phone. Development was done in plain C.
+			* Maintenance of preinstalled Music Player J2ME application.
+			* Development of new features for Messaging component on Symbian OS based mobile phone.
+		}
+	}}
+}
+
+={Areas of expertise}
+
+table{
+	opt{cols{2} border{1} weight{1 3} align{right left}}
+
+	cell_n{Environtments} |{Linux, Windows, Android, Mac OS}
+	cell_n{Programming Languages} |{ b{C++}, C, bash, C#, Java, Objective-C, javascript, Python }
+	cell_n{Tools and Technologies} |{gcc, GNU make, gdb, bash, sed, asciidoc, subversion, git, docker, OpenGL/ES, Qt, SQL, TCP/UDP, ESP8266, AVR MCUs, Debian APT, Arch pacman, NuGet (C++), homebrew, Maven (Android NDK C++), Conan}
+}
+
+={Education}
+
+table{
+	opt{cols{3} weight{1 3 1}}
+
+	|{2000 - 2006}
+	|{
+		Master of Science in Electronics and Technology.
+		Chair of optoelectronics and optics of semiconductors.
+	}
+	|{Saint-Petersburg's Electro-technical University dq{LETI}}
+}
+
+={Language skills}
+
+table{
+	opt{cols{2} border{0} weight{1 3} align{right left}}
+
+	cell_n{Russian} cell{native}
+	cell_n{English} cell{fluent}
+	cell_n{Finnish} cell{basic}
+}
+
+={ Hobbies }
+
+p{
+	Coding, DYI, guitar, volleyball, badminton, etc.
+}
+p{
+	My hobby electronics project: "http://izdelie.icu"
 }

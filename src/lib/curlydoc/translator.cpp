@@ -340,14 +340,14 @@ void translator::handle_table(const treeml::forest_ext& forest){
 	}
 
 	if(t.aligns.empty()){
-		t.aligns.push_back(align::center);
+		t.aligns.push_back(align::left);
 	}
 	while(t.aligns.size() < t.num_cols){
 		t.aligns.push_back(t.aligns.back());
 	}
 
 	if(t.valigns.empty()){
-		t.valigns.push_back(valign::center);
+		t.valigns.push_back(valign::top);
 	}
 	while(t.valigns.size() < t.num_cols){
 		t.valigns.push_back(t.valigns.back());
