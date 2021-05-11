@@ -22,6 +22,9 @@ private:
 	void handle_table(const treeml::forest_ext& forest);
 	void handle_cell(const treeml::forest_ext& forest);
 
+	void handle_list(const treeml::forest_ext& forest);
+	void handle_list_item(const treeml::forest_ext& forest);
+
 	void translate(bool space, const treeml::tree_ext& tree);
 protected:
     void report_space(bool report);
@@ -127,10 +130,23 @@ public:
 		size_t cur_row = 0;
 		void push(cell&& c);
 	};
+
 private:
 	std::vector<table> cur_table;
+
 public:
 	virtual void on_table(const table& tbl, const treeml::forest_ext& forest) = 0;
+
+	struct list{
+		bool ordered = false;
+		std::vector<treeml::forest_ext> items;
+	};
+
+	virtual void on_list(const list& l, const treeml::forest_ext& forest) = 0;
+private:
+	std::vector<list> cur_list;
+
+public:
 };
 
 }

@@ -10,6 +10,9 @@ const std::string curly_brace_close = "}";
 const std::string empty_tag = "";
 const std::string table_tag = "table";
 const std::string cell_tag = "cell";
+
+const std::string list_tag = "list";
+const std::string list_item_tag = "li";
 }
 
 translator::translator(){
@@ -150,7 +153,19 @@ translator::translator(){
 			this->handle_cell(forest);
 		};
 		this->add_tag("|", f);
-		this->add_tag("cell", f);
+		this->add_tag(cell_tag, f);
+	}
+
+	this->add_tag(list_tag, [this](bool space, auto& forest){
+		this->handle_list(forest);
+	});
+
+	{
+		auto f = [this](bool space, auto& forest){
+			this->handle_list_item(forest);
+		};
+		this->add_tag(list_item_tag, f);
+		this->add_tag("-", f);
 	}
 }
 
@@ -492,4 +507,43 @@ void translator::handle_cell(const treeml::forest_ext& forest){
 
 	ASSERT(!this->cur_table.empty())
 	this->cur_table.back().push(std::move(c));
+}
+
+void translator::handle_list(const treeml::forest_ext& forest){
+	this->cur_list.emplace_back();
+	utki::scope_exit cur_list_scope_exit([this](){
+		this->cur_list.pop_back();
+	});
+
+	auto& l = this->cur_list.back();
+
+	ASSERT(!forest.empty())
+	auto i = forest.begin();
+
+	if(is_options(*i)){
+		for(const auto& p : i->children){
+			check_option(p);
+
+			if(p == "ordered"){
+				l.ordered = p.children.front().value.to_bool();
+			}
+		}
+		++i;
+	}
+
+	this->translate(i, forest.end());
+
+	this->on_list(l, forest);
+}
+
+void translator::handle_list_item(const treeml::forest_ext& forest){
+	ASSERT(this->cur_tag.size() >= 2)
+
+	if(this->get_parent_tag() != list_tag){
+		throw std::invalid_argument("'li' tag is only allowed directly inside of 'list' tag");
+	}
+
+	ASSERT(!this->cur_list.empty()) // since we have checked the parent tag is 'list'
+
+	this->cur_list.back().items.push_back(forest);
 }

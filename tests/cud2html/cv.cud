@@ -106,9 +106,11 @@ table{
 		title{Software Engineer}
 		firm{Motorola}
 		text{
-			* Porting Java virtual machine to a mobile phone. Development was done in plain C.
-			* Maintenance of preinstalled Music Player J2ME application.
-			* Development of new features for Messaging component on Symbian OS based mobile phone.
+			list{
+				-{Porting Java virtual machine to a mobile phone. Development was done in plain C.}
+				-{Maintenance of preinstalled Music Player J2ME application.}
+				-{Development of new features for Messaging component on Symbian OS based mobile phone.}
+			}
 		}
 	}}
 }

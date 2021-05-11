@@ -182,3 +182,17 @@ void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& fo
 
 	this->ss << '\n' << "</table>";
 }
+
+void translator_to_html::on_list(const list& l, const treeml::forest_ext& forest){
+	const auto tag = l.ordered ? "ol" : "ul";
+
+	this->ss << '\n' << '<' << tag << '>';
+
+	for(const auto& li : l.items){
+		this->ss << '\n' << "<li>";
+		this->translate(li);
+		this->ss << "</li>";
+	}
+
+	this->ss << '\n' << "</" << tag << '>';
+}
