@@ -9,7 +9,7 @@
 #include "translator_to_html.hpp"
 
 namespace{
-void translate(const std::string& file_name, bool save_evaled){
+void translate(std::string_view file_name, bool save_evaled){
 	std::string out_file_name = utki::split(file_name, '.').front() + ".html";
 	std::string evaled_file_name;
 	if(save_evaled){
