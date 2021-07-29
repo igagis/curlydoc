@@ -16,8 +16,8 @@ table{
 	cell_n{Location} cell{Helsinki, Finland}
 	cell_n{Tel.} cell{+358 438 242 969}
 	cell_n{Email} cell{igagis@gmail.com}
-	cell_n{GitHub} cell{"http://github.com/cppfw/svgren http://github.com/cppfw"}
-	cell_n{Website} cell{"http://izdelie.icu"}
+	cell_n{GitHub} cell{http://github.com/cppfw/svgren http://github.com/cppfw}
+	cell_n{Website} cell{http://izdelie.icu}
 	cell_n{Summary} cell{ opt{ span{2} }
 		About 15 years developing commercial software. Excellent C/C++ and Java programming skills.
 		Familiarity with agile and non-agile development methodologies and processes.
@@ -154,5 +154,5 @@ p{
 	Coding, DYI, guitar, volleyball, badminton, etc.
 }
 p{
-	My hobby electronics project: "http://izdelie.icu"
+	My hobby electronics project: http://izdelie.icu
 }
