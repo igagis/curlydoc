@@ -4,21 +4,21 @@
 - `U` - character by unicode number, e.g. `U{042b}`
 - `p` - paragraph
 - `br` - line break, e.g. `br{1}`, where number is the number of breaks
-- `dq` - double quotes, e.g. `q{some b{quoted} text}`
+- `dq` - double quotes, e.g. `dq{some b{quoted} text}`
 - `cb` - curly braces, eg `cb{some curly-braced text}`
-- `b` or `*` - bold, e.g. `some b{bold text}`
-- `i` or `/` - italic
-- `u` or `_` - underline
-- `s` or `~` - strikethrough
-- `h1` or `=` - header 1
-- `h2` or `==` - header 2
-- `h3` or `===` - header 3
-- `h4` or `====` - header 4
-- `h5` or `=====` - header 5
-- `h6` or `======` - header 6
-- `m` or `{backtick}` - monospace
+- `b` - bold, e.g. `some b{bold text}`
+- `i` - italic
+- `u` - underline
+- `s` - strikethrough
+- `h1` - header 1
+- `h2` - header 2
+- `h3` - header 3
+- `h4` - header 4
+- `h5` - header 5
+- `h6` - header 6
+- `m` - monospace
 - `list` - list
-- `li` or `-` - list item
+- `li` - list item
 - `image` - image, `image{param{width{200}} me.jpg}`
-- `table` or `|===` - table
-- `cell` or `|` - table cell
+- `table` - table
+- `cell` - table cell
