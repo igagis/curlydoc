@@ -6,8 +6,8 @@
 #include "../../src/lib/curlydoc/interpreter.hpp"
 
 namespace{
-tst::set set0("interpreter", [](auto& suite){
-	suite.template add<std::pair<std::string, std::string>>(
+tst::set set0("interpreter", [](tst::suite& suite){
+	suite.add<std::pair<std::string, std::string>>(
 			"eval_is_as_expected",
 			// pairs are {input, expected output}
 			{

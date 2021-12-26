@@ -7,8 +7,8 @@
 #include "../../src/cud2html/translator_to_html.hpp"
 
 namespace{
-tst::set set("traslator_to_html", [](auto& suite){
-	suite.template add<std::pair<std::string, std::string>>(
+tst::set set("traslator_to_html", [](tst::suite& suite){
+	suite.add<std::pair<std::string, std::string>>(
 			"translate_to_html",
 			{
 				{"{hello world!}", "hello world!"},
@@ -34,7 +34,7 @@ tst::set set("traslator_to_html", [](auto& suite){
 			}
 		);
 	
-	suite.template add<std::pair<std::string, std::string>>(
+	suite.add<std::pair<std::string, std::string>>(
 			"interpreted_translate_to_html",
 			{
 				{"{hello world!}", "hello world!"},
