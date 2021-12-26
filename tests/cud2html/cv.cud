@@ -107,9 +107,9 @@ table{
 		firm{Motorola}
 		text{
 			list{
-				-{Porting Java virtual machine to a mobile phone. Development was done in plain C.}
-				-{Maintenance of preinstalled Music Player J2ME application.}
-				-{Development of new features for Messaging component on Symbian OS based mobile phone.}
+				li{Porting Java virtual machine to a mobile phone. Development was done in plain C.}
+				li{Maintenance of preinstalled Music Player J2ME application.}
+				li{Development of new features for Messaging component on Symbian OS based mobile phone.}
 			}
 		}
 	}}
@@ -120,9 +120,9 @@ h1{Areas of expertise}
 table{
 	opt{cols{2} border{1} weight{1 3} align{right left}}
 
-	cell_n{Environtments} |{Linux, Windows, Android, Mac OS}
-	cell_n{Programming Languages} |{ b{C++}, C, bash, C#, Java, Objective-C, javascript, Python }
-	cell_n{Tools and Technologies} |{gcc, GNU make, gdb, bash, sed, asciidoc, subversion, git, docker, OpenGL/ES, Qt, SQL, TCP/UDP, ESP8266, AVR MCUs, Debian APT, Arch pacman, NuGet (C++), homebrew, Maven (Android NDK C++), Conan}
+	cell_n{Environtments} cell{Linux, Windows, Android, Mac OS}
+	cell_n{Programming Languages} cell{ b{C++}, C, bash, C#, Java, Objective-C, javascript, Python }
+	cell_n{Tools and Technologies} cell{gcc, GNU make, gdb, bash, sed, asciidoc, subversion, git, docker, OpenGL/ES, Qt, SQL, TCP/UDP, ESP8266, AVR MCUs, Debian APT, Arch pacman, NuGet (C++), homebrew, Maven (Android NDK C++), Conan}
 }
 
 h1{Education}
@@ -130,12 +130,12 @@ h1{Education}
 table{
 	opt{cols{3} weight{1 3 1}}
 
-	|{2000 - 2006}
-	|{
+	cell{2000 - 2006}
+	cell{
 		Master of Science in Electronics and Technology.
 		Chair of optoelectronics and optics of semiconductors.
 	}
-	|{Saint-Petersburg's Electro-technical University dq{LETI}}
+	cell{Saint-Petersburg's Electro-technical University dq{LETI}}
 }
 
 h1{Language skills}

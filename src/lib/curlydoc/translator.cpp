@@ -72,7 +72,6 @@ translator::translator(){
             this->report_space(space);
 			this->on_bold(forest);
 		};
-		this->add_tag("*", f);
 		this->add_tag("b", f);
 	}
 
@@ -81,7 +80,6 @@ translator::translator(){
             this->report_space(space);
 			this->on_italic(forest);
 		};
-		this->add_tag("/", f);
 		this->add_tag("i", f);
 	}
 
@@ -90,7 +88,6 @@ translator::translator(){
             this->report_space(space);
 			this->on_underline(forest);
 		};
-		this->add_tag("_", f);
 		this->add_tag("u", f);
 	}
 
@@ -99,7 +96,6 @@ translator::translator(){
             this->report_space(space);
 			this->on_strikethrough(forest);
 		};
-		this->add_tag("~", f);
 		this->add_tag("s", f);
 	}
 
@@ -108,7 +104,6 @@ translator::translator(){
             this->report_space(space);
 			this->on_monospace(forest);
 		};
-		this->add_tag("`", f);
 		this->add_tag("m", f);
 	}
 
@@ -116,7 +111,6 @@ translator::translator(){
 		auto f = [this](bool space, auto& forest){
 			this->on_header1(forest);
 		};
-		this->add_tag("=", f);
 		this->add_tag("h1", f);
 	}
 
@@ -124,7 +118,6 @@ translator::translator(){
 		auto f = [this](bool space, auto& forest){
 			this->on_header2(forest);
 		};
-		this->add_tag("==", f);
 		this->add_tag("h2", f);
 	}
 
@@ -132,7 +125,6 @@ translator::translator(){
 		auto f = [this](bool space, auto& forest){
 			this->on_header3(forest);
 		};
-		this->add_tag("===", f);
 		this->add_tag("h3", f);
 	}
 
@@ -140,7 +132,6 @@ translator::translator(){
 		auto f = [this](bool space, auto& forest){
 			this->on_header4(forest);
 		};
-		this->add_tag("====", f);
 		this->add_tag("h4", f);
 	}
 	
@@ -148,7 +139,6 @@ translator::translator(){
 		auto f = [this](bool space, auto& forest){
 			this->on_header5(forest);
 		};
-		this->add_tag("=====", f);
 		this->add_tag("h5", f);
 	}
 
@@ -156,7 +146,6 @@ translator::translator(){
 		auto f = [this](bool space, auto& forest){
 			this->on_header6(forest);
 		};
-		this->add_tag("======", f);
 		this->add_tag("h6", f);
 	}
 	
@@ -173,7 +162,6 @@ translator::translator(){
 		auto f = [this](bool space, auto& forest){
 			this->handle_cell(forest);
 		};
-		this->add_tag("|", f);
 		this->add_tag(cell_tag, f);
 	}
 
@@ -186,7 +174,6 @@ translator::translator(){
 			this->handle_list_item(forest);
 		};
 		this->add_tag(list_item_tag, f);
-		this->add_tag("-", f);
 	}
 }
 

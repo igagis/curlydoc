@@ -1,19 +1,19 @@
-= { Hello wolrd! }
+h1 { Hello wolrd! }
 
 Text without paragrpah.
 
 p{
-	Hi, how _{are you} doing b{today}?
+	Hi, how u{are you} doing b{today}?
 }
 p{
-	I'm *{fine, thank you}! ~{How} /{about you?}
+	I'm b{fine, thank you}! s{How} i{about you?}
 	Today I was "planning *{literally}" to go to somewhere...
 }
 p{
 	Here m{go""b{e}s s"b"{o}me b{monospace} text}, that's it.
 }
 
-== { Header 2 }
+h2 { Header 2 }
 
 p{
 	Some dq{more b{text} in quotes}, yes!
