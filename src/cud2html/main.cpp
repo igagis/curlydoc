@@ -44,7 +44,7 @@ void translate(std::string_view file_name, bool save_evaled){
 
 	curlydoc::translator_to_html translator;
 
-	interpreter.add_repeater_functions(utki::make_span(translator.list_tags()));
+	interpreter.add_repeater_functions(translator.list_tags());
 
 	std::cout << "Hello cdoc2html!" << '\n';
 

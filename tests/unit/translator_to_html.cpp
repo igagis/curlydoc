@@ -55,7 +55,7 @@ tst::set set("traslator_to_html", [](tst::suite& suite){
 
 				curlydoc::translator_to_html tr;
 
-				interpreter.add_repeater_functions(utki::make_span(tr.list_tags()));
+				interpreter.add_repeater_functions(tr.list_tags());
 
 				tr.translate(interpreter.eval(in));
 
