@@ -512,6 +512,8 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		}
 		return treeml::forest_ext();
 	});
+
+	this->init_std_lib();
 }
 
 treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end, bool preserve_vars){

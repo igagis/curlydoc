@@ -88,7 +88,7 @@ private:
 public:
 	interpreter(std::unique_ptr<papki::file> file);
 
-	virtual ~interpreter(){}
+	virtual ~interpreter() = default;
 
 	treeml::forest_ext eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end, bool preserve_vars = false);
 
@@ -104,6 +104,7 @@ public:
 
 	void add_repeater_functions(utki::span<const std::string> names);
 
+private:
 	void init_std_lib();
 };
 
