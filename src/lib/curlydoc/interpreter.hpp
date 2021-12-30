@@ -46,7 +46,7 @@ private:
 	
 	class context{
 		const context* const prev;
-		std::unordered_map<std::string, treeml::forest_ext> def;
+		std::unordered_map<std::string, treeml::forest_ext> defs;
 	public:
 		context(const context* const prev = nullptr) : prev(prev){}
 

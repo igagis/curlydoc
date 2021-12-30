@@ -1,4 +1,4 @@
-def{
+defs{
 	inc_var1{Hello}
 	inc_var2{asis{bla bla{bla{bla}} bla bla}}
 }

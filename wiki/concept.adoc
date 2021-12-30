@@ -10,9 +10,9 @@ include{some_file.cud}
 // Array element access must have one childless child.
 // Variable is invoked as ${var_name}.
 
-def{
+defs{
     my_template{asis{
-        def{}
+        defs{}
         
 		==={ subheader }
 		p{
@@ -78,7 +78,7 @@ p{
     image{my_image.png}
 }
 
-def{
+defs{
 	index{3 4 6}
 }
 

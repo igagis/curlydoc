@@ -16,32 +16,32 @@ tst::set set0("interpreter", [](tst::suite& suite){
 				{"{hello now} world!", "{hello now} world!"},
 				{"hi{}{hello now} world!", "hi{}{hello now} world!"},
 				{"hello asis{world{and} by the way, {nice\"weather\"} }", "hello world{and} by the way, {nice\"weather\"}"},
-				{"hello def{v{bla bla}}, I say ${v}", "hello , I say bla bla"},
-				{"hello def{v{asis{bla{bla{bla}} bla}}}, I say ${v}", "hello , I say bla{bla{bla}} bla"},
-				{"hello def{v{bla bla}} def{v2}, I say ${v}", "hello , I say bla bla"}, // #7
+				{"hello defs{v{bla bla}}, I say ${v}", "hello , I say bla bla"},
+				{"hello defs{v{asis{bla{bla{bla}} bla}}}, I say ${v}", "hello , I say bla{bla{bla}} bla"},
+				{"hello defs{v{bla bla}} defs{v2}, I say ${v}", "hello , I say bla bla"}, // #7
 				{
 					R"(
 						hello
-						def{
+						defs{
 							v{bla bla}
 							tmpl{asis{
 								hello ${@} sir!
 							}}
 						}
-						def{v2}
+						defs{v2}
 						I say tmpl{good}
 					)",
 					"hello I say hello good sir!"
 				},
 				{R"(
 					hello
-					def{
+					defs{
 						v{bla bla}
 						tmpl{asis{
 							hello ${@} sir!
 						}}
 					}
-					def{
+					defs{
 						tmpl{asis{
 							hello tmpl{${@}} sir!
 						}}
@@ -50,7 +50,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 				)",
 				"hello I say hello hello good sir! sir!"},
 				{R"(
-					def{
+					defs{
 						v1{hello world!}
 					}
 
@@ -65,33 +65,33 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// if
 				{R"(
-					def{
+					defs{
 						v{bla bla}
 					}
 					if{${v}}
 				)", ""},
 				{R"(
-					def{
+					defs{
 						v{bla bla}
 					}
 					if{${v}}then{Hello}
 				)", "Hello"},
 				{R"(
-					def{
+					defs{
 						v{bla bla}
 						v1
 					}
 					if{${v1}}then{Hello}else{World}
 				)", "World"},
 				{R"(
-					def{
+					defs{
 						v{bla bla}
 						v1
 					}
 					if{${v1}}then{Hello}
 				)", ""},
 				{R"(
-					def{
+					defs{
 						v{bla bla}
 						v1
 					}
@@ -100,25 +100,25 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// if inside if
 				{R"(
-					def{
+					defs{
 						v{bla}
 					}
 					if{if{${v}}then{true}}then{hello}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v
 					}
 					if{if{${v}}else{true}}then{hello}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v
 					}
 					if{if{${v}}then{true}}else{hello}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v{bla}
 					}
 					if{if{${v}}else{true}}else{hello}
@@ -126,7 +126,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// if inside then
 				{R"(
-					def{
+					defs{
 						v{bla bla}
 						v1
 					}
@@ -138,7 +138,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// if inside else
 				{R"(
-					def{
+					defs{
 						v{bla bla}
 						v1
 					}
@@ -153,19 +153,19 @@ tst::set set0("interpreter", [](tst::suite& suite){
 					if{bla}and{hi}then{hello}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v1
 					}
 					if{bla}and{${v1}}then{hello}else{bye}
 				)", "bye"},
 				{R"(
-					def{
+					defs{
 						v1{true}
 					}
 					if{bla}and{${v1}}then{hello}else{bye}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v1{true}
 						v2
 					}
@@ -174,13 +174,13 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// if inside and
 				{R"(
-					def{
+					defs{
 						v{bla}
 					}
 					if{bla}and{if{${v}}then{true}}then{hello}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v
 					}
 					if{bla}and{if{${v}}else{true}}then{hello}
@@ -191,27 +191,27 @@ tst::set set0("interpreter", [](tst::suite& suite){
 					if{bla}or{true}then{hello}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v1
 					}
 					if{${v1}}or{true}then{hello}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v1
 						v2
 					}
 					if{${v1}}or{${v2}}then{hello}else{bye}
 				)", "bye"},
 				{R"(
-					def{
+					defs{
 						v1
 						v2
 					}
 					if{true}or{${v1}}and{${v2}}then{hello}else{bye}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v1
 						v2
 					}
@@ -220,14 +220,14 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// if inside or
 				{R"(
-					def{
+					defs{
 						v
 						v2{bla}
 					}
 					if{${v}}or{if{${v2}}then{true}}then{hello}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v
 						v2{bla}
 					}
@@ -236,13 +236,13 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// not
 				{R"(
-					def{
+					defs{
 						v
 					}
 					if{not{${v}}}then{hello}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v{bla}
 					}
 					if{not{${v}}}else{hello}
@@ -250,13 +250,13 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// map
 				{R"(
-					def{
+					defs{
 						v{bla bla}
 					}
 					map{ hi{${v}} ${v} bye{hi}}
 				)", "hi{bla bla} ${v} bye{hi}"},
 				{R"(
-					def{
+					defs{
 						v{bla bla}
 					}
 					Hello 
@@ -272,14 +272,14 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// access array element by index
 				{R"(
-					def{
+					defs{
 						a{hello world map{how{map{are{you}}}} doing?}
 						i{2}
 					}
 					Hi at{${i} ${a}} man? I'm at{3 ${a}} at{1 ${a}} at{0 ${a}}.
 				)", "Hi how{are{you}}man? I'm doing? world hello ."},
 				{R"(
-					def{
+					defs{
 						a{hello world map{how{map{are{you}}}} doing?}
 						i{-2}
 					}
@@ -288,7 +288,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// access array element by key
 				{R"(
-					def{
+					defs{
 						a{map{
 							x{bla bla}
 							y{hey}
@@ -304,49 +304,49 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// slice
 				{R"(
-					def{
+					defs{
 						v{bla bla bla}
 					}
 					slice{0 end ${v}}
 				)", "bla bla bla"},
 				{R"(
-					def{
+					defs{
 						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
 					}
 					slice{0 end ${v}}
 				)", "bla bla{hi}bla hello{world{how{are{you}}}}"},
 				{R"(
-					def{
+					defs{
 						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
 					}
 					slice{0 4 ${v}}
 				)", "bla bla{hi}bla hello{world{how{are{you}}}}"},
 				{R"(
-					def{
+					defs{
 						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
 					}
 					slice{2 end ${v}}
 				)", "bla hello{world{how{are{you}}}}"},
 				{R"(
-					def{
+					defs{
 						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
 					}
 					slice{-2 end ${v}}
 				)", "bla hello{world{how{are{you}}}}"},
 				{R"(
-					def{
+					defs{
 						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
 					}
 					slice{1 -1 ${v}}
 				)", "bla{hi}bla"},
 				{R"(
-					def{
+					defs{
 						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
 					}
 					slice{-3 3 ${v}}
 				)", "bla{hi}bla"},
 				{R"(
-					def{
+					defs{
 						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
 					}
 					slice{-2 -1 ${v}}
@@ -354,7 +354,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// opt
 				{R"(
-					def{
+					defs{
 						v{var}
 					}
 					opt{x{bla} y{${v}}}
@@ -362,13 +362,13 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// size
 				{R"(
-					def{
+					defs{
 						v{bla bla asis{hello} {bla bla} {bla bla bla} bla}
 					}
 					size{${v}}
 				)", "6"},
 				{R"(
-					def{
+					defs{
 						v{bla bla asis{hello} {bla bla} {bla bla bla} bla}
 						var{v}
 					}
@@ -383,19 +383,19 @@ tst::set set0("interpreter", [](tst::suite& suite){
 					if{not{is_word{bla}}}else{hello}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v
 					}
 					if{is_word{${v}}}else{hello}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v{bla}
 					}
 					if{is_word{${v}}}then{hello}else{world}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v{map{bla{hi}}}
 					}
 					if{is_word{${v}}}then{world}else{hello}
@@ -412,7 +412,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 					val{asis{hello{bla{bla}}}}
 				)", "hello"},
 				{R"(
-					def{
+					defs{
 						v
 					}
 					val{${v}}
@@ -429,7 +429,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 					args{map{bla{hello world}}}
 				)", "hello world"},
 				{R"(
-					def{
+					defs{
 						v{asis{
 							hello world{bla bla{hi}}
 						}}
@@ -437,7 +437,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 					args{map{bla{${v}}}}
 				)", "hello world{bla bla{hi}}"},
 				{R"(
-					def{
+					defs{
 						v
 					}
 					args{${v}}
@@ -483,20 +483,20 @@ tst::set set0("interpreter", [](tst::suite& suite){
 					if{gt{-5 -3}}then{hello}else{world}
 				)", "world"},
 				{R"(
-					def{
+					defs{
 						v{4}
 					}
 					if{gt{${v} 10}}then{hello}else{world}
 				)", "world"},
 				{R"(
-					def{
+					defs{
 						v{4}
 						v2{9}
 					}
 					if{gt{${v} ${v2}}}then{hello}else{world}
 				)", "world"},
 				{R"(
-					def{
+					defs{
 						v{4}
 						v2{9}
 					}

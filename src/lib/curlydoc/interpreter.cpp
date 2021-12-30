@@ -62,7 +62,7 @@ void interpreter::add_repeater_functions(utki::span<const std::string> names){
 }
 
 void interpreter::context::add(const std::string& name, treeml::forest_ext&& value){
-	auto i = this->def.insert(
+	auto i = this->defs.insert(
 			std::make_pair(name, std::move(value))
 		);
 	if(!i.second){
@@ -71,8 +71,8 @@ void interpreter::context::add(const std::string& name, treeml::forest_ext&& val
 }
 
 interpreter::context::find_result interpreter::context::try_find(const std::string& name)const{
-	auto i = this->def.find(name);
-	if(i == this->def.end()){
+	auto i = this->defs.find(name);
+	if(i == this->defs.end()){
 		if(this->prev){
 			return this->prev->try_find(name);
 		}
@@ -143,7 +143,7 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		return ret;
 	});
 
-	this->add_function("def", [this](const treeml::forest_ext& args){
+	this->add_function("defs", [this](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
 		auto& ctx = this->push_context();
@@ -605,7 +605,7 @@ treeml::forest_ext interpreter::eval(){
 
 void interpreter::init_std_lib(){
 	const auto forest = treeml::read_ext(R"qwertyuiop(
-		def{
+		defs{
 			// check if the first element is an options element
 			is_opt{asis{
 				if{ gt{ size{${@}} 0 } } // size > 0
@@ -616,7 +616,7 @@ void interpreter::init_std_lib(){
 						}
 			}}
 		}
-		def{
+		defs{
 			// get options value
 			get_opt{asis{
 				if{ is_opt{${@}} } // if there are options
