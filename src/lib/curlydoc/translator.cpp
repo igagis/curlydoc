@@ -37,7 +37,7 @@ const std::string list_item_tag = "li";
 }
 
 translator::translator(){
-    this->add_tag("", [this](bool space, auto& forest){
+    this->add_tag("g", [this](bool space, auto& forest){
         ASSERT(!forest.empty())
         this->report_space(space);
         this->translate(forest);

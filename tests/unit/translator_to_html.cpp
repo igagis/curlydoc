@@ -11,8 +11,8 @@ tst::set set("traslator_to_html", [](tst::suite& suite){
 	suite.add<std::pair<std::string, std::string>>(
 			"translate_to_html",
 			{
-				{"{hello world!}", "hello world!"},
-				{"hi{} {hello world!}", "hi hello world!"},
+				{"hello world!", "hello world!"},
+				{"hi{} hello world!", "hi hello world!"},
 				{"p{hello world!}", "\n<p>hello world!</p>"},
 				{"b{bold text}", "<b>bold text</b>"},
 				{"some b{bold text}", "some <b>bold text</b>"},
@@ -37,8 +37,8 @@ tst::set set("traslator_to_html", [](tst::suite& suite){
 	suite.add<std::pair<std::string, std::string>>(
 			"interpreted_translate_to_html",
 			{
-				{"{hello world!}", "hello world!"},
-				{"hi{} {hello world!}", "hi hello world!"},
+				{"hello world!", "hello world!"},
+				{"hi{} hello world!", "hi hello world!"},
 				{"p{hello world!}", "\n<p>hello world!</p>"},
 				{"b{bold text}", "<b>bold text</b>"},
 				{"some b{bold text}", "some <b>bold text</b>"},

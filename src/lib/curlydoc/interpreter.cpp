@@ -40,6 +40,18 @@ interpreter::exception::exception(const std::string& message, const std::string&
 {}
 
 void interpreter::add_function(const std::string& name, function_type&& func){
+	if(!func){
+		// repeater function
+		// check if repeater function with same name already exists (for example 'g')
+		auto i = this->functions.find(name);
+		if(i != this->functions.end()){
+			if(!i->second){
+				// this is repeater function as well, no need to add anything
+				return;
+			}
+		}
+	}
+
 	auto res = this->functions.insert(std::make_pair(std::move(name), std::move(func)));
 	if(!res.second){
 		std::stringstream ss;
@@ -54,9 +66,6 @@ void interpreter::add_repeater_function(const std::string& name){
 
 void interpreter::add_repeater_functions(utki::span<const std::string> names){
 	for(const auto& n : names){
-		if(n.empty()){
-			continue; // empty repeater is already registered
-		}
 		this->add_repeater_function(n);
 	}
 }
@@ -110,7 +119,7 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		file_name_stack{"unknown"},
 		file(std::move(file))
 {
-	this->add_repeater_function("");
+	this->add_repeater_function("g");
 
 	this->add_function("asis", [](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call

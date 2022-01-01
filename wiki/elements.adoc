@@ -1,6 +1,6 @@
 = elements
 
-- empty string - convey contents, e.g. `{some b{text}}` is same as `some b{text}`
+- `g` - group contents, e.g. `g{some b{text}}` is same as `some b{text}`
 - `U` - character by unicode number, e.g. `U{042b}`
 - `p` - paragraph
 - `br` - line break, e.g. `br{1}`, where number is the number of breaks

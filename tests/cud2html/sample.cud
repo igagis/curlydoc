@@ -28,5 +28,5 @@ p{
 }
 
 p{
-	Text ""{convey as is}, works fine too.
+	Text g{convey as is}, works fine too.
 }
