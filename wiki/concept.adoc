@@ -3,7 +3,7 @@
 Using `treeml` markup.
 
 ....
-include{some_file.cud}
+include{some_file.cudoc}
 
 // templates, variables and arrays are all same. Difference is only in the way how those are invoked.
 // Template invokation must have at least one child with children.

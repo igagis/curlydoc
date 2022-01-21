@@ -34,7 +34,7 @@ void translate(std::string_view file_name, bool save_evaled){
 	std::string out_file_name = utki::split(file_name, '.').front() + ".html";
 	std::string evaled_file_name;
 	if(save_evaled){
-		evaled_file_name = utki::split(file_name, '.').front() + ".cud_evaled";
+		evaled_file_name = utki::split(file_name, '.').front() + ".cudoc_evaled";
 	}
 
 

@@ -264,7 +264,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 
 				// include
 				{R"(
-					Hello include{testdata/include.cud} World!
+					Hello include{testdata/include.cudoc} World!
 					And inc_var1 = ${inc_var1},
 					inc_var2 = ${inc_var2}
 				)", "Hello Hi World! And inc_var1 = Hello , inc_var2 = bla bla{bla{bla}}bla bla"},
