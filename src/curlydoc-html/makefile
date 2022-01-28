@@ -3,7 +3,7 @@ include prorab-test.mk
 
 $(eval $(call prorab-config, ../../config))
 
-this_name := cud2html
+this_name := curlydoc-html
 
 this_srcs := $(call prorab-src-dir, .)
 

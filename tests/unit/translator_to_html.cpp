@@ -4,7 +4,7 @@
 #include <treeml/tree.hpp>
 
 #include "../../src/lib/curlydoc/interpreter.hpp"
-#include "../../src/cud2html/translator_to_html.hpp"
+#include "../../src/curlydoc-html/translator_to_html.hpp"
 
 namespace{
 tst::set set("traslator_to_html", [](tst::suite& suite){

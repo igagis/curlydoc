@@ -46,7 +46,7 @@ void translate(std::string_view file_name, bool save_evaled){
 
 	interpreter.add_repeater_functions(translator.list_tags());
 
-	std::cout << "Hello cdoc2html!" << '\n';
+	std::cout << "Hello curlydoc-html!" << '\n';
 
 	std::cout << "output file name = " << out_file_name << '\n';
 	

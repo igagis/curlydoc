@@ -6,7 +6,7 @@
 		{
 			"label": "build",
 			"type": "shell",
-			"command": "make autojobs=true",
+			"command": "make",
 			"group": "build",
 			"problemMatcher": [
 				"$gcc"
@@ -15,7 +15,7 @@
 		{
 			"label": "build_dbg",
 			"type": "shell",
-			"command": "make autojobs=true config=dbg",
+			"command": "make config=dbg",
 			"group": "build",
 			"problemMatcher": [
 				"$gcc"
@@ -49,9 +49,9 @@
 			]
 		},
 		{
-			"label": "run_cdoc2html",
+			"label": "run_curlydoc-html",
 			"type": "shell",
-			"command": "make run_cdoc2html",
+			"command": "make run_curlydoc-html",
 			"group": "build",
 			"problemMatcher": [],
 			"dependsOn": "build"
@@ -59,7 +59,7 @@
 		{
 			"label": "test_",
 			"type": "shell",
-			"command": "make test autojobs=true",
+			"command": "make test",
 			"group": "build",
 			"problemMatcher": [],
 			"dependsOn": "build"
@@ -67,7 +67,7 @@
 		{
 			"label": "test_dbg",
 			"type": "shell",
-			"command": "make test autojobs=true config=dbg",
+			"command": "make test config=dbg",
 			"group": "build",
 			"problemMatcher": [],
 			"dependsOn": "build_dbg"
