@@ -351,13 +351,13 @@ tst::set set0("interpreter", [](tst::suite& suite){
 					slice{-2 -1 ${v}}
 				)", "bla"}, // #49
 
-				// opt
+				// prm
 				{R"(
 					defs{
 						v{var}
 					}
-					opt{x{bla} y{${v}}}
-				)", "opt{x{bla}y{var}}"},
+					prm{x{bla} y{${v}}}
+				)", "prm{x{bla}y{var}}"},
 
 				// size
 				{R"(

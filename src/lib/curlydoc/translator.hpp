@@ -50,8 +50,8 @@ private:
 protected:
     void report_space(bool report);
 
-	static bool is_options(const treeml::tree_ext& forest)noexcept;
-	static void check_option(const treeml::tree_ext& forest);
+	static bool is_parameters(const treeml::tree_ext& forest)noexcept;
+	static void check_parameter(const treeml::tree_ext& forest);
 
 public:
 	translator();

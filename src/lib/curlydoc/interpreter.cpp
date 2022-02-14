@@ -139,11 +139,11 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		return ret;
 	});
 
-	this->add_function("opt", [this](const treeml::forest_ext& args){
+	this->add_function("prm", [this](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
 		treeml::forest_ext ret;
-		ret.emplace_back("opt");
+		ret.emplace_back("prm");
 
 		for(const auto& a : args){
 			ret.back().children.push_back(treeml::tree_ext(a.value, this->eval(a.children)));
@@ -615,10 +615,10 @@ treeml::forest_ext interpreter::eval(){
 void interpreter::init_std_lib(){
 	const auto forest = treeml::read_ext(R"qwertyuiop(
 		defs{
-			// check if the first element is an options element
-			is_opt{asis{
+			// check if the first element is a parameters element
+			is_prm{asis{
 				if{ gt{ size{${@}} 0 } } // size > 0
-						and{ eq{ val{ at{0 ${@}} } opt} } // @[0].value == opt
+						and{ eq{ val{ at{0 ${@}} } prm} } // @[0].value == prm
 						and{ gt{ size{ args{ at{0 ${@}} }} 0} } // @[0].children.size > 0
 						then{
 							true
@@ -626,17 +626,17 @@ void interpreter::init_std_lib(){
 			}}
 		}
 		defs{
-			// get options value
-			get_opt{asis{
-				if{ is_opt{${@}} } // if there are options
+			// get parameters value
+			get_prm{asis{
+				if{ is_prm{${@}} } // if there are parameters
 				then{
 					args{at{0 ${@}}}
 				}
 			}}
 
-			// strip out options
-			no_opt{asis{
-				if{ is_opt{${@}} } // if there are options
+			// strip out parameters
+			no_prm{asis{
+				if{ is_prm{${@}} } // if there are parameters
 				then{
 					slice{1 end ${@}}
 				}else{
@@ -644,9 +644,9 @@ void interpreter::init_std_lib(){
 				}
 			}}
 
-			// define options if non-empty
-			opt?{asis{
-				if{${@}}then{map{opt{ ${@} }}}
+			// define parameters if non-empty
+			prm?{asis{
+				if{${@}}then{map{prm{ ${@} }}}
 			}}
 		}
 	)qwertyuiop");

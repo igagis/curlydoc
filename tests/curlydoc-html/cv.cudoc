@@ -1,24 +1,24 @@
 defs{
 	cell_n{asis{
 		cell{
-			opt?{ get_opt{${@}} }
-			b{ no_opt{${@}}: }
+			prm?{ get_prm{${@}} }
+			b{ no_prm{${@}}: }
 		}
 	}}
 }
 
 // basic info
 table{
-	opt{ cols{3} border{0} weight{1 2 2} align{right left center} valign{top}}
+	prm{ cols{3} border{0} weight{1 2 2} align{right left center} valign{top}}
 
-	cell_n{Name} cell{Ivan Gagis} cell{opt{span{1 7}} image{ opt{ width{200} } me.jpg} }
+	cell_n{Name} cell{Ivan Gagis} cell{prm{span{1 7}} image{ prm{ width{200} } me.jpg} }
 	cell_n{Birth date} cell{15.02.83}
 	cell_n{Location} cell{Helsinki, Finland}
 	cell_n{Tel.} cell{+358 438 242 969}
 	cell_n{Email} cell{igagis@gmail.com}
 	cell_n{GitHub} cell{http://github.com/cppfw/svgren http://github.com/cppfw}
 	cell_n{Website} cell{http://izdelie.icu}
-	cell_n{Summary} cell{ opt{ span{2} }
+	cell_n{Summary} cell{ prm{ span{2} }
 		About 15 years developing commercial software. Excellent C/C++ and Java programming skills.
 		Familiarity with agile and non-agile development methodologies and processes.
 		Good skills of existing code base analysis and maintenance, self-studying,
@@ -29,7 +29,7 @@ table{
 h1{Work experience}
 
 table{
-	opt{ cols{3} border{1} weight{1 3 1} align{center left center}}
+	prm{ cols{3} border{1} weight{1 3 1} align{center left center}}
 
 	defs{
 		row{asis{
@@ -118,7 +118,7 @@ table{
 h1{Areas of expertise}
 
 table{
-	opt{cols{2} border{1} weight{1 3} align{right left}}
+	prm{cols{2} border{1} weight{1 3} align{right left}}
 
 	cell_n{Environtments} cell{Linux, Windows, Android, Mac OS}
 	cell_n{Programming Languages} cell{ b{C++}, C, bash, C#, Java, Objective-C, javascript, Python }
@@ -128,7 +128,7 @@ table{
 h1{Education}
 
 table{
-	opt{cols{3} weight{1 3 1}}
+	prm{cols{3} weight{1 3 1}}
 
 	cell{2000 - 2006}
 	cell{
@@ -141,7 +141,7 @@ table{
 h1{Language skills}
 
 table{
-	opt{cols{2} border{0} weight{1 3} align{right left}}
+	prm{cols{2} border{0} weight{1 3} align{right left}}
 
 	cell_n{Russian} cell{native}
 	cell_n{English} cell{fluent}

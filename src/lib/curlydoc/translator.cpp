@@ -43,7 +43,7 @@ translator::translator(){
         this->translate(forest);
     });
 
-	this->add_tag("opt", [](bool space, auto& forest){
+	this->add_tag("prm", [](bool space, auto& forest){
 		// ignore
 	});
 
@@ -199,8 +199,8 @@ std::vector<std::string> translator::list_tags()const{
 	std::vector<std::string> tags;
 
 	for(const auto& h : this->handlers){
-		if(h.first == "opt"){
-			continue; // opt is not a tag, and it is just ignored by translator
+		if(h.first == "prm"){
+			continue; // prm is not a tag, and it is just ignored by translator
 		}
 		tags.push_back(h.first);
 	}
@@ -251,11 +251,11 @@ void translator::report_space(bool report){
     }
 }
 
-bool translator::is_options(const treeml::tree_ext& tree)noexcept{
-	return tree == "opt" && !tree.children.empty();
+bool translator::is_parameters(const treeml::tree_ext& tree)noexcept{
+	return tree == "prm" && !tree.children.empty();
 }
 
-void translator::check_option(const treeml::tree_ext& tree){
+void translator::check_parameter(const treeml::tree_ext& tree){
 	if(tree.children.empty()){
 		throw std::invalid_argument(std::string("no value specified for '") + tree.value.to_string() + "' parameter");
 	}
@@ -267,9 +267,9 @@ void translator::handle_image(const treeml::forest_ext& forest){
 	ASSERT(!forest.empty())
 	auto i = forest.begin();
 
-	if(is_options(*i)){
+	if(is_parameters(*i)){
 		for(const auto& p : i->children){
-			check_option(p);
+			check_parameter(p);
 
 			if(p == "width"){
 				params.width = p.children.front().value.to_uint32();
@@ -326,9 +326,9 @@ void translator::handle_table(const treeml::forest_ext& forest){
 
 	auto& t = this->cur_table.back();
 
-	if(is_options(*i)){
+	if(is_parameters(*i)){
 		for(const auto& p : i->children){
-			check_option(p);
+			check_parameter(p);
 
 			if(p == "cols"){
 				t.num_cols = p.children.front().value.to_uint32();
@@ -489,9 +489,9 @@ void translator::handle_cell(const treeml::forest_ext& forest){
 	ASSERT(!forest.empty())
 	auto i = forest.begin();
 
-	if(is_options(*i)){
+	if(is_parameters(*i)){
 		for(const auto& p : i->children){
-			check_option(p);
+			check_parameter(p);
 
 			if(p == "span"){
 				auto i = p.children.begin();
@@ -528,9 +528,9 @@ void translator::handle_list(const treeml::forest_ext& forest){
 	ASSERT(!forest.empty())
 	auto i = forest.begin();
 
-	if(is_options(*i)){
+	if(is_parameters(*i)){
 		for(const auto& p : i->children){
-			check_option(p);
+			check_parameter(p);
 
 			if(p == "ordered"){
 				l.ordered = p.children.front().value.to_bool();
