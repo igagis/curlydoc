@@ -67,87 +67,58 @@ translator::translator(){
 		this->on_paragraph(forest);
 	});
 
-	{
-		auto f = [this](bool space, auto& forest){
-            this->report_space(space);
-			this->on_bold(forest);
-		};
-		this->add_tag("b", f);
-	}
+	this->add_tag("b", [this](bool space, auto& forest){
+		this->report_space(space);
+		this->on_bold(forest);
+	});
 
-	{
-		auto f = [this](bool space, auto& forest){
-            this->report_space(space);
-			this->on_italic(forest);
-		};
-		this->add_tag("i", f);
-	}
+	this->add_tag("i", [this](bool space, auto& forest){
+		this->report_space(space);
+		this->on_italic(forest);
+	});
 
-	{
-		auto f = [this](bool space, auto& forest){
-            this->report_space(space);
-			this->on_underline(forest);
-		};
-		this->add_tag("u", f);
-	}
+	this->add_tag("u", [this](bool space, auto& forest){
+		this->report_space(space);
+		this->on_underline(forest);
+	});
 
-	{
-		auto f = [this](bool space, auto& forest){
-            this->report_space(space);
-			this->on_strikethrough(forest);
-		};
-		this->add_tag("s", f);
-	}
+	this->add_tag("s", [this](bool space, auto& forest){
+		this->report_space(space);
+		this->on_strikethrough(forest);
+	});
 
-	{
-		auto f = [this](bool space, auto& forest){
-            this->report_space(space);
-			this->on_monospace(forest);
-		};
-		this->add_tag("m", f);
-	}
+	this->add_tag("m", [this](bool space, auto& forest){
+		this->report_space(space);
+		this->on_monospace(forest);
+	});
 
-	{
-		auto f = [this](bool space, auto& forest){
-			this->on_header1(forest);
-		};
-		this->add_tag("h1", f);
-	}
+	this->add_tag("h1", [this](bool space, auto& forest){
+		this->on_header1(forest);
+	});
 
-	{
-		auto f = [this](bool space, auto& forest){
-			this->on_header2(forest);
-		};
-		this->add_tag("h2", f);
-	}
+	this->add_tag("h2", [this](bool space, auto& forest){
+		this->on_header2(forest);
+	});
 
-	{
-		auto f = [this](bool space, auto& forest){
-			this->on_header3(forest);
-		};
-		this->add_tag("h3", f);
-	}
+	this->add_tag("h3", [this](bool space, auto& forest){
+		this->on_header3(forest);
+	});
 
-	{
-		auto f = [this](bool space, auto& forest){
-			this->on_header4(forest);
-		};
-		this->add_tag("h4", f);
-	}
+	this->add_tag("h4", [this](bool space, auto& forest){
+		this->on_header4(forest);
+	});
 	
-	{
-		auto f = [this](bool space, auto& forest){
-			this->on_header5(forest);
-		};
-		this->add_tag("h5", f);
-	}
+	this->add_tag("h5", [this](bool space, auto& forest){
+		this->on_header5(forest);
+	});
 
-	{
-		auto f = [this](bool space, auto& forest){
-			this->on_header6(forest);
-		};
-		this->add_tag("h6", f);
-	}
+	this->add_tag("h6", [this](bool space, auto& forest){
+		this->on_header6(forest);
+	});
+
+	this->add_tag("ins", [this](bool space, auto& forest){
+		this->on_ins(forest);
+	});
 	
 	this->add_tag("image", [this](bool space, auto& forest){
 		this->report_space(space);
@@ -158,23 +129,17 @@ translator::translator(){
 		this->handle_table(forest);
 	});
 
-	{
-		auto f = [this](bool space, auto& forest){
-			this->handle_cell(forest);
-		};
-		this->add_tag(cell_tag, f);
-	}
+	this->add_tag(cell_tag, [this](bool space, auto& forest){
+		this->handle_cell(forest);
+	});
 
 	this->add_tag(list_tag, [this](bool space, auto& forest){
 		this->handle_list(forest);
 	});
 
-	{
-		auto f = [this](bool space, auto& forest){
-			this->handle_list_item(forest);
-		};
-		this->add_tag(list_item_tag, f);
-	}
+	this->add_tag(list_item_tag, [this](bool space, auto& forest){
+		this->handle_list_item(forest);
+	});
 }
 
 void translator::add_tag(const std::string& tag, handler_type&& func){

@@ -48,6 +48,8 @@ public:
 	void on_header5(const treeml::forest_ext& forest)override;
 	void on_header6(const treeml::forest_ext& forest)override;
 
+	void on_ins(const tml::forest_ext& forest)override;
+
 	void on_image(const image_params& params, const treeml::forest_ext& forest)override;
 
 	void on_table(const table& tbl, const treeml::forest_ext& forest)override;

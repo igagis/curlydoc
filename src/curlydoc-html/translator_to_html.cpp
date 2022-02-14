@@ -105,6 +105,10 @@ void translator_to_html::on_header6(const treeml::forest_ext& forest){
 	this->ss << "</h6>";
 }
 
+void translator_to_html::on_ins(const tml::forest_ext& forest){
+	this->ss << '\n' << "<br/>" << '\n';
+}
+
 void translator_to_html::on_image(const image_params& params, const treeml::forest_ext& forest){
 	this->ss << "<img src=\"" << params.url << "\"";
 

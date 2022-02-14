@@ -20,7 +20,8 @@ tst::set set("traslator_to_html", [](tst::suite& suite){
 				{"pre b{bold} post", "pre <b>bold</b> post"},
 				{"mi\"b\"{dd}le", "mi<b>dd</b>le"},
 				{"mi\"i\"{dd}le", "mi<i>dd</i>le"},
-				{"some \"quoted\" stuff", "some quoted stuff"}
+				{"some \"quoted\" stuff", "some quoted stuff"},
+				{"some ins{br} stuff", "some\n<br/>\n stuff"} // TODO: get rid of leading space after <br/>
 			},
 			[](const auto& p){
 				const auto in = treeml::read_ext(p.first.c_str());

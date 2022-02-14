@@ -84,6 +84,8 @@ public:
 	virtual void on_header5(const treeml::forest_ext& forest) = 0;
 	virtual void on_header6(const treeml::forest_ext& forest) = 0;
 
+	virtual void on_ins(const tml::forest_ext& forest) = 0;
+
 	struct image_params{
 		std::string url;
 		std::optional<uint32_t> width;
