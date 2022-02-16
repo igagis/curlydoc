@@ -2,59 +2,58 @@
 
 **curlydoc** is a document markup language.
 
-**curlydoc** is based on link:https://github.com/cppfw/treeml[`treeml`] markup language.
+**curlydoc** is based on link:https://github.com/cppfw/treeml[**treeml**] markup language.
 
 Tree nodes without children are ordinary words and are concatenated in the final document.
 
-Tree nodes with children have special meaning. Those are either `functions`, `macros` or `tags`.
+Tree nodes with children have special meaning. Those are either **functions**, **macros** or **tags**.
 
-**curlydoc** toolchain is a set of tools for translating **curlydoc** documents to other document formats. It consists of `interpreter` and `translator`.
+**curlydoc** toolchain is a set of tools for translating **curlydoc** documents to other document formats. It consists of **interpreter** and **translator**.
 
-The **curlydoc** document is first processed by `interpreter`, and then the output is conveyed to `translator`.
+The **curlydoc** document is first processed by **interpreter**, and then the output is conveyed to **translator**.
 
-The `interpreter` evaluates `functions` and `macros` by substituting them with the `treeml` nodes resulting from the evaluation.
+The **interpreter** evaluates **functions** and **macros** by substituting them with the **treeml** nodes resulting from the evaluation.
 
-The `translator` translates `tags` and ordinary words into a final document in some specific format, like `html` or `pdf`.
+The **translator** translates **tags** and ordinary words into a final document in some specific format, like **html** or **pdf**.
 
 == interpreter
 
-The `interpreter` evaluates `functions` and `macros`.
+The **interpreter** evaluates **functions** and **macros**.
 
 === functions
 
-The `function` is a tree node _with children_ with the node value representing a known function name. Set of known function names is predefined by the `interpreter`.
+The **function** is a tree node _with children_ with the node value representing a known function name. **Functions** are predefined by the **interpreter**.
 
-If the value of the node _with children_ is a known function name then _the children_ of the node are the function arguments.
+If the value of the node _with children_ is a function name then _the children_ of the node are the function arguments.
 
-See the list of functions in the `interpreter` link:interpreter_reference.adoc[reference].
+See the list of functions in the **interpreter** link:interpreter_reference.adoc[reference].
 
 ==== example
 
-The `asis` function simply substitues it's argument.
+The `asis` function simply substitues it's argument without evaluating it.
 
 ....
 Lorem ipsum asis{dolor} sit amet.
 ....
 
-After evaluation by `interpreter` this will result in:
+After evaluation by **interpreter** this will result in:
 
 ....
 Lorem ipsum dolor sit amet.
 ....
 
-
 === macros
 
-The `macro` is a tree node _with children_ with the node value representing a defined macro name. Macros are defined by user using `defs` function.
+The **macro** is a **treeml** node _with children_ with the node value representing a defined macro name. **Macros** are defined by user using `defs` function.
 
-Macro definitions are visible within a specific scope where those are defined, i.e. only within nodes subtree which contain the corresponding `defs` node
+**Macro** definitions are visible within a specific scope where those are defined, i.e. only within nodes subtree which contain the corresponding `defs` node
 which defined the macro.
 
 If the value of the node _with children_ is a defined macro name then _the children_ of the node are macro arguments.
 
-When evaluating a macro the `interpreter` first evaluates the macro's arguments and assigns the result to a temporary macro anmed `@` which lives only during the macro evaluation. After that the `interpreter` evaluates the macro's definition as it was specified in the corresponding `defs` function invocation.
+When evaluating a macro the **interpreter** first evaluates the macro's arguments and assigns the result to a temporary macro named `@` which lives only during the macro evaluation. After that the **interpreter** evaluates the macro's definition as it was specified in the corresponding `defs` function invocation.
 
-A `macro` can be defined with a name same as one of the predefined `functions`, in that case, the `macro`, within its scope, will shadow the function.
+A **macro** can be defined with the same name as one of the predefined **functions**, in that case, the **macro**, within its scope, will shadow the **function**.
 
 ==== example
 
@@ -74,10 +73,10 @@ defs{
 my_macro_1{to the whole} ${my_macro_2}
 
 // NOTE: The `$` function substitutes the definition of a macro given as argument.
-//       This allows using macros without any arguments.
+//       This allows using macros without any arguments (i.e. as variables).
 ....
 
-this example, after evaluation by the `interpreter` will result in the following `treeml` document:
+this example, after evaluation by the **interpreter** will result in the following **treeml** document:
 
 ....
 Hello to the whole world!
@@ -85,17 +84,18 @@ Hello to the whole world!
 
 == translator
 
-The `translator` translates the output from the `interpreter` to the final specific document format, like `html` or `pdf`.
+The **translator** translates the output from the **interpreter** to the final specific document format, like **html** or **pdf**.
 
-The `tag` is a `treeml` node _with children_. Tags are used to apply formatting to the text.
+A **treeml** node _without children_ represents a simple word.
 
-A tag can have a `prm` child node which defines parameters for the tag,
-the `prm` must be the first child of the tag node.
+A **tag** is a **treeml** node _with children_. **Tags** are used to apply formatting to the text.
 
-Note, that each `tag` recognized by the `translator` has corresponding "repeater" function in the `interpreter`, so the `interpreter`
-will evaluate the contents of the `tag`, but will leave the tag node itslef in place.
+A **tag** can have a `prm` child node which defines parameters for the **tag**. The `prm` must be the first child of the tag node.
 
-See list of tags in `translator` link:translator_reference.adoc[reference].
+Note, that each **tag** name recognized by the **translator** has corresponding "repeater" **function** in the **interpreter**, so the **interpreter**
+will evaluate the contents of the **tag**, but will leave the tag node itslef in place.
+
+See list of **tags** in **translator** link:translator_reference.adoc[reference].
 // TODO: add link
 
 === example
@@ -108,13 +108,13 @@ defs{
 Hello b{to ${var} whole} world!
 ....
 
-The `interpreter` has the `b` "repeater" function, so it will evaluate the contents of the `b` tag and the intermediate result will be as follows:
+The **interpreter** has the `b` "repeater" function, so it will evaluate the contents of the `b` tag and the intermediate result will be as follows:
 
 ....
 Hello b{to the whole} world!
 ....
 
-Then the `translator` will translate this intermediate `treeml` document to formatted text, for example in `html`:
+Then the **translator** will translate this intermediate **treeml** document to formatted text, for example in **html**:
 
 ....
 Hello <b>to the whole</b> world!
@@ -126,114 +126,114 @@ Hello <b>to the whole</b> world!
 
 
 
-....
-include{some_file.cudoc}
+// ....
+// include{some_file.cudoc}
 
-// templates, variables and arrays are all same. Difference is only in the way how those are invoked.
-// Template invokation must have at least one child with children.
-// Array element access must have one childless child.
-// Variable is invoked as ${var_name}.
+// // templates, variables and arrays are all same. Difference is only in the way how those are invoked.
+// // Template invokation must have at least one child with children.
+// // Array element access must have one childless child.
+// // Variable is invoked as ${var_name}.
 
-defs{
-    my_template{asis{
-        defs{}
+// defs{
+//     my_template{asis{
+//         defs{}
         
-		==={ subheader }
-		p{
-			lorem ipsum ${x} dolor ${y} sit amet ${z} bla bla...
-		}
-    }}
+// 		==={ subheader }
+// 		p{
+// 			lorem ipsum ${x} dolor ${y} sit amet ${z} bla bla...
+// 		}
+//     }}
 
-    b{asis{
-        map{b{
-            ${@}
-        }}
-    }}
+//     b{asis{
+//         map{b{
+//             ${@}
+//         }}
+//     }}
 
-    // variable is same as template without arguments, invoke as ${var_name}
-    variable1{1.0.3}
+//     // variable is same as template without arguments, invoke as ${var_name}
+//     variable1{1.0.3}
 
-    // array is same as variable
-    array{
-        {element1 bla bla} {element2} {element3} {this is b{element} 4} {${variable}} {sinle_word_element} {trololo trololo}
-        {complex{element bla bla}}
-    }
-}
+//     // array is same as variable
+//     array{
+//         {element1 bla bla} {element2} {element3} {this is b{element} 4} {${variable}} {sinle_word_element} {trololo trololo}
+//         {complex{element bla bla}}
+//     }
+// }
 
-// Template invocation:
-my_template{map{x{bla} y{bal} z{lba}}}
+// // Template invocation:
+// my_template{map{x{bla} y{bal} z{lba}}}
 
-// array:
-size{array} // size of array
-count{${array}} // count number of elements
-at{10 array} // element access by index.
-pick{10 ${array}}
-${array} // this will substitute all array elements as is, without any unwrapping
-${array 10}
-${map{x}}
-//get{bla map}
-find{bla ${map}}
+// // array:
+// size{array} // size of array
+// count{${array}} // count number of elements
+// at{10 array} // element access by index.
+// pick{10 ${array}}
+// ${array} // this will substitute all array elements as is, without any unwrapping
+// ${array 10}
+// ${map{x}}
+// //get{bla map}
+// find{bla ${map}}
 
-={ header1 curlydoc document markup concept }
+// ={ header1 curlydoc document markup concept }
 
-=={ header2 curlydoc code example }
+// =={ header2 curlydoc code example }
 
-p{
-    Hello world! b{how are you doing today}???? I'm fine, thanks!
-    How ab"b"{o}ut y""b{o}u? I'm i{fine}, too. Version ${variable1}.
-}
+// p{
+//     Hello world! b{how are you doing today}???? I'm fine, thanks!
+//     How ab"b"{o}ut y""b{o}u? I'm i{fine}, too. Version ${variable1}.
+// }
 
-m{{ syntax{cpp} } // the parameters block must be the first child, it maybe absent
-    bla bla
-}
+// m{{ syntax{cpp} } // the parameters block must be the first child, it maybe absent
+//     bla bla
+// }
 
 
-// possible template for cpp code block
-cpp{"""
-multiline code
-snippet
-"""}
+// // possible template for cpp code block
+// cpp{"""
+// multiline code
+// snippet
+// """}
 
-%{b{params} bla bla bla} %{/}
+// %{b{params} bla bla bla} %{/}
 
-p{
-    Lorem i{ipsum} b{i{dolor}} sit code{amet} bla bla.
-    link{http://blabla.net}.
-    image{my_image.png}
-}
+// p{
+//     Lorem i{ipsum} b{i{dolor}} sit code{amet} bla bla.
+//     link{http://blabla.net}.
+//     image{my_image.png}
+// }
 
-defs{
-	index{3 4 6}
-}
+// defs{
+// 	index{3 4 6}
+// }
 
-for{
-    // the first child of the 'for' must be the iterator declaration
-	i{ 3 4 6 }
-    // or
-	i{ range{from{3} to{size{array}} step{2}} }
-	// or
-	i{ {first one} {second one} {third{one}} }
+// for{
+//     // the first child of the 'for' must be the iterator declaration
+// 	i{ 3 4 6 }
+//     // or
+// 	i{ range{from{3} to{size{array}} step{2}} }
+// 	// or
+// 	i{ {first one} {second one} {third{one}} }
 
     
-    my_template{ x{${i}} y{${array ${i}}} z{bye} }
-}
+//     my_template{ x{${i}} y{${array ${i}}} z{bye} }
+// }
 
-if{bla}then{Hello}else{World!}
+// if{bla}then{Hello}else{World!}
 
-p{
-    numbered list:
-    ol{
-		{bla bla}
-		{bla bla}
-		{bla bla}
-	}
+// p{
+//     numbered list:
+//     ol{
+// 		{bla bla}
+// 		{bla bla}
+// 		{bla bla}
+// 	}
 
-    unnumbered list:
-	ul{
-		{bla bla bla}
-		{bla bla bla}
-	}
+//     unnumbered list:
+// 	ul{
+// 		{bla bla bla}
+// 		{bla bla bla}
+// 	}
 
-}
+// }
 
-....
+// ....
