@@ -1,6 +1,130 @@
 = curlydoc document markup concept
 
-Using `treeml` markup.
+**curlydoc** is a document markup language.
+
+**curlydoc** is based on link:https://github.com/cppfw/treeml[`treeml`] markup language.
+
+Tree nodes without children are ordinary words and are concatenated in the final document.
+
+Tree nodes with children have special meaning. Those are either `functions`, `macros` or `tags`.
+
+**curlydoc** toolchain is a set of tools for translating **curlydoc** documents to other document formats. It consists of `interpreter` and `translator`.
+
+The **curlydoc** document is first processed by `interpreter`, and then the output is conveyed to `translator`.
+
+The `interpreter` evaluates `functions` and `macros` by substituting them with the `treeml` nodes resulting from the evaluation.
+
+The `translator` translates `tags` and ordinary words into a final document in some specific format, like `html` or `pdf`.
+
+== interpreter
+
+The `interpreter` evaluates `functions` and `macros`.
+
+=== functions
+
+The `function` is a tree node _with children_ with the node value representing a known function name. Set of known function names is predefined by the `interpreter`.
+
+If the value of the node _with children_ is a known function name then _the children_ of the node are the function arguments.
+
+See the list of functions in the `interpreter` link:interpreter_reference.adoc[reference].
+
+==== example
+
+The `asis` function simply substitues it's argument.
+
+....
+Lorem ipsum asis{dolor} sit amet.
+....
+
+After evaluation by `interpreter` this will result in:
+
+....
+Lorem ipsum dolor sit amet.
+....
+
+
+=== macros
+
+The `macro` is a tree node _with children_ with the node value representing a defined macro name. Macros are defined by user using `defs` function.
+
+Macro definitions are visible within a specific scope where those are defined, i.e. only within nodes subtree which contain the corresponding `defs` node
+which defined the macro.
+
+If the value of the node _with children_ is a defined macro name then _the children_ of the node are macro arguments.
+
+When evaluating a macro the `interpreter` first evaluates the macro's arguments and assigns the result to a temporary macro anmed `@` which lives only during the macro evaluation. After that the `interpreter` evaluates the macro's definition as it was specified in the corresponding `defs` function invocation.
+
+A `macro` can be defined with a name same as one of the predefined `functions`, in that case, the `macro`, within its scope, will shadow the function.
+
+==== example
+
+....
+defs{
+	// macros are defined as <macro-name>{<macro-definition>}
+
+	my_macro_1{
+		// macro definitions are evaluated at definition time,
+		// so we use the 'asis' function to avoid evaluation of '$' function (see explanation below)
+		asis{Hello ${@}}
+	} 
+
+	my_macro_2{world!}
+}
+
+my_macro_1{to the whole} ${my_macro_2}
+
+// NOTE: The `$` function substitutes the definition of a macro given as argument.
+//       This allows using macros without any arguments.
+....
+
+this example, after evaluation by the `interpreter` will result in the following `treeml` document:
+
+....
+Hello to the whole world!
+....
+
+== translator
+
+The `translator` translates the output from the `interpreter` to the final specific document format, like `html` or `pdf`.
+
+The `tag` is a `treeml` node _with children_. Tags are used to apply formatting to the text.
+
+A tag can have a `prm` child node which defines parameters for the tag,
+the `prm` must be the first child of the tag node.
+
+Note, that each `tag` recognized by the `translator` has corresponding "repeater" function in the `interpreter`, so the `interpreter`
+will evaluate the contents of the `tag`, but will leave the tag node itslef in place.
+
+See list of tags in `translator` link:translator_reference.adoc[reference].
+// TODO: add link
+
+=== example
+
+....
+defs{
+	var{the}
+}
+
+Hello b{to ${var} whole} world!
+....
+
+The `interpreter` has the `b` "repeater" function, so it will evaluate the contents of the `b` tag and the intermediate result will be as follows:
+
+....
+Hello b{to the whole} world!
+....
+
+Then the `translator` will translate this intermediate `treeml` document to formatted text, for example in `html`:
+
+....
+Hello <b>to the whole</b> world!
+....
+
+
+
+
+
+
 
 ....
 include{some_file.cudoc}

@@ -486,7 +486,7 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		if(evaled.size() == 1){
 			return evaled.front().children;
 		}else if(!evaled.empty()){
-			throw exception("more than one value passed to 'val' function");
+			throw exception("more than one value passed to 'args' function");
 		}
 
 		return treeml::forest_ext();
