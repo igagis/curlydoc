@@ -74,6 +74,14 @@ Macros are invoked as `<macro-name>{<macro-args>}`.
 At the moment of macro invocation the **interpreter** will evaluate macro arguments and create a temporary macro named `@` which will be defined to the result of that evaluation. Then the macro definition is evaluated and the result is returned. Then the temporary `@` macro is undefined.
 
 .example
+....
+macro1{some argument}
+....
+
+.result
+....
+Hello
+....
 
 == $
 
