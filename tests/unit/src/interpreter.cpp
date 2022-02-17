@@ -59,7 +59,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 					for{
 						i{10 20 ${v1} g{${v1}} }
 
-						x = ${i} 
+						x = ${i}
 					}
 					end
 				)", "Hi x = 10 x = 20 x = hello x = world! x = g{hello world!}end"}, // #9

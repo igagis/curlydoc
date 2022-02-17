@@ -36,4 +36,99 @@ map{
 
 == prm
 
+`prm{<args>}` is equivalent to `map{prm{map{<args>}}}`.
+
+.example
+....
+Image: image{ prm{ width{asis{200}} } me.jpg}
+....
+
+.result
+....
+Image: image{ prm{ width{200} } me.jpg}
+....
+
+== defs
+
+Defines macros.
+
+Macros are defined in the same scope in which the `defs` function is called.
+
+Macro definitions are evaluated at the moment of definition.
+
+Macros are defined in the form:
+....
+<name>{<definition>}
+....
+
+.example
+....
+defs{
+	macro1{Hello}
+	macro2{asis{world!}}}
+}
+....
+
+Macros are invoked as `<macro-name>{<macro-args>}`.
+
+At the moment of macro invocation the **interpreter** will evaluate macro arguments and create a temporary macro named `@` which will be defined to the result of that evaluation. Then the macro definition is evaluated and the result is returned. Then the temporary `@` macro is undefined.
+
+.example
+
+== $
+
+Returns definition of the macro specified as argument.
+
+.example
+....
+defs{
+	macro1{Hello}
+	macro2{
+		asis{
+			${@}
+		}
+	}
+}
+${macro1} macro2{world}!
+....
+
+.result
+....
+Hello world!
+....
+
+== for
+
+For-loop.
+
+.syntax
+....
+for{ <iter-name>{<iter-values>} <body> }
+....
+
+In the beginning, the `<iter-values>` are evaluated by **interpreter**.
+Then the `<body>` is evaluated for each node of the resulting `<iter-values>` while defining a temporary macro named <iter-name> to the current `<iter-value>`.
+
+.example
+....
+defs{
+	v1{hello world!}
+}
+
+Hi
+for{
+	i{10 20 ${v1} g{${v1}} }
+
+	x = ${i}
+}
+end
+....
+
+.result
+....
+Hi x = 10 x = 20 x = hello x = world! x = g{hello world!}end
+....
+
+== if
+
 // TODO:
