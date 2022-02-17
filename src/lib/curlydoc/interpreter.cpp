@@ -1,7 +1,7 @@
 /*
 curlydoc - document markup language translator
 
-Copyright (C) 2021  Ivan Gagis <igagis@gmail.com>
+Copyright (C) 2021 Ivan Gagis <igagis@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,19 +40,7 @@ interpreter::exception::exception(const std::string& message, const std::string&
 {}
 
 void interpreter::add_function(const std::string& name, function_type&& func){
-	if(!func){
-		// repeater function
-		// check if repeater function with same name already exists (for example 'g')
-		auto i = this->functions.find(name);
-		if(i != this->functions.end()){
-			if(!i->second){
-				// this is repeater function as well, no need to add anything
-				return;
-			}
-		}
-	}
-
-	auto res = this->functions.insert(std::make_pair(std::move(name), std::move(func)));
+	auto res = this->functions.insert(std::make_pair(name, std::move(func)));
 	if(!res.second){
 		std::stringstream ss;
 		ss << "function '" << name << "' is already added";
@@ -61,7 +49,19 @@ void interpreter::add_function(const std::string& name, function_type&& func){
 }
 
 void interpreter::add_repeater_function(const std::string& name){
-	this->add_function(name, nullptr);
+	this->add_function(
+			name,
+			[this, name](const tml::forest_ext& args){
+				ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+				treeml::forest_ext ret;
+				ret.emplace_back(name);
+
+				ret.front().children = this->eval(args);
+
+				return ret;
+			}
+		);
 }
 
 void interpreter::add_repeater_functions(utki::span<const std::string> names){
@@ -119,8 +119,6 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		file_name_stack{"unknown"},
 		file(std::move(file))
 {
-	this->add_repeater_function("g");
-
 	this->add_function("asis", [](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
@@ -568,19 +566,15 @@ treeml::forest_ext interpreter::eval(treeml::forest_ext::const_iterator begin, t
 					throw exception(std::string("function/macro '") + i->value.to_string() + "' not found");
 				}
 
-				if(func_i->second){
-					output = func_i->second(i->children);
+				ASSERT(func_i->second)
 
-					if(!output.empty()){
-						output.front().value.info.flags.set(
-								treeml::flag::space,
-								i->value.info.flags.get(treeml::flag::space)
-							);
-					}
-				}else{
-					// repeater function, which means the tag remains as is, but its children are evaluated
-					output.emplace_back(i->value);
-					output.back().children = this->eval(i->children);
+				output = func_i->second(i->children);
+
+				if(!output.empty()){
+					output.front().value.info.flags.set(
+							treeml::flag::space,
+							i->value.info.flags.get(treeml::flag::space)
+						);
 				}
 			}
 

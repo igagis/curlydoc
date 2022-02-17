@@ -1,5 +1,39 @@
 = curlydoc interpreter
 
-**curlydoc** has interpreter
+The **interpreter** predefines the following functions:
 
-TODO:
+== asis
+
+Returns its arguments without evaluation.
+
+.example
+....
+Hello asis{asis{world}}!
+....
+
+.result
+....
+Hello asis{world}!
+....
+
+== map
+
+Evaluates the second level of its arguments and returns the result.
+
+.example
+....
+map{
+	key1{Hello}
+	key2{asis{world!}}
+}
+....
+
+.result
+....
+	key1{Hello}
+	key2{world!}
+....
+
+== prm
+
+// TODO:

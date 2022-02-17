@@ -3,6 +3,8 @@
 
 #include <papki/fs_file.hpp>
 
+#include "dummy_translator.hpp"
+
 #include "../../src/lib/curlydoc/interpreter.hpp"
 
 namespace{
@@ -325,7 +327,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
 					}
 					slice{2 end ${v}}
-				)", "bla hello{world{how{are{you}}}}"},
+				)", "bla hello{world{how{are{you}}}}"}, // #45
 				{R"(
 					defs{
 						v{asis{bla bla{hi} bla hello{world{how{are{you}}}}}}
@@ -357,7 +359,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 						v{var}
 					}
 					prm{x{bla} y{${v}}}
-				)", "prm{x{bla}y{var}}"},
+				)", "prm{x{bla}y{var}}"}, // #50
 
 				// size
 				{R"(
@@ -372,7 +374,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 						var{v}
 					}
 					size{hello asis{world{bla bla} bla} hi}
-				)", "4"},
+				)", "4"}, // #52
 
 				// is_word
 				{R"(
@@ -504,6 +506,10 @@ tst::set set0("interpreter", [](tst::suite& suite){
 			},
 			[](auto& p){
 				curlydoc::interpreter interpreter(std::make_unique<papki::fs_file>("none"));
+
+				dummy_translator tr;
+
+				interpreter.add_repeater_functions(tr.list_tags());
 
 				const auto in = treeml::read_ext(p.first);
 
