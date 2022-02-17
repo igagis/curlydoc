@@ -1,1 +1,3 @@
 = curlydoc
+
+See link:wiki/concept.adoc[WiKi] for description.
