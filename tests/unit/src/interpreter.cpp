@@ -301,7 +301,7 @@ tst::set set0("interpreter", [](tst::suite& suite){
 					}
 
 					x = get{x ${a}} y = get{y ${a}} z = get{z ${a}} bla = get{bla ${a}}
-				)", "x = bla bla y = hey z = how{are{you}}bla ="},
+				)", "x = bla bla y = hey z = how{are{you}} bla ="},
 
 				// slice
 				{R"(
@@ -419,15 +419,15 @@ tst::set set0("interpreter", [](tst::suite& suite){
 					val{${v}}
 				)", ""},
 
-				// args
+				// children
 				{R"(
-					args{bla}
+					children{bla}
 				)", ""},
 				{R"(
-					args{map{bla{hello}}}
+					children{map{bla{hello}}}
 				)", "hello"},
 				{R"(
-					args{map{bla{hello world}}}
+					children{map{bla{hello world}}}
 				)", "hello world"},
 				{R"(
 					defs{
@@ -435,13 +435,13 @@ tst::set set0("interpreter", [](tst::suite& suite){
 							hello world{bla bla{hi}}
 						}}
 					}
-					args{map{bla{${v}}}}
+					children{map{bla{${v}}}}
 				)", "hello world{bla bla{hi}}"},
 				{R"(
 					defs{
 						v
 					}
-					args{${v}}
+					children{${v}}
 				)", ""},
 
 				// eq

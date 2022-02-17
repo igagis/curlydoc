@@ -131,4 +131,291 @@ Hi x = 10 x = 20 x = hello x = world! x = g{hello world!}end
 
 == if
 
-// TODO:
+Sets the boolean flag for the current scope to `true` if the argumetn is not empty after evaluation, otherwise sets it to `false`.
+
+== then
+
+In case the boolean flag for current scope is set to `true` it evaluates the arguments and returns the result. Otherwise it does nothing and returns void.
+
+.example
+....
+defs{
+	v1{bla bla}
+	v2
+}
+if{ ${v1} } then{ Hello } world!
+if{ ${v2} } then{ this will not be visible }
+....
+
+.result
+....
+Hello world!
+....
+
+== else
+
+In case the boolean flag for current scope is set to `false` it evaluates the arguments and returns the result. Otherwise it does nothing and returns void.
+
+.example
+....
+defs{
+	v1{bla bla}
+	v2
+}
+if{ ${v2} } else{ Hello } world!
+if{ ${v2} } then{ this will not be visible } else{ this will be visible }
+....
+
+.result
+....
+Hello world!
+this will be visible
+....
+
+== and
+
+Performs `and` operation between current boolean flag for the scope and evaluated argument (non-empty/empty = true/flase)
+and sets the result as current boolean flag for the scope.
+
+.example
+....
+defs{
+	v1
+}
+if{bla}and{hi}then{hello}
+if{bla}and{${v1}}then{hello}else{world!}
+....
+
+.result
+....
+hello
+world!
+....
+
+== or
+
+Performs `or` operation between current boolean flag for the scope and evaluated argument (non-empty/empty = true/flase)
+and sets the result as current boolean flag for the scope.
+
+.example
+....
+defs{
+	v1
+}
+if{${v1}}or{true}then{hello}
+if{${v1}}or{${v1}}then{hello}else{world!}
+....
+
+.result
+....
+hello
+world!
+....
+
+== not
+
+Returns void if the evaluated argument is non-empty, otherwise returns `true`.
+
+.example
+....
+defs{
+	v1
+	v2{bla}
+}
+if{not{${v1}}}then{hello}
+if{not{${v2}}}else{world!}
+....
+
+.result
+....
+hello
+world!
+....
+
+== eq
+
+Evaluates its arguments and compares first one to the second one for equality. If those are equal it returns `true`, otherwise returns void.
+
+If after arguments evaluation there are less or more arguemnts than true it throws the "malformed document" error.
+
+.example
+....
+if{eq{bla bla}}then{hello}
+if{eq{asis{bla{bla bla} bla{bla bla}}}}then{world!}
+....
+
+.result
+....
+hello
+world!
+....
+
+== gt
+
+Evaluates its arguments and converts them to unsigned integers, then does the `first arg > second arg` comparison. If it is true then it returns `true`.
+Otherwise returns void.
+
+.example
+....
+if{gt{10 0}}then{hello}else{world!}
+if{gt{3 10}}then{hello}else{world!}
+....
+
+.result
+....
+hello
+world!
+....
+
+== include
+
+Evaluates and returns contents of the file specified as argument.
+
+.example
+....
+Hello include{some_dir/doc_piece.cudoc} World!
+....
+
+== size
+
+Evaluates the arguments and returns number of nodes.
+
+.example
+....
+defs{
+	v{bla bla asis{hello} g{bla bla} g{bla bla bla} bla}
+}
+size{a b c d}
+size{${v}}
+....
+
+.result
+....
+4
+6
+....
+
+== at
+
+Access array element by index. Evaluates its arguments, then takes the first node value
+as index (starts from 0) into the subsequent nodes and returns the node corresponding to that index.
+
+.example
+....
+defs{
+	t{a b c world! d}
+	i{3}
+}
+at{2 bla hi hello world!}
+at{${i} ${t}}
+....
+
+.result
+....
+hello
+world!
+....
+
+== get
+
+Access array element by key.
+Evaluates its arguments, then takes the first node value as key into subseqent nodes map and returns the first matching node value.
+
+.example
+....
+defs{
+	a{map{
+		x{bla bla}
+		y{hey}
+		z{asis{
+			how{are{you}}
+		}}
+		bla{13}
+	}}
+}
+
+x = get{x ${a}} y = get{y ${a}} z = get{z ${a}} bla = get{bla ${a}}
+....
+
+.result
+....
+x = bla bla y = hey z = how{are{you}} bla = 13
+....
+
+== slice
+
+Evaluates its arguments.
+Then takes first node value as range start index and the second node value as range ende index (or `end` for the range end).
+The indices can be negative, then it will count from the end.
+First index must be less or equal to the second index, otherwise the document is malformed.
+Then it returns a slice of the remaining nodes. The last index is not included.
+
+.example
+....
+defs{
+	v{a b c d}
+}
+slice{0 1 ${v}}
+slice{1 end ${v}}
+slice{1 -2 ${v}}
+....
+
+.result
+....
+a
+b c d
+b c
+....
+
+== is_word
+
+Evaluates arguments.
+Returns `true` if the argument is a single word. Otherwise return void.
+
+.example
+....
+defs{
+	v{map{bla{hi}}}
+}
+if{is_word{bla}}then{hello}
+if{is_word{${v}}}then{hello}else{world!}
+....
+
+.result
+....
+hello
+world!
+....
+
+== val
+
+Evaluates arguments.
+Returns value of the node while ignoring it's children.
+
+.example
+....
+val{asis{hello{bla}}}
+....
+
+.result
+....
+hello
+....
+
+== children
+
+Evaluates arguments.
+If there are more than 1 node then document is malformed.
+Returns children of the node.
+
+.example
+....
+children{bla}
+children{map{bla{hello}}}
+....
+
+.result
+....
+
+hello
+....

@@ -313,6 +313,36 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		return treeml::forest_ext();
 	});
 
+	this->add_function("eq", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		auto res = this->eval(args);
+
+		if(res.size() != 2){
+			throw exception("'eq' function requires exactly 2 arguments");
+		}
+
+		if(res.front() == res.back()){
+			return treeml::forest_ext{{"true"}};
+		}
+		return treeml::forest_ext();
+	});
+
+	this->add_function("gt", [this](const treeml::forest_ext& args){
+		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
+
+		auto res = this->eval(args);
+
+		if(res.size() != 2){
+			throw exception("'eq' function requires exactly 2 arguments");
+		}
+
+		if(res.front().value.to_int64() > res.back().value.to_int64()){
+			return treeml::forest_ext{{"true"}};
+		}
+		return treeml::forest_ext();
+	});
+
 	this->add_function("include", [this](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
@@ -476,7 +506,7 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		return ret;
 	});
 
-	this->add_function("args", [this](const treeml::forest_ext& args){
+	this->add_function("children", [this](const treeml::forest_ext& args){
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
 		auto evaled = this->eval(args);
@@ -487,36 +517,6 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 			throw exception("more than one value passed to 'args' function");
 		}
 
-		return treeml::forest_ext();
-	});
-
-	this->add_function("eq", [this](const treeml::forest_ext& args){
-		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
-
-		auto res = this->eval(args);
-
-		if(res.size() != 2){
-			throw exception("'eq' function requires exactly 2 arguments");
-		}
-
-		if(res.front() == res.back()){
-			return treeml::forest_ext{{"true"}};
-		}
-		return treeml::forest_ext();
-	});
-
-	this->add_function("gt", [this](const treeml::forest_ext& args){
-		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
-
-		auto res = this->eval(args);
-
-		if(res.size() != 2){
-			throw exception("'eq' function requires exactly 2 arguments");
-		}
-
-		if(res.front().value.to_int64() > res.back().value.to_int64()){
-			return treeml::forest_ext{{"true"}};
-		}
 		return treeml::forest_ext();
 	});
 
