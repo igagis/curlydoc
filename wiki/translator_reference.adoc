@@ -4,7 +4,7 @@
 - `U` - character by unicode number, e.g. `U{042b}`
 - `p` - paragraph
 - `dq` - double quotes, e.g. `dq{some b{quoted} text}`
-- `cb` - curly braces, eg `cb{some curly-braced text}`
+- `cb` - curly braces, e.g. `cb{some curly-braced text}`
 - `b` - bold, e.g. `some b{bold text}`
 - `i` - italic
 - `u` - underline
@@ -18,7 +18,39 @@
 - `m` - monospace
 - `list` - list
 - `li` - list item
-- `image` - image, `image{prm{width{200}} me.jpg}`
-- `table` - table
+- `image` - image
++
+....
+image{
+	prm{
+		width{<image-width>} // e.g. width{200} for 200 px width
+		height{<image-height>} // e.g. height{300} for 300 px height
+	}
+	me.jpg // image file
+}
+....
+- `table` - table,
++
+....
+table{
+	prm{
+		cols{<num-columns>} // e.g. cols{4} for 4 columns
+		border{<border-thickness>} // e.g. border{2} for 2 px border
+		weight{<cols-weights>} // e.g. weight{1 1 2 1}
+		align{<cols-horizontal-aligns>} // e.g. align{left left center right}
+		valign{<cols-vertical-aligns>} // e.g. valign{top top center bottom}
+	}
+	[cell{} cell{} ...]
+}
+....
 - `cell` - table cell
++
+....
+cell{
+	prm{
+		span{<col-span> [<row-span>]} // e.g. span{2 3}
+	}
+	[<cell-contents>]
+}
+....
 - `ins` - insert stuff, `ins{br}` - insert line break
