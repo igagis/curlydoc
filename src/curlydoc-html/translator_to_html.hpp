@@ -28,6 +28,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 namespace curlydoc{
 
 class translator_to_html : public translator{
+	bool no_next_space = false;
 public:
 	std::stringstream ss;
 

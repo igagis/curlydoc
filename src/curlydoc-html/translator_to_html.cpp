@@ -30,6 +30,12 @@ translator_to_html::translator_to_html(){
 }
 
 void translator_to_html::on_word(const std::string& word){
+	if(this->no_next_space){
+		this->no_next_space = false;
+		if(word == " "){
+			return;
+		}
+	}
 	this->ss << word;
 }
 
@@ -107,6 +113,7 @@ void translator_to_html::on_header6(const treeml::forest_ext& forest){
 
 void translator_to_html::on_ins(const tml::forest_ext& forest){
 	this->ss << '\n' << "<br/>" << '\n';
+	this->no_next_space = true;
 }
 
 void translator_to_html::on_image(const image_params& params, const treeml::forest_ext& forest){
