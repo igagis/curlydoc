@@ -139,7 +139,7 @@ Hi x = 10 x = 20 x = hello x = world! x = g{hello world!}end
 
 == if
 
-Sets the boolean flag for the current scope to `true` if the argumetn is not empty after evaluation, otherwise sets it to `false`.
+Sets the boolean flag for the current scope to `true` if the argument is not empty after evaluation, otherwise sets it to `false`.
 
 == then
 
