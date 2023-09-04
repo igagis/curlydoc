@@ -21,21 +21,23 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <unordered_map>
 #include <list>
+#include <unordered_map>
 #include <vector>
 
 #include <treeml/tree_ext.hpp>
 
-namespace curlydoc{
+namespace curlydoc {
 
-class interpreter{
+class interpreter
+{
 	std::vector<std::string> file_name_stack;
 
 public:
 	typedef std::function<treeml::forest_ext(const treeml::forest_ext&)> function_type;
 
-	class exception : public std::invalid_argument{
+	class exception : public std::invalid_argument
+	{
 	public:
 		exception(const std::string& message);
 		exception(const std::string& message, const std::string& file, const treeml::leaf_ext& leaf);
@@ -43,23 +45,27 @@ public:
 
 private:
 	std::unordered_map<std::string, function_type> functions;
-	
-	class context{
+
+	class context
+	{
 		const context* const prev;
 		std::unordered_map<std::string, treeml::forest_ext> defs;
+
 	public:
-		context(const context* const prev = nullptr) : prev(prev){}
+		context(const context* const prev = nullptr) :
+			prev(prev)
+		{}
 
 		void add(const std::string& name, treeml::forest_ext&& value);
 
-		struct find_result{
+		struct find_result {
 			const treeml::forest_ext* value;
 			const context& ctx;
 		};
 
-		find_result try_find(const std::string& name)const;
+		find_result try_find(const std::string& name) const;
 
-		const treeml::forest_ext& find(const std::string& name)const;
+		const treeml::forest_ext& find(const std::string& name) const;
 	};
 
 	// NOTE: use std::list to avoid context objects to be moved
@@ -67,32 +73,43 @@ private:
 
 	context& push_context(const context* prev = nullptr);
 
-	struct bool_state{
+	struct bool_state {
 		bool flag = false;
 		bool true_before_or = false;
 	};
 
 	std::vector<bool_state> if_flag_stack = {bool_state()}; // initial flag for root scope
 
-	struct if_flag_push{
+	struct if_flag_push {
 		interpreter& owner;
-		if_flag_push(interpreter& owner) : owner(owner){
+
+		if_flag_push(interpreter& owner) :
+			owner(owner)
+		{
 			this->owner.if_flag_stack.emplace_back();
 		}
-		~if_flag_push(){
+
+		~if_flag_push()
+		{
 			this->owner.if_flag_stack.pop_back();
 		}
 	};
 
 	std::unique_ptr<papki::file> file; // for including files
+
 public:
 	interpreter(std::unique_ptr<papki::file> file);
 
 	virtual ~interpreter() = default;
 
-	treeml::forest_ext eval(treeml::forest_ext::const_iterator begin, treeml::forest_ext::const_iterator end, bool preserve_vars = false);
+	treeml::forest_ext eval(
+		treeml::forest_ext::const_iterator begin,
+		treeml::forest_ext::const_iterator end,
+		bool preserve_vars = false
+	);
 
-	treeml::forest_ext eval(const treeml::forest_ext& forest, bool preserve_vars = false){
+	treeml::forest_ext eval(const treeml::forest_ext& forest, bool preserve_vars = false)
+	{
 		return this->eval(forest.begin(), forest.end(), preserve_vars);
 	}
 
@@ -108,4 +125,4 @@ private:
 	void init_std_lib();
 };
 
-}
+} // namespace curlydoc

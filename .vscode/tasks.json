@@ -22,6 +22,15 @@
 			]
 		},
 		{
+			"label": "format",
+			"type": "shell",
+			"command": "make format",
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
 			"label": "clean",
 			"type": "shell",
 			"command": "make clean",
