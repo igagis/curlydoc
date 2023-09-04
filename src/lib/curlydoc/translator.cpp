@@ -21,6 +21,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #include "translator.hpp"
 
+#include <utki/util.hpp>
+
 using namespace curlydoc;
 
 namespace{
