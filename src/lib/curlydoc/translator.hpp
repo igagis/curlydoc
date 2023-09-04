@@ -31,7 +31,7 @@ namespace curlydoc {
 class translator
 {
 public:
-	typedef std::function<void(bool, const treeml::forest_ext&)> handler_type;
+	using handler_type = std::function<void(bool, const treeml::forest_ext&)>;
 
 private:
 	std::unordered_map<std::string, handler_type> handlers;
@@ -58,7 +58,13 @@ protected:
 public:
 	translator();
 
-	virtual ~translator() {}
+	translator(const translator&) = delete;
+	translator& operator=(const translator&) = delete;
+
+	translator(translator&&) = delete;
+	translator& operator=(translator&&) = delete;
+
+	virtual ~translator() = default;
 
 	std::vector<std::string> list_tags() const;
 
@@ -104,16 +110,16 @@ public:
 		std::optional<size_t> col_span;
 		std::optional<size_t> row_span;
 
-		size_t col_index;
+		size_t col_index{};
 
 		decltype(col_span)::value_type get_col_span() const noexcept
 		{
-			return this->col_span ? this->col_span.value() : 1;
+			return this->col_span.value_or(1);
 		}
 
 		decltype(row_span)::value_type get_row_span() const noexcept
 		{
-			return this->row_span ? this->row_span.value() : 1;
+			return this->row_span.value_or(1);
 		}
 	};
 

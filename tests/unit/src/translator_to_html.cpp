@@ -7,7 +7,7 @@
 #include "../../src/curlydoc-html/translator_to_html.hpp"
 
 namespace{
-tst::set set("traslator_to_html", [](tst::suite& suite){
+const tst::set set("traslator_to_html", [](tst::suite& suite){
 	suite.add<std::pair<std::string, std::string>>(
 			"translate_to_html",
 			{

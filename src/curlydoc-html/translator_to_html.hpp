@@ -34,8 +34,6 @@ class translator_to_html : public translator
 public:
 	std::stringstream ss;
 
-	translator_to_html();
-
 	void on_word(const std::string& word) override;
 	void on_paragraph(const treeml::forest_ext& forest) override;
 	void on_bold(const treeml::forest_ext& forest) override;

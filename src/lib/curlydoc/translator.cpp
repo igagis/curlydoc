@@ -406,8 +406,8 @@ size_t translator::table_row::get_free_col_index(size_t span)
 void translator::table_row::set_occupied(size_t index, size_t span)
 {
 	ASSERT(index <= this->occupied_cols.size() - span)
-	for (auto i = std::next(this->occupied_cols.begin(), index);
-		 i != std::next(this->occupied_cols.begin(), index + span);
+	for (auto i = utki::next(this->occupied_cols.begin(), index);
+		 i != utki::next(this->occupied_cols.begin(), index + span);
 		 ++i)
 	{
 		ASSERT(!(*i))

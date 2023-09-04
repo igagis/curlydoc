@@ -34,7 +34,7 @@ class interpreter
 	std::vector<std::string> file_name_stack;
 
 public:
-	typedef std::function<treeml::forest_ext(const treeml::forest_ext&)> function_type;
+	using function_type = std::function<treeml::forest_ext(const treeml::forest_ext&)>;
 
 	class exception : public std::invalid_argument
 	{
@@ -89,6 +89,12 @@ private:
 			this->owner.if_flag_stack.emplace_back();
 		}
 
+		if_flag_push(const if_flag_push&) = delete;
+		if_flag_push& operator=(const if_flag_push&) = delete;
+
+		if_flag_push(if_flag_push&&) = delete;
+		if_flag_push& operator=(if_flag_push&&) = delete;
+
 		~if_flag_push()
 		{
 			this->owner.if_flag_stack.pop_back();
@@ -99,6 +105,12 @@ private:
 
 public:
 	interpreter(std::unique_ptr<papki::file> file);
+
+	interpreter(const interpreter&) = delete;
+	interpreter& operator=(const interpreter&) = delete;
+
+	interpreter(interpreter&&) = delete;
+	interpreter& operator=(interpreter&&) = delete;
 
 	virtual ~interpreter() = default;
 

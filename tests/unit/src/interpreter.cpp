@@ -8,7 +8,7 @@
 #include "../../src/lib/curlydoc/interpreter.hpp"
 
 namespace{
-tst::set set0("interpreter", [](tst::suite& suite){
+const tst::set set0("interpreter", [](tst::suite& suite){
 	suite.add<std::pair<std::string, std::string>>(
 			"eval_is_as_expected",
 			// pairs are {input, expected output}

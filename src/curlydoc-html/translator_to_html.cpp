@@ -22,13 +22,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include "translator_to_html.hpp"
 
 #include <numeric>
+#include <ratio>
 
 using namespace curlydoc;
-
-translator_to_html::translator_to_html()
-{
-	// TODO: ?
-}
 
 void translator_to_html::on_word(const std::string& word)
 {
@@ -158,7 +154,7 @@ std::string to_string(translator::align a)
 			return "center";
 		default:
 			ASSERT(false)
-			return std::string();
+			return {};
 	}
 }
 } // namespace
@@ -175,7 +171,7 @@ std::string to_string(translator::valign a)
 			return "middle";
 		default:
 			ASSERT(false)
-			return std::string();
+			return {};
 	}
 }
 } // namespace
@@ -193,7 +189,7 @@ void translator_to_html::on_table(const table& tbl, const treeml::forest_ext& fo
 	std::vector<size_t> weight_percent;
 
 	for (const auto& w : tbl.weights) {
-		weight_percent.push_back(w * 100 / total_weight);
+		weight_percent.push_back(w * std::centi::den / total_weight);
 	}
 
 	for (const auto& r : tbl.rows) {

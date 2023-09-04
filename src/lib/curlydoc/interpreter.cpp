@@ -107,7 +107,7 @@ interpreter::context& interpreter::push_context(const context* prev)
 	if (!prev) {
 		prev = &this->context_stack.back();
 	}
-	this->context_stack.push_back(context{prev});
+	this->context_stack.emplace_back(prev);
 	return this->context_stack.back();
 }
 
@@ -127,7 +127,7 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		treeml::forest_ext ret;
 
 		for (const auto& a : args) {
-			ret.push_back(treeml::tree_ext(a.value, this->eval(a.children)));
+			ret.emplace_back(a.value, this->eval(a.children));
 		}
 
 		return ret;
@@ -140,7 +140,7 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		ret.emplace_back("prm");
 
 		for (const auto& a : args) {
-			ret.back().children.push_back(treeml::tree_ext(a.value, this->eval(a.children)));
+			ret.back().children.emplace_back(a.value, this->eval(a.children));
 		}
 
 		return ret;
@@ -198,6 +198,8 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 
 			try {
 				ctx.add(iter_name, {i});
+				// do not add in case name already exists
+				// NOLINTNEXTLINE(bugprone-empty-catch)
 			} catch (exception&) {
 				ASSERT(false)
 			}
@@ -213,11 +215,10 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 	this->add_function("if", [this](const treeml::forest_ext& args) {
 		ASSERT(!args.empty()) // if there are no arguments, then it is not a function call
 
-		bool flag;
-		{
+		bool flag = [this, &args]() {
 			if_flag_push if_flag_push(*this);
-			flag = !this->eval(args).empty();
-		}
+			return !this->eval(args).empty();
+		}();
 
 		auto& bs = this->if_flag_stack.back();
 		bs.flag = flag;
@@ -265,11 +266,10 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 			}
 		}
 
-		bool flag;
-		{
+		bool flag = [this, &args]() {
 			if_flag_push if_flag_push(*this);
-			flag = !this->eval(args).empty();
-		}
+			return !this->eval(args).empty();
+		}();
 
 		this->if_flag_stack.back().flag = flag;
 
@@ -288,11 +288,10 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 			}
 		}
 
-		bool flag;
-		{
+		bool flag = [this, &args]() {
 			if_flag_push if_flag_push(*this);
-			flag = !this->eval(args).empty();
-		}
+			return !this->eval(args).empty();
+		}();
 
 		this->if_flag_stack.back().flag = flag;
 
@@ -381,7 +380,7 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 
 		int64_t index = res.front().value.to_int64();
 
-		int64_t size = res.size() - 1;
+		int64_t size = int64_t(res.size()) - 1;
 
 		if (index < 0) {
 			index = size + index;
@@ -433,19 +432,18 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 			throw exception("too few arguments given to 'slice' function, expected at least 2");
 		}
 
-		int64_t size = evaled.size() - 2;
+		int64_t size = int64_t(evaled.size()) - 2;
 
 		int64_t begin = evaled.front().value.to_int64();
 
-		int64_t end;
-		{
+		int64_t end = [&evaled, &size]() {
 			const auto& v = std::next(evaled.begin())->value;
 			if (v == "end") {
-				end = size;
+				return size;
 			} else {
-				end = v.to_int64();
+				return v.to_int64();
 			}
-		}
+		}();
 
 		if (begin < 0) {
 			begin = size + begin;
@@ -491,7 +489,7 @@ interpreter::interpreter(std::unique_ptr<papki::file> file) :
 		auto evaled = this->eval(args);
 
 		if (evaled.size() == 1) {
-			ret.push_back(treeml::tree_ext(evaled.front().value));
+			ret.emplace_back(evaled.front().value);
 		} else if (!evaled.empty()) {
 			throw exception("more than one value passed to 'val' function");
 		}
@@ -551,6 +549,8 @@ treeml::forest_ext interpreter::eval(
 
 				try {
 					ctx.add("@", std::move(args));
+					// do not add in case name already exists
+					// NOLINTNEXTLINE(bugprone-empty-catch)
 				} catch (exception&) {
 					ASSERT(false)
 				}
