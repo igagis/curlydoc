@@ -11,7 +11,7 @@ this_srcs += ../../src/curlydoc-html/translator_to_html.cpp
 this_libcurlydoc := $(d)../../src/lib/out/$(c)/libcurlydoc$(dot_so)
 
 this_cxxflags += -I $(d)../../src/lib
-this_ldlibs += $(this_libcurlydoc) -ltst -ltreeml -lpapki
+this_ldlibs += $(this_libcurlydoc) -l tst -l tml -l papki
 
 $(eval $(prorab-build-app))
 

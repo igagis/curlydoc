@@ -511,12 +511,12 @@ const tst::set set0("interpreter", [](tst::suite& suite){
 
 				interpreter.add_repeater_functions(tr.list_tags());
 
-				const auto in = treeml::read_ext(p.first);
+				const auto in = tml::read_ext(p.first);
 
 				auto res = interpreter.eval(in.begin(), in.end());
 				tst::check(
-						res == treeml::read_ext(p.second),
-						[&](auto&o){o << "res = " << treeml::to_non_ext(res);},
+						res == tml::read_ext(p.second),
+						[&](auto&o){o << "res = " << tml::to_non_ext(res);},
 						SL
 					);
 			}

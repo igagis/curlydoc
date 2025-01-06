@@ -2,7 +2,7 @@
 
 **curlydoc** is a document markup language.
 
-**curlydoc** is based on link:https://github.com/cppfw/treeml[**treeml**] markup language.
+**curlydoc** is based on link:https://github.com/cppfw/tml[**tml**] markup language.
 
 Tree nodes without children are ordinary words and are concatenated in the final document.
 
@@ -12,7 +12,7 @@ Tree nodes with children have special meaning. Those are either **functions**, *
 
 The **curlydoc** document is first processed by **interpreter**, and then the output is conveyed to **translator**.
 
-The **interpreter** evaluates **functions** and **macros** by substituting them with the **treeml** nodes resulting from the evaluation.
+The **interpreter** evaluates **functions** and **macros** by substituting them with the **tml** nodes resulting from the evaluation.
 
 The **translator** translates **tags** and ordinary words into a final document in some specific format, like **html** or **pdf**.
 
@@ -44,7 +44,7 @@ Lorem ipsum dolor sit amet.
 
 === macros
 
-The **macro** is a **treeml** node _with children_ with the node value representing a defined macro name. **Macros** are defined by user using `defs` function.
+The **macro** is a **tml** node _with children_ with the node value representing a defined macro name. **Macros** are defined by user using `defs` function.
 
 **Macro** definitions are visible within a specific scope where those are defined, i.e. only within nodes subtree which contain the corresponding `defs` node
 which defined the macro.
@@ -76,7 +76,7 @@ my_macro_1{to the whole} ${my_macro_2}
 //       This allows using macros without any arguments (i.e. as variables).
 ....
 
-this example, after evaluation by the **interpreter** will result in the following **treeml** document:
+this example, after evaluation by the **interpreter** will result in the following **tml** document:
 
 ....
 Hello to the whole world!
@@ -86,9 +86,9 @@ Hello to the whole world!
 
 The **translator** translates the output from the **interpreter** to the final specific document format, like **html** or **pdf**.
 
-A **treeml** node _without children_ represents a simple word.
+A **tml** node _without children_ represents a simple word.
 
-A **tag** is a **treeml** node _with children_. **Tags** are used to apply formatting to the text.
+A **tag** is a **tml** node _with children_. **Tags** are used to apply formatting to the text.
 
 A **tag** can have a `prm` child node which defines parameters for the **tag**. The `prm` must be the first child of the tag node.
 
@@ -114,7 +114,7 @@ The **interpreter** has the `b` "repeater" function, so it will evaluate the con
 Hello b{to the whole} world!
 ....
 
-Then the **translator** will translate this intermediate **treeml** document to formatted text, for example in **html**:
+Then the **translator** will translate this intermediate **tml** document to formatted text, for example in **html**:
 
 ....
 Hello <b>to the whole</b> world!

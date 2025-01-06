@@ -9,8 +9,8 @@ this_srcs := $(call prorab-src-dir, .)
 
 this_libcurlydoc := $(d)../lib/out/$(c)/libcurlydoc$(dot_so)
 
-this_cxxflags += -I$(d)../lib
-this_ldlibs += $(this_libcurlydoc) -lclargs -lpapki -ltreeml
+this_cxxflags += -I $(d)../lib
+this_ldlibs += $(this_libcurlydoc) -l clargs -l papki -l tml
 
 $(eval $(prorab-build-app))
 

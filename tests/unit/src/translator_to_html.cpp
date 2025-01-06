@@ -1,7 +1,7 @@
 #include <tst/set.hpp>
 #include <tst/check.hpp>
 
-#include <treeml/tree.hpp>
+#include <tml/tree.hpp>
 
 #include "../../src/lib/curlydoc/interpreter.hpp"
 #include "../../src/curlydoc-html/translator_to_html.hpp"
@@ -28,7 +28,7 @@ const tst::set set("traslator_to_html", [](tst::suite& suite){
 				{"some\nins{br}\nstuff", "some\n<br/>\nstuff"},
 			},
 			[](const auto& p){
-				const auto in = treeml::read_ext(p.first.c_str());
+				const auto in = tml::read_ext(p.first.c_str());
 
 				curlydoc::translator_to_html tr;
 
@@ -54,7 +54,7 @@ const tst::set set("traslator_to_html", [](tst::suite& suite){
 				{"some \"quoted\" stuff", "some quoted stuff"}
 			},
 			[](const auto& p){
-				const auto in = treeml::read_ext(p.first.c_str());
+				const auto in = tml::read_ext(p.first.c_str());
 
 				curlydoc::interpreter interpreter(nullptr);
 

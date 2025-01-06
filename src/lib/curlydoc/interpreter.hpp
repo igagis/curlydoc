@@ -25,116 +25,106 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <unordered_map>
 #include <vector>
 
-#include <treeml/tree_ext.hpp>
+#include <tml/tree_ext.hpp>
 
 namespace curlydoc {
 
-class interpreter
-{
-	std::vector<std::string> file_name_stack;
+class interpreter {
+  std::vector<std::string> file_name_stack;
 
 public:
-	using function_type = std::function<treeml::forest_ext(const treeml::forest_ext&)>;
+  using function_type = std::function<tml::forest_ext(const tml::forest_ext &)>;
 
-	class exception : public std::invalid_argument
-	{
-	public:
-		exception(const std::string& message);
-		exception(const std::string& message, const std::string& file, const treeml::leaf_ext& leaf);
-	};
+  class exception : public std::invalid_argument {
+  public:
+    exception(const std::string &message);
+    exception(const std::string &message, const std::string &file,
+              const tml::leaf_ext &leaf);
+  };
 
 private:
-	std::unordered_map<std::string, function_type> functions;
+  std::unordered_map<std::string, function_type> functions;
 
-	class context
-	{
-		const context* const prev;
-		std::unordered_map<std::string, treeml::forest_ext> defs;
+  class context {
+    const context *const prev;
+    std::unordered_map<std::string, tml::forest_ext> defs;
 
-	public:
-		context(const context* const prev = nullptr) :
-			prev(prev)
-		{}
+  public:
+    context(const context *const prev = nullptr) : prev(prev) {}
 
-		void add(const std::string& name, treeml::forest_ext&& value);
+    void add(const std::string &name, tml::forest_ext &&value);
 
-		struct find_result {
-			const treeml::forest_ext* value;
-			const context& ctx;
-		};
+    struct find_result {
+      const tml::forest_ext *value;
+      const context &ctx;
+    };
 
-		find_result try_find(const std::string& name) const;
+    find_result try_find(const std::string &name) const;
 
-		const treeml::forest_ext& find(const std::string& name) const;
-	};
+    const tml::forest_ext &find(const std::string &name) const;
+  };
 
-	// NOTE: use std::list to avoid context objects to be moved
-	std::list<context> context_stack = {context()};
+  // NOTE: use std::list to avoid context objects to be moved
+  std::list<context> context_stack = {context()};
 
-	context& push_context(const context* prev = nullptr);
+  context &push_context(const context *prev = nullptr);
 
-	struct bool_state {
-		bool flag = false;
-		bool true_before_or = false;
-	};
+  struct bool_state {
+    bool flag = false;
+    bool true_before_or = false;
+  };
 
-	std::vector<bool_state> if_flag_stack = {bool_state()}; // initial flag for root scope
+  std::vector<bool_state> if_flag_stack = {
+      bool_state()}; // initial flag for root scope
 
-	struct if_flag_push {
-		interpreter& owner;
+  struct if_flag_push {
+    interpreter &owner;
 
-		if_flag_push(interpreter& owner) :
-			owner(owner)
-		{
-			this->owner.if_flag_stack.emplace_back();
-		}
+    if_flag_push(interpreter &owner) : owner(owner) {
+      this->owner.if_flag_stack.emplace_back();
+    }
 
-		if_flag_push(const if_flag_push&) = delete;
-		if_flag_push& operator=(const if_flag_push&) = delete;
+    if_flag_push(const if_flag_push &) = delete;
+    if_flag_push &operator=(const if_flag_push &) = delete;
 
-		if_flag_push(if_flag_push&&) = delete;
-		if_flag_push& operator=(if_flag_push&&) = delete;
+    if_flag_push(if_flag_push &&) = delete;
+    if_flag_push &operator=(if_flag_push &&) = delete;
 
-		~if_flag_push()
-		{
-			this->owner.if_flag_stack.pop_back();
-		}
-	};
+    ~if_flag_push() { this->owner.if_flag_stack.pop_back(); }
+  };
 
-	std::unique_ptr<papki::file> file; // for including files
+  std::unique_ptr<papki::file> file; // for including files
 
 public:
-	interpreter(std::unique_ptr<papki::file> file);
+  interpreter(std::unique_ptr<papki::file> file);
 
-	interpreter(const interpreter&) = delete;
-	interpreter& operator=(const interpreter&) = delete;
+  interpreter(const interpreter &) = delete;
+  interpreter &operator=(const interpreter &) = delete;
 
-	interpreter(interpreter&&) = delete;
-	interpreter& operator=(interpreter&&) = delete;
+  interpreter(interpreter &&) = delete;
+  interpreter &operator=(interpreter &&) = delete;
 
-	virtual ~interpreter() = default;
+  virtual ~interpreter() = default;
 
-	treeml::forest_ext eval(
-		treeml::forest_ext::const_iterator begin,
-		treeml::forest_ext::const_iterator end,
-		bool preserve_vars = false
-	);
+  tml::forest_ext eval(tml::forest_ext::const_iterator begin,
+                       tml::forest_ext::const_iterator end,
+                       bool preserve_vars = false);
 
-	treeml::forest_ext eval(const treeml::forest_ext& forest, bool preserve_vars = false)
-	{
-		return this->eval(forest.begin(), forest.end(), preserve_vars);
-	}
+  tml::forest_ext eval(const tml::forest_ext &forest,
+                       bool preserve_vars = false) {
+    return this->eval(forest.begin(), forest.end(), preserve_vars);
+  }
 
-	treeml::forest_ext eval();
+  tml::forest_ext eval();
 
-	void add_function(const std::string& name, function_type&& func);
+  void add_function(const std::string &name, function_type &&func);
 
-	void add_repeater_function(const std::string& name);
+  void add_repeater_function(const std::string &name);
 
-	void add_repeater_functions(utki::span<const std::string> names);
+  void add_repeater_functions(utki::span<const std::string> names);
 
 private:
-	void init_std_lib();
+  void init_std_lib();
 };
 
 } // namespace curlydoc
