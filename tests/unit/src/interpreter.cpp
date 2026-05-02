@@ -1,7 +1,7 @@
 #include <tst/set.hpp>
 #include <tst/check.hpp>
 
-#include <papki/fs_file.hpp>
+#include <fsif/native_file.hpp>
 
 #include "dummy_translator.hpp"
 
@@ -505,7 +505,7 @@ const tst::set set0("interpreter", [](tst::suite& suite){
 				)", "hello"},
 			},
 			[](auto& p){
-				curlydoc::interpreter interpreter(std::make_unique<papki::fs_file>("none"));
+				curlydoc::interpreter interpreter(std::make_unique<fsif::native_file>("none"));
 
 				dummy_translator tr;
 
